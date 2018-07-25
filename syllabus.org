@@ -1,0 +1,190 @@
+#+TITLE:  Algorithms
+#+AUTHOR: Nathan Dotz
+#+DATE:   Detroit Labs Dev Coaching 2018
+#+EMAIL:  ndotz@detroitlabs.com
+#+LANGUAGE:  en
+
+* Course Materials
+  The Algorithm Design Manual (2nd Edition), Skiena - ISBN-10: 1849967202
+
+* Course Outline
+** Session 1
+
+*** Introduction to Algorithms & Algorithmic Analysis
+
+    Reading
+    - Chapters 1 & 2
+
+    Lecture
+    - Specifying Problems
+    - Algorithmic Thinking
+    - Incorrectness
+    - Induction and Recursion
+    - Summations
+    - Modeling
+    - RAM Computation Model
+    - Best / Worse / Average Case Analysis
+    - \Omega / O / \theta Notation
+    - Growth and Dominance
+    - Reasoning About Complexity
+    - Logarithms and Limits
+
+** Session 2
+
+*** Data Structures I
+
+    Reading
+    - Chapter 3
+
+    Lecture
+    - Why Data Structures Matter
+    - Arrays
+    - Lists
+    - Stacks
+    - Queues
+    - Dictionaries
+
+** Session 3
+
+*** Data Structures II
+
+    Reading
+    - Chapters 3
+
+    Lecture
+    - Binary Search Trees
+    - Priority Queues
+    - Hashing and Strings
+    - Specialized Data Structures
+
+** Session 4
+
+*** Sorting and Searching I
+
+    Reading
+    - Chapters 4
+
+    Lecture
+    - Why Sorting Matters
+    - Applications and Pragmatics of Searching
+    - Heaps
+    - Heapsort
+
+** Session 5
+
+*** Sorting and Searching II
+
+    Reading
+    - Chapters 4
+
+    Lecture
+    - Mergesort
+    - Quicksort
+    - Randomization
+    - Divide and Conquer
+    - Recursion
+
+** Session 6
+
+*** Graph Traversal I
+
+    Reading
+    - Chapters 5
+
+    Lecture
+    - Types of Graphs
+    - Graph Data Structures
+    - Traversal Techniques
+    - Breadth-First Search
+
+** Session 7
+
+*** Graph Traversal II
+
+    Reading
+    - Chapters 5
+
+    Lecture
+    - Depth-First Search
+    - Topological Sorting
+    - Strongly Connected Components
+
+** Session 8
+
+*** Weighted Graphs I
+
+    Reading
+    - Chapters 6
+
+    Lecture
+    - Minimum Spanning Trees
+    - Prim's Algorithm
+    - Kruskal's Algorithm
+
+** Session 9
+
+*** Weighted Graphs II
+
+    Reading
+    - Chapters 6
+
+    Lecture
+    - Shortest Paths
+    - Dijkstra's Algorithm
+    - Network Flow and Bipartite Matching
+    - Graph Modeling
+
+** Session 10
+
+*** Combinations and Heuristics I
+
+    Reading
+    - Chapters 7
+
+    Lecture
+    - Backtracking
+    - Subsets
+    - Permutations
+    - Search Pruning
+    - Sudoku and N-Queens
+
+** Session 11
+
+*** Combinations and Heuristics II
+
+    Reading
+    - Chapters 7
+
+    Lecture
+    - Heuristic Searches
+    - Random Sampling
+    - Local Searches
+    - Simulated Annealing
+    - Genetic and Parallel Algorithms
+
+** Session 12
+
+*** Dynamic Programming
+
+    Reading
+    - Chapters 8
+
+    Lecture
+    - Caching
+    - Approximate Matching
+    - Longest Matching Sequence
+    - Partitions Problem
+    - Context-Free Grammars
+
+** Session 13
+
+*** Intractable Problems and Approximate Algorithms
+
+    Reading
+    - Chapters 9
+
+    Lecture
+    - NP-Completeness
+    - "Solved" Reductions
+    - Elementary Hardness
+    - Satisfiability
