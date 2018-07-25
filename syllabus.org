@@ -14,6 +14,7 @@
 
     Reading
     - Chapters 1 & 2
+      (~61 pgs)
 
     Lecture
     - Specifying Problems
@@ -34,7 +35,8 @@
 *** Data Structures I
 
     Reading
-    - Chapter 3
+    - Chapter 3 \sect 3-3.3
+      (~11 pgs)
 
     Lecture
     - Why Data Structures Matter
@@ -49,7 +51,8 @@
 *** Data Structures II
 
     Reading
-    - Chapters 3
+    - Chapter 3 \sect 3.4-3.9
+      (~22 pgs)
 
     Lecture
     - Binary Search Trees
@@ -62,7 +65,8 @@
 *** Sorting and Searching I
 
     Reading
-    - Chapters 4
+    - Chapter 4 \sect 4-4.4
+      (~17 pgs)
 
     Lecture
     - Why Sorting Matters
@@ -75,7 +79,8 @@
 *** Sorting and Searching II
 
     Reading
-    - Chapters 4
+    - Chapter 4 \sect 4.5-4.10
+      (~19 pgs)
 
     Lecture
     - Mergesort
@@ -89,7 +94,8 @@
 *** Graph Traversal I
 
     Reading
-    - Chapters 5
+    - Chapter 5 \sect 5-5.7
+      (~22 pgs)
 
     Lecture
     - Types of Graphs
@@ -102,7 +108,8 @@
 *** Graph Traversal II
 
     Reading
-    - Chapters 5
+    - Chapter 5 \sect 5.8-5.10
+      (~15 pgs)
 
     Lecture
     - Depth-First Search
@@ -114,7 +121,8 @@
 *** Weighted Graphs I
 
     Reading
-    - Chapters 6
+    - Chapter 6 \sect 6-6.2
+      (~13 pgs)
 
     Lecture
     - Minimum Spanning Trees
@@ -126,7 +134,8 @@
 *** Weighted Graphs II
 
     Reading
-    - Chapters 6
+    - Chapter 6 \sect 6.3-6.6
+      (~19 pgs)
 
     Lecture
     - Shortest Paths
@@ -139,7 +148,8 @@
 *** Combinations and Heuristics I
 
     Reading
-    - Chapters 7
+    - Chapter 7 \sect 7-7.4
+      (~16 pgs)
 
     Lecture
     - Backtracking
@@ -153,7 +163,8 @@
 *** Combinations and Heuristics II
 
     Reading
-    - Chapters 7
+    - Chapter 7 \sect 7.5-7.10
+      (~23 pgs)
 
     Lecture
     - Heuristic Searches
@@ -167,7 +178,8 @@
 *** Dynamic Programming
 
     Reading
-    - Chapters 8
+    - Chapter 8
+      (~37 pgs)
 
     Lecture
     - Caching
@@ -181,7 +193,8 @@
 *** Intractable Problems and Approximate Algorithms
 
     Reading
-    - Chapters 9
+    - Chapter 9
+      (~34 pgs)
 
     Lecture
     - NP-Completeness
