@@ -1,0 +1,745 @@
+#+TITLE:  Computer Science 2: Algorithms
+#+AUTHOR: Detroit Labs Dev Coaching
+#+DATE:   2018
+#+EMAIL:  ndotz@detroitlabs.com
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   skip:nil d:nil todo:t pri:nil tags:not-in-toc timestamp:nil
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+REVEAL_PLUGINS: (highlight notes)
+#+REVEAL_THEME: league
+#+REVEAL_MARGIN: 0.2
+# #+REVEAL_MIN_SCALE: 0.5
+# #+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_EXTRA_CSS: ./presentation.css
+
+* Lecture 1
+* Introduction to Algorithms
+** Specifying Problems
+** What is an Algorithm?
+   #+BEGIN_NOTES
+   These are the first 4 words of our book. Before we jump in too
+   far, I want to pose this question to all of you: what is an
+   algorithm?
+   #+END_NOTES
+** What is an Algorithm?
+   #+BEGIN_NOTES
+   "An algorithm is a procedure to accomplish a specific task." or
+   more broadly, it's a way of describing a process for solving a
+   specific problem. Thus, an algorithm will be the same whether
+   programs implementing it are running in Fortran on a mainframe or
+   in ruby on a web server or in Swift on an iPad.
+   #+END_NOTES
+   #+BEGIN_QUOTE
+   "An algorithm is a procedure to accomplish a specific task."
+   #+END_QUOTE
+   S.S. Skiena, The Algorithm Design Manual, 2nd ed.
+** What is an Algorithm?
+   #+BEGIN_NOTES
+   Skiena also tells us that to be "interesting", an algorithm should
+   do the following
+
+   ---
+
+   It is fundamental to understand the difference between a general,
+   well-specified problem and an instance of that problem.
+   #+END_NOTES
+   - solve a general, well-specified problem
+   - describe the complete set of instances it must work on
+   - describe the output after running on an instance
+** Rigorous Specification
+   #+BEGIN_NOTES
+   So what does a rigorously specified problem look like? There is no
+   official format, but a formal statement might look something like
+   this
+
+   ---
+
+   An instance of sorting might be an array of names, or a list of numbers.
+   Determining the general problem from an instance of a problem is
+   the first step in solving it.
+
+   ---
+
+   A faster algorithm running on a slower machine will always win for
+   sufficiently large instances of that problem. Often the instance
+   needn't even get very large before the faster algorithm wins. Thus
+   the lie of "it's fast enough" that we tell ourselves is always false.
+   #+END_NOTES
+   #+BEGIN_VERSE
+   Problem: Sorting
+
+   Input:   A sequence of $n$ keys $a_1 \rightarrow a_n$
+
+   Output:  The permutation of the input such that $a\prime_1 \le a\prime_2 \dots \le a\prime_n$
+   #+END_VERSE
+** Algorithmic Thinking
+   #+BEGIN_NOTES
+   So, an algorithm is a procedure that takes any possible input
+   instance and transforms it to be the appropriate desired
+   output. Often, there are innumerable ways of solving any particular
+   problem, and sorting is no exception.
+   ---
+   Insertion sort starts with one element (which is itself, a sorted
+   list) and then incrementally inserts the remaining elements such
+   that the list remains sorted.
+   #+END_NOTES
+   #+ATTR_HTML: :height 80%, :width 80%
+   [[https://upload.wikimedia.org/wikipedia/commons/0/0f/Insertion-sort-example-300px.gif]]
+** Insertion Sort in C
+   #+BEGIN_NOTES
+   Insertion sort is a generalized algorithm. It works with any data
+   that the comparison operation for sorting works on. Thus, it will
+   work just as well on numbers, strings, or any other data for which
+   we have defined an ordered comparison. We can easily verify that it
+   is correct no matter the input.
+   ---
+   We want algorithms that are correct, efficient, and easy to
+   implement. Sometimes, we can't get all of these at the same
+   time. In practice, we will come up with a solution that is "good
+   enough" regardless of whether a better algorithm exists, and only
+   occasionally be faced with finding the most efficient solution once
+   there are serious performance issues - a situation this course
+   intends to prepare you for.
+   ---
+   For now though, we will focus on finding solutions that are
+   correct, which will be complicated enough. Let's take a look at
+   some problems and finding the correct solution, as opposed to just
+   a good solution.
+   #+END_NOTES
+   #+BEGIN_SRC c
+   insertion_sort(item s[], int n) {
+       int i, j;
+       for (i=1, i < n, i++) {
+           j = i;
+           while ((j < 0) && (s[j] < s[j-1])) {
+               swap(&s[j], &s[j-1]);
+               j = j - 1;
+           }
+       }
+   }
+   #+END_SRC
+** Correct and Efficient
+* Rok's Mail Route
+  #+BEGIN_NOTES
+  So, one thing Rok is nice enough to do for us is to deliver mail to
+  our desks when it comes in. However, Rok's time is precious, so we
+  want to figure out a the shortest route for her to deliver the mail
+  as quickly as possible around the office. What would be a good place
+  to start with writing an algorithm to find the best way for Rok to
+  deliver the mail?
+  #+END_NOTES
+  [[./img/round_desks.png]]
+** Rok's Mail Route
+   #+BEGIN_NOTES
+   So, before we get started, let's take a look at a statement of our problem.
+
+   ---
+
+   What would be a good place to start with writing an algorithm to
+   find the best way for Rok to deliver the mail?
+   #+END_NOTES
+   #+BEGIN_VERSE
+   Problem: Rok's Mail Route
+
+   Input: A set of points $P$ of size $n$ for which the distance between the points is known
+
+   Output: An ordering of the input such that the total distance traveled from $P\prime_o$ to $P\prime_n$ is shorter than any other ordering.
+   #+END_VERSE
+** Nearest Neighbor
+   #+BEGIN_NOTES
+   Nearest Neighbor is common answer to this question. Pick some
+   point, and then take the distance to the point with the least cost
+   associated (the nearest), then repeat from the new point, until all
+   points are visited.
+
+   ---
+
+   Nearest neighbor seems like a great way to solve our problem. It is
+   easy to think about, and it's easy to write the code. It just makes
+   sense to visit all the close places and then go to the farther away
+   points, and for the route we just saw it's reasonably efficient,
+   however it is utterly wrong for the problem we just stated.
+   #+END_NOTES
+   #+BEGIN_VERSE
+   NearestNeighbor($P$)
+       Pick and visit an initial point $p_0$ from $P$
+       $p = p_0$
+       $i = 0$
+       While there are unvisited points
+       $i = i+1$
+           Select $p_i$ to be the closest unvisited point to $p_{i-1}$
+           Visit $p_1$
+       Return to $p_0$ from $p_{n-1}$
+   #+END_VERSE
+** Rok's Mail Route, Round 2
+   #+BEGIN_NOTES
+   Here is a configuration of desks for which the nearest neighbor
+   algorithm is one of the worst case scenarios! Rok would start with
+   Dan and Paul's desks, but then cross back to Brian's, and then
+   Nathan's, and so forth, wasting as much travel time as possible!
+
+   ---
+
+   Clearly starting at one end of this configuration and going
+   directly to the other would then make nearest neighbor work for
+   this instance, but rearranging the points again into a vertical
+   plane breaks this strategy yet again!
+   #+END_NOTES
+   [[./img/linear_desks.png]]
+** Closest Pair
+   #+BEGIN_NOTES
+   We could try another strategy. We could repeatedly connect the
+   closest pair of endpoints whose connection won't create a cycle (a
+   loop) or a 3-way branch of some kind. Each point will start as a
+   1-point chain. We'll go step by step with a set of either single-
+   or multiple-point chains, merging the points into the chain with
+   the closest endpoint and eventually have one big long chain, then
+   ends of which complete the cycle.
+
+   ---
+
+   This heuristic is more complicated and less efficient since we need
+   to do many more comparisons, but it does at least give the right
+   answer for the examples so far. So naturally, let's take a look at
+   another potential input that breaks it.
+   #+END_NOTES
+   #+BEGIN_VERSE
+   ClosestPair($P$)
+       Let $n$ be the number of points in the set
+       For $i = 1$ to $n − 1$ do
+           $d = \infty$
+           For each pair of endpoints $(x, y)$ of partial paths
+               if $dist(x, y) \le d$ then $x_m = x$, $y_m = y$, $d = dist(x, y)$
+           Connect $(x_m, y_m)$ by an edge
+       Connect the two endpoints by an edge
+   #+END_VERSE
+** Rok's Mail Route, Round 3
+   #+BEGIN_NOTES
+   This configuration of desks doesn't work with closest pair
+   either. It would have Rok zig-zagging back and forth between the
+   rows of desks. In fact, if we moved the desks just close enough to
+   one another that the horizontal distance is just trivially large
+   enough to cause the zig-zag instead of completing them in a circle,
+   we're still walking about 20% more than just going around them.
+   #+END_NOTES
+   [[./img/rectangle_desks.png]]
+** Exhaustive Search
+   #+BEGIN_NOTES
+   Have you thrown your hands in the air in frustration yet? You're
+   probably wondering by now what the correct answer is, so here it
+   is. The only correct solution to this problem is to evaluate every
+   possible ordering of the points for the shortest path. By comparing
+   every possible combination we are guaranteed to end up with the
+   shortest route. However, this is ridiculously slow. As soon as you
+   have more than a handful of points, the fastest computers available
+   to you wouldn't be able to solve this problem in a reasonable
+   time.
+   #+END_NOTES
+   #+BEGIN_VERSE
+   OptimalTSP($P$)
+       $d = \infty$
+       For each of the $n!$ permutations $P_i$ of the set $P$
+           If $cost(P_i) \le d$ then $d = cost(P_i)$ and $P_{min} = P_i$
+       Return $P_{min}$
+   #+END_VERSE
+   /135! \approx 2.690473e+230 \leftarrow 231-digit number of possible paths/
+* Hustle Problem
+  #+BEGIN_NOTES
+  Let's take a look at another problem and try to reason about it
+  in an algorithmic way. Imagine we have a number of possible jobs we
+  can assign a particular team to in the coming year. Each of these
+  jobs has a specific start and end day and the team can only be on
+  one project at a time. Each of these jobs pays the same amount.
+
+  ---
+
+  The goal of the business team is as usual: they want to assign the
+  team in a way to make as much money as possible. Because they each
+  pay the same amount, the goal will be to assign the team to the
+  maximum number of jobs such that no jobs conflict or
+  overlap. Looking at the picture we can see that the best option is
+  to assign them to 4 jobs, Pizza Frens, CrabCo and Casino folks, as
+  well as either Sammiches to Go or More Cars, LLC.
+  #+END_NOTES
+  [[./img/hustle.png]]
+** Hustle Problem
+   #+BEGIN_NOTES
+   While we can guess the solution by drawing a picture, let's solve
+   this as an algorithmic scheduling problem. What ideas do you have
+   for how to solve it?
+   #+END_NOTES
+   #+BEGIN_VERSE
+   Problem: Hustle Problem
+
+   Input:   A set $I$ of $n$ intervals on the line
+
+   Output:  The largest subset of mutually non-overlapping intervals selected from $I$
+   #+END_VERSE
+** Earliest Job
+   #+BEGIN_NOTES
+   What about the earliest job? If we're not doing anything else, does it
+   make sense to just take the first thing that comes up?
+
+   ---
+
+   Taking work when there is no work makes sense, but we can easily
+   think up a data set for which this does not produce the desired
+   output, such as one very long job that starts before a series of
+   many shorter jobs that do not overlap.
+
+   ---
+
+   Does this give you any ideas for another strategy? If longer jobs
+   starting early block later, smaller jobs, should we go by short
+   jobs instead?
+   #+END_NOTES
+   #+BEGIN_VERSE
+   EarliestJobFirst($I$)
+       Accept the earliest starting job $j$ from $I$ which does not overlap
+       any previously accepted job. Repeat until no such jobs remain.
+   #+END_VERSE
+** Shortest Job
+   #+BEGIN_NOTES
+   Doing the most jobs naturally lends itself to taking the shortest
+   jobs possible, right? This seems to make sense until we once again
+   realize that we can create a data set wherein short jobs overlap
+   only the small gaps between several other large jobs that start
+   before and end after them. Thus, the shortest jobs may block work
+   on other jobs.
+   #+END_NOTES
+   #+BEGIN_VERSE
+   ShortestJobFirst($I$)
+       While ($I \ne \emptyset$) do
+           Accept the shortest possible job $j$ from $I$
+           Delete $j$, and any interval which intersects $j$ from $I$.
+   #+END_VERSE
+** Exhaustive Search
+   #+BEGIN_NOTES
+   So, is the exhaustive search the only algorithm that is ever going
+   to work for solving problems? We know that "try all the
+   possibilities and select the best result" will always provide the
+   best result but that it's slow. We can see there that there are 2
+   to the power of n subsets, which is better than n factorial like in
+   the robot problem, but that's still a million subsets for n=20, but
+   at 100 jobs, we're in the ballpark of a 30-digit number of subsets
+   to generate. However, unlike the mail route problem, we can
+   actually solve the scheduling problem without doing an exhaustive
+   search.
+   #+END_NOTES
+   #+BEGIN_VERSE
+   ExhaustiveJobs($I$)
+       $j = 0$
+       $S_{max} = \emptyset$
+       For each of the $2^n$ subsets $S_i$ of intervals $I$
+           If $S_i$ is mutually non-overlapping and $size(S_i) > j$
+               then $j = size(S_i)$ and $S_{max} = S_i$
+       Return $S_max$
+   #+END_VERSE
+** Earliest Ending Job
+   #+BEGIN_NOTES
+   We already looked at the jobs that start first or are shortest, but
+   as it turns out, it is taking the jobs that end first that will
+   supply the maximum amount of work completed. Always taking the next
+   job to complete will always free us up the maximum number of times
+   to take on more work.
+
+   See if you can come up with a data set that this doesn't apply for.
+   #+END_NOTES
+   #+BEGIN_VERSE
+   OptimalScheduling($I$)
+       While ($I \ne \emptyset$) do
+           Do job $j$ from $I$ which has the earliest end date.
+           Delete $j$ and any interval which intersects $j$ from $I$.
+   #+END_VERSE
+* Incorrectness
+  #+BEGIN_NOTES
+   For both of our problems today, we examined possible solutions to
+   our problems by finding counterexamples to our data
+   sets. Basically, we kept making data sets that break the previous
+   algorithm until we can't break it anymore. The idea is to
+   iteratively demonstrate the incorrectness of a heuristic until we
+   can't find an incorrect one.
+  #+END_NOTES
+  Good Counter-examples are:
+  - Verifiable
+    1. Calculate the answer
+    2. Show that a better answer exists
+  - Simple
+    - No unnecessary details
+    - Clearly shows failure
+** Finding counterexamples
+   #+BEGIN_NOTES
+   There are some strategies to finding good counterexamples. Try to
+   isolate the smallest possible amount of data that you can prove an
+   incorrectness on. Then, think of all the possible combinations of
+   that small number. If a heuristic has words like "closest" or
+   "shortest", try to find weaknesses, like making things equally
+   close, or equally short. Also, try combining things extreme
+   examples. Try very close with very far away, or very short with
+   very long.
+   #+END_NOTES
+   - Think small
+   - Think exhaustively
+   - Hunt for weakness
+   - Look for ties
+   - Seek extremes
+** Induction and Recursion
+   #+BEGIN_NOTES
+   So, just because we can't find a counterexample doesn't mean we
+   have found a correct algorithm. Often we show that an algorithm is
+   correct by induction to create a demonstration of correctness. So
+   to start, we might be solve this summation for n=1 and n=2 and just
+   assume the rest is true all the way through n-1.
+
+   ---
+
+   This is similar how we implement recursive algorithms in
+   programming languages. We might start with a base case, handle any
+   exception cases, and then recur on the problem set until it reaches
+   one of the base or exception cases.
+   #+END_NOTES
+   $$\sum_{i=1}^{n} i = {n(n+1) \over 2}$$
+   Insertion sort:
+   - Base case: a single element array is sorted
+   - First n-1 elements are sorted after n-1 iterations
+   - To insert: move all elements to make room for new element
+** Summations
+   #+BEGIN_NOTES
+   Just a quick aside in case you are unfamiliar with the notation on
+   the previous slide. The uppercase sigma is used to represent a
+   summation. So in this example, the summation of F of I from 1 to n
+   is sum of adding all of the results of the function F applied to
+   each of the numbers from 1 to N.
+   #+END_NOTES
+   $$\sum_{i=1}^{n} f(i) = f(1) + f(2) + ... f(n)$$
+** Modeling
+   #+BEGIN_NOTES
+   So far, we know that we can approach solving problems by honing our
+   intuition with examples and counter-examples, narrow down to a
+   heuristic, and then try to prove our heuristic by
+   induction. However, a lot of problems have already been solved in
+   computer science, and there's no reason we shouldn't rely on those
+   solutions to make our programs better. However, we will have
+   real-world data, and our algorithms work on abstract
+   structures. So, it's best for us to get good at modeling our data
+   and problem abstractly so that we can match them up with common
+   problems.
+
+   ---
+
+   Permutations are good for arrangements and orderings. Keywords to
+   look for are "arrangement", "ordering", "sequence", or "tour".
+
+   Subsets are for selecting thing. This is often a strategy when we
+   need a "collection", "group" or "selection".
+
+   Trees give us hierarchies. This is usually our model when we want a
+   "hierarchy", "taxonomy", "history", or "inheritance".
+
+   Graphs are arbitrary relationships between objects. We're looking
+   at problems for "network", "circuit" or "relationship" here.
+
+   Points are used to model some data geographically. They come up in
+   problems around "location", "position" or "distance".
+
+   Polygons are used for space and geometry problems. Watch out for
+   "shapes", "regions", "configurations" and "boundaries".
+
+   Strings are obviously sequences of characters or
+   patterns. Obviously here we're looking at "text" or "label"
+   problems, but also pattern recognition.
+
+   You can find descriptions of how to think about these objects
+   recursively at the end of the first chapter.
+   #+END_NOTES
+   - Permutations
+   - Subsets
+   - Trees
+   - Graphs
+   - Points
+   - Polygons
+   - Strings
+* Algorithmic Analysis
+  #+BEGIN_NOTES
+  So far, we've talked a lot about problems and how to think about
+  solutions to those problems. However, so far all we've said is that
+  one solution is "better" than the other because we had some
+  reasoning around it. If we're going to keep talking about why some
+  heuristics are better than others, we're going to need to establish
+  some ways of talking about, qualifying and quantifying them. That's
+  what we'll be establishing for the rest of this session.
+  #+END_NOTES
+** RAM Computation Model
+   #+BEGIN_NOTES
+   Even though computers get faster and faster, algorithms remain
+   consistent because we use the RAM model to count operations. By
+   treating these as units instead of time measurements, so long as
+   computers continue to work approximately the same way our analysis
+   of how they programs perform can remain consistent.
+   #+END_NOTES
+   - Operations (+, -, =, if, call) = 1 step
+   - Memory Access = 1 step
+   - Loops and subroutines = composition of their steps
+** Best / Worse / Average Case
+   #+BEGIN_NOTES
+   Now that we've established how we're going to count time with the
+   RAM model, we can start to do analyses of performance. We can think
+   about this in terms of sorting an array.
+   #+END_NOTES
+   [[https://www8.cs.umu.se/kurser/TDBAfl/VT06/algorithms/BOOK/BOOK17/IMG39.GIF]]
+   - Worst-case: maximum number of steps
+     - (reverse order)
+   - Best-case: minimum number of steps
+     - (already sorted)
+   - Average-case: average number of steps
+     - (randomly sorted)
+** Which one?
+   #+BEGIN_NOTES
+   We almost always are concerned with the worst-case
+   scenario. Generally, things like the best-case scenario aren't
+   particularly interesting. We know the best-case scenario buying a
+   lottery ticket, but you'd probably be much more interested in
+   hearing about whether the worst-case scenario is one in a million
+   or one in ten. Algorithms incorporating randomness are becoming
+   more relevant with advances in computing, and average-case analysis
+   is required to show off their advantages, but for many other
+   algorithms, the average case simply reflects the worst case.
+   #+END_NOTES
+   [[https://cdn.pixabay.com/photo/2017/05/31/12/46/sausage-2360277_960_720.jpg]]
+** \Omega / O / \theta Notation
+   #+BEGIN_NOTES
+   It's important to note that these time complexities actually
+   represent numerical functions. However, they are too complex, so by
+   combining the RAM model with these analyses we come to Big-O
+   notation, which allows us to express complexity as a function
+   abstracted around the steps it takes.
+
+   ---
+
+   Actual analysis of instances of algorithms is problematic as they
+   are both bumpy (too many corner cases) and require too much detail
+   to specify. Big-O simplifies analysis by ignoring unimportant
+   details and focusing on the bounding functions that have the
+   greatest impact on comparing algorithms. This includes ignoring
+   multiplicative constants and focusing on the variables that most
+   effect the complexity.
+   #+END_NOTES
+   $f(n) = 2n$ is equivalent to $g(n) = n$ in Big-O
+
+   - $f(n) = O(g(n))$ \leftarrow upper bound / worst case
+   - $f(n) = \Omega(g(n))$ \leftarrow lower bound / best case
+   - $f(n) = \theta(g(n))$ \leftarrow upper & lower bound / tight case
+** Growth and Dominance
+   #+BEGIN_NOTES
+   How can we just toss out the constants and even the smaller
+   exponential factors? Well, as our values of n grow, the largest
+   exponential factor will always dominate the lower factors
+   significantly. Asymptotic dominance matters because although we may
+   think an algorithm runs "fast enough" for small cases, it will
+   inevitably hit a problem large enough that the time becomes
+   exponentially slow, so we should always seek an algorithm with
+   better complexity if such a solution is available.
+   #+END_NOTES
+   [[./img/dominance.png]]
+** Dominance Rankings
+   #+BEGIN_NOTES
+   Constant functions don't do much real computation. Add two
+   numbers. Print the first thing in a list. No dependence on n.
+
+   Logarithmic functions eliminate more and more of their input as
+   they process more, like binary search.
+
+   Linear functions look at each thing a fixed number of times, like
+   finding a minimum or an average.
+
+   Superlinear functions are like quicksort and mergesort. They split
+   up many comparisons to minimize duplicate work.
+
+   Quadratic functions compare all the possible pairs of things, like
+   insertion and selection sort.
+
+   Cubic functions compare all the triples. Mostly Dynamic
+   programming.
+
+   Exponential functions show up when we need to look at all the
+   subsets.
+
+   Factorial functions are when we need to look at every ordering or
+   permutation of n items.
+
+   ---
+
+   Explain Asymptotic dominance w/ rocket example.
+   #+END_NOTES
+   $f(n)$ dominates $g(n)$ if:
+
+   $$lim_{n\rightarrow\infty }{g(n) \over f(n)} = 0$$
+
+   This is the same as saying $g(n) = o(f(n))$.
+
+   n! >> 2^n >> n^3 >> n^2 >> n \times log n >> n >> log n >> 1
+
+** Reasoning About Complexity
+   #+BEGIN_NOTES
+   Now that we've been through all of that, let's take a look at some
+   code and see if we can reason through its complexity. This will be
+   a little bit of a working backward, going from code to the
+   inductive explanation.
+   #+END_NOTES
+** Selection Sort
+   #+BEGIN_NOTES
+   How does this implementation work?
+
+   - Go through all items
+   - find the smallest
+   - swap to position
+   - move to next position
+
+   This is an O(n^2) algorithm because it potentially loops through the
+   whole set once for each element in the set.
+   #+END_NOTES
+   #+BEGIN_SRC c++
+   selection_sort(int s[], int n) {
+       int i, j;
+       int min;        /* index of min */
+       for (i=0, i < n, i++) {
+           min = i;
+           for (j = i+1; j < n; j++)
+               if (s[j] < s[min])
+                   min = j;
+           swap(&s[i], &s[min]);
+       }
+   }
+   #+END_SRC
+** Worst-case for selection sort
+   #+BEGIN_NOTES
+   What is the worst-case for the selection sort?
+   #+END_NOTES
+   Outer loop goes through $n$ times.
+
+   Inner loop goes through at most $n$ times for each iteration of outer
+
+   Takes at most $n \times n$ \rightarrow $O(n^2)$ time in the worst case.
+
+   This is actually $\theta(n^2)$ because at least ${n \over 2}$ times it scans through
+   at least ${n \over 2}$ elements, for a total of ${n^2 \over 4}$ steps.
+** Insertion Sort
+   #+BEGIN_NOTES
+   How about the implementation for insertion sort?
+
+   - Go through each element
+   - swap element down until previous element is smaller
+   - move outer loop to next element
+
+   This is also an O(n^2) algorithm because n calls to an inner loop
+   takes at most n steps on each call.
+   #+END_NOTES
+   #+BEGIN_SRC c
+   insertion_sort(item s[], int n) {
+       int i, j;
+       for (i=1, i < n, i++) {
+           j = i;
+           while (j > 0 && s[j] < s[j-1]) {
+               swap(&s[j], &s[j-1]);
+               j = j - 1;
+           }
+       }
+   }
+   #+END_SRC
+** Worst case for insertion sort
+   Outer loop goes through $n$ times.
+
+   Inner loop swaps at most $n$ times.
+
+   This is also $O(n^2)$ time in the worst case.
+
+   This is also $\Omega(n^2)$ time and therefore $\theta(n^2)$.
+** Logarithms
+   #+BEGIN_NOTES
+   When was the last time you even saw the word logarithm in print or
+   on a screen? Likely it's been since your last math class. So,
+   Here's a refresher:
+
+   A logarithm is an inverse exponential function. When dealing with
+   powers of 2, logarithms reflect how many times we can multiply
+   something by 2 to reach some number, or how many time we can divide
+   that number by 2 to reach 1. However, as we'll see in a minute, the
+   base of the logarithm is actually unimportant for our needs, so
+   this works with powers of 3 or 5 or 10 or whatever.
+
+   So if logarithms are an inverse of exponential functions, and
+   exponential functions grow at an extremely fast rate as n gets
+   larger, then logarithmic functions actually grow slower and slower
+   as n gets larger. This makes sense when we take the nature of
+   logarithms into account, as they show up when we repeatedly halve
+   our data sets.
+   #+END_NOTES
+   $$b^x = y == x = \log_b y$$
+** Binary Search
+   #+BEGIN_NOTES
+   Let's look at one of the most classic examples of an O(log n)
+   algorithm, the binary search.
+
+   ---
+
+   We can halve a data set log_2 n times. With n = 10 this is 3.3219
+   #+END_NOTES
+   To find search item $I$
+   - Start in the middle ($M$) of a sorted set
+   - Compare $I$ to $M$, discard data where $I$ will not be.
+   - Reset $M$ to middle of remaining data.
+
+   How many times can we halve $n$ before getting to 1?
+** Trees
+   #+BEGIN_NOTES
+   Here's another classic logarithm example:
+
+   A height h tree with d children per node has d^h leaves.
+
+   For n leaves, n = d^h, which implies h = log_d n.
+
+   So, in a binary tree, n = 2^h, so h = log_2 n
+   #+END_NOTES
+   In a tree with $n$ leaves, how tall is the tree?
+
+   The number of leaves doubles with each level, so how many times can
+   we double 1 until we get to $n$?
+** Bases and asymptotic dominance
+   #+BEGIN_NOTES
+   Lastly, I want to point out that we often don't write the base when
+   we're talking about logarithms in Big-O notation, and there is a
+   reason for that. Normally we just say that it is "log of n" without
+   stating something like "log sub 2 of n" and that's because the
+   actual base of the logarithm is relatively unimportant so long as
+   the algorithm is correct. Much like constants, the base can effect
+   the specific rate of growth, but asymptotically, O(log n)
+   algorithms will always grow faster than constant functions (which
+   do not grow) and slower than all other functions. We can find the
+   proof of this in the formula for changing the base of a log.
+   #+END_NOTES
+   $$\log_b a = {\log_c a \over \log_c b}$$
+
+   $\log_2 1,000,000 = 19.9316$
+
+   $\log_3 1,000,000 = 12.5754$
+
+   $\log_{100} 1,000,000 = 3$
+* The Knapsack Problem
+  #+BEGIN_NOTES
+  Why does this problem matter? This is a packing problem. What's the
+  maximum amount of stuff you can fit in a shipment, a cargo
+  container, a warehouse full of frozen crab... etc.
+  #+END_NOTES
+  Given a set of integers $S = \{s_1, s_2, ... , s_n\}$, and a given target
+  number $T$, find a subset of $S$ which adds up exactly to $T$.
+
+  For example, within $S = \{1, 2, 5, 7, 8\}$ there is a subset which
+  adds up to $T = 18$ but not $T = 19$.
+** Knapsack Solutions
+   Find counter-examples disproving the following:
+   - Take elements from S in order if they fit? (first fit)
+   - Take elements from S from smallest to largest? (best fit)
+   - Take elements from S from largest to smallest?

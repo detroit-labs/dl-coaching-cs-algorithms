@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Computer Science 2: Algorithms</title>
+<meta name="author" content="(Detroit Labs Dev Coaching)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="./reveal.js/css/theme/league.css" id="theme"/>
+
+<link rel="stylesheet" href="./presentation.css"/>
+<link rel="stylesheet" href="./reveal.js/lib/css/zenburn.css"/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Computer Science 2: Algorithms</h1><h2 class="author">Detroit Labs Dev Coaching</h2><h2 class="date">2018</h2>
+</section>
+
+<section>
+<section id="slide-org4cae90b">
+<h2 id="org4cae90b">Lecture 1</h2>
+</section>
+</section>
+<section>
+<section id="slide-org30e1378">
+<h2 id="org30e1378">Introduction to Algorithms</h2>
+<div class="outline-text-2" id="text-org30e1378">
+</div>
+</section>
+<section id="slide-orgab406a9">
+<h3 id="orgab406a9">Specifying Problems</h3>
+</section>
+<section id="slide-orgd0907b7">
+<h3 id="orgd0907b7">What is an Algorithm?</h3>
+<aside class="notes">
+<p>
+These are the first 4 words of our book. Before we jump in too
+far, I want to pose this question to all of you: what is an
+algorithm?
+</p>
+
+</aside>
+</section>
+<section id="slide-org60f3c4c">
+<h3 id="org60f3c4c">What is an Algorithm?</h3>
+<aside class="notes">
+<p>
+"An algorithm is a procedure to accomplish a specific task." or
+more broadly, it's a way of describing a process for solving a
+specific problem. Thus, an algorithm will be the same whether
+programs implementing it are running in Fortran on a mainframe or
+in ruby on a web server or in Swift on an iPad.
+</p>
+
+</aside>
+<blockquote nil>
+<p>
+"An algorithm is a procedure to accomplish a specific task."
+</p>
+</blockquote>
+<p>
+S.S. Skiena, The Algorithm Design Manual, 2nd ed.
+</p>
+</section>
+<section id="slide-org67d1111">
+<h3 id="org67d1111">What is an Algorithm?</h3>
+<aside class="notes">
+<p>
+Skiena also tells us that to be "interesting", an algorithm should
+do the following
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+It is fundamental to understand the difference between a general,
+well-specified problem and an instance of that problem.
+</p>
+
+</aside>
+<ul>
+<li>solve a general, well-specified problem</li>
+<li>describe the complete set of instances it must work on</li>
+<li>describe the output after running on an instance</li>
+
+</ul>
+</section>
+<section id="slide-org1ce5bd8">
+<h3 id="org1ce5bd8">Rigorous Specification</h3>
+<aside class="notes">
+<p>
+So what does a rigorously specified problem look like? There is no
+official format, but a formal statement might look something like
+this
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+An instance of sorting might be an array of names, or a list of numbers.
+Determining the general problem from an instance of a problem is
+the first step in solving it.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+A faster algorithm running on a slower machine will always win for
+sufficiently large instances of that problem. Often the instance
+needn't even get very large before the faster algorithm wins. Thus
+the lie of "it's fast enough" that we tell ourselves is always false.
+</p>
+
+</aside>
+<p class="verse">
+Problem: Sorting<br />
+<br />
+Input:   A sequence of \(n\) keys \(a_1 \rightarrow a_n\)<br />
+<br />
+Output:  The permutation of the input such that \(a\prime_1 \le a\prime_2 \dots \le a\prime_n\)<br />
+</p>
+</section>
+<section id="slide-org28928d1">
+<h3 id="org28928d1">Algorithmic Thinking</h3>
+<aside class="notes">
+<p>
+So, an algorithm is a procedure that takes any possible input
+instance and transforms it to be the appropriate desired
+output. Often, there are innumerable ways of solving any particular
+problem, and sorting is no exception.
+&#x2014;
+Insertion sort starts with one element (which is itself, a sorted
+list) and then incrementally inserts the remaining elements such
+that the list remains sorted.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Insertion-sort-example-300px.gif" alt="Insertion-sort-example-300px.gif" height="80%," width="80%" />
+</p>
+</div>
+</section>
+<section id="slide-org095d5c9">
+<h3 id="org095d5c9">Insertion Sort in C</h3>
+<aside class="notes">
+<p>
+Insertion sort is a generalized algorithm. It works with any data
+that the comparison operation for sorting works on. Thus, it will
+work just as well on numbers, strings, or any other data for which
+we have defined an ordered comparison. We can easily verify that it
+is correct no matter the input.
+&#x2014;
+We want algorithms that are correct, efficient, and easy to
+implement. Sometimes, we can't get all of these at the same
+time. In practice, we will come up with a solution that is "good
+enough" regardless of whether a better algorithm exists, and only
+occasionally be faced with finding the most efficient solution once
+there are serious performance issues - a situation this course
+intends to prepare you for.
+&#x2014;
+For now though, we will focus on finding solutions that are
+correct, which will be complicated enough. Let's take a look at
+some problems and finding the correct solution, as opposed to just
+a good solution.
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre><code class="c" >insertion_sort(item s[], int n) {
+    int i, j;
+    for (i=1, i < n, i++) {
+        j = i;
+        while ((j < 0) && (s[j] < s[j-1])) {
+            swap(&s[j], &s[j-1]);
+            j = j - 1;
+        }
+    }
+}
+</code></pre>
+</div>
+</section>
+<section id="slide-org87644e0">
+<h3 id="org87644e0">Correct and Efficient</h3>
+</section>
+</section>
+<section>
+<section id="slide-orgf2b6652">
+<h2 id="orgf2b6652">Rok's Mail Route</h2>
+<aside class="notes">
+<p>
+So, one thing Rok is nice enough to do for us is to deliver mail to
+our desks when it comes in. However, Rok's time is precious, so we
+want to figure out a the shortest route for her to deliver the mail
+as quickly as possible around the office. What would be a good place
+to start with writing an algorithm to find the best way for Rok to
+deliver the mail?
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/round_desks.png" alt="round_desks.png" />
+</p>
+</div>
+</section>
+<section id="slide-org264a0af">
+<h3 id="org264a0af">Rok's Mail Route</h3>
+<aside class="notes">
+<p>
+So, before we get started, let's take a look at a statement of our problem.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+What would be a good place to start with writing an algorithm to
+find the best way for Rok to deliver the mail?
+</p>
+
+</aside>
+<p class="verse">
+Problem: Rok's Mail Route<br />
+<br />
+Input: A set of points \(P\) of size \(n\) for which the distance between the points is known<br />
+<br />
+Output: An ordering of the input such that the total distance traveled from \(P\prime_o\) to \(P\prime_n\) is shorter than any other ordering.<br />
+</p>
+</section>
+<section id="slide-org4aedbc0">
+<h3 id="org4aedbc0">Nearest Neighbor</h3>
+<aside class="notes">
+<p>
+Nearest Neighbor is common answer to this question. Pick some
+point, and then take the distance to the point with the least cost
+associated (the nearest), then repeat from the new point, until all
+points are visited.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+Nearest neighbor seems like a great way to solve our problem. It is
+easy to think about, and it's easy to write the code. It just makes
+sense to visit all the close places and then go to the farther away
+points, and for the route we just saw it's reasonably efficient,
+however it is utterly wrong for the problem we just stated.
+</p>
+
+</aside>
+<p class="verse">
+NearestNeighbor(\(P\))<br />
+&#xa0;&#xa0;&#xa0;&#xa0;Pick and visit an initial point \(p_0\) from \(P\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;\(p = p_0\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;\(i = 0\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;While there are unvisited points<br />
+&#xa0;&#xa0;&#xa0;&#xa0;\(i = i+1\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;Select \(p_i\) to be the closest unvisited point to \(p_{i-1}\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;Visit \(p_1\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;Return to \(p_0\) from \(p_{n-1}\)<br />
+</p>
+</section>
+<section id="slide-org308f21d">
+<h3 id="org308f21d">Rok's Mail Route, Round 2</h3>
+<aside class="notes">
+<p>
+Here is a configuration of desks for which the nearest neighbor
+algorithm is one of the worst case scenarios! Rok would start with
+Dan and Paul's desks, but then cross back to Brian's, and then
+Nathan's, and so forth, wasting as much travel time as possible!
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+Clearly starting at one end of this configuration and going
+directly to the other would then make nearest neighbor work for
+this instance, but rearranging the points again into a vertical
+plane breaks this strategy yet again!
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/linear_desks.png" alt="linear_desks.png" />
+</p>
+</div>
+</section>
+<section id="slide-orge51e065">
+<h3 id="orge51e065">Closest Pair</h3>
+<aside class="notes">
+<p>
+We could try another strategy. We could repeatedly connect the
+closest pair of endpoints whose connection won't create a cycle (a
+loop) or a 3-way branch of some kind. Each point will start as a
+1-point chain. We'll go step by step with a set of either single-
+or multiple-point chains, merging the points into the chain with
+the closest endpoint and eventually have one big long chain, then
+ends of which complete the cycle.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+This heuristic is more complicated and less efficient since we need
+to do many more comparisons, but it does at least give the right
+answer for the examples so far. So naturally, let's take a look at
+another potential input that breaks it.
+</p>
+
+</aside>
+<p class="verse">
+ClosestPair(\(P\))<br />
+&#xa0;&#xa0;&#xa0;&#xa0;Let \(n\) be the number of points in the set<br />
+&#xa0;&#xa0;&#xa0;&#xa0;For \(i = 1\) to \(n − 1\) do<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;\(d = \infty\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;For each pair of endpoints \((x, y)\) of partial paths<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;if \(dist(x, y) \le d\) then \(x_m = x\), \(y_m = y\), \(d = dist(x, y)\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;Connect \((x_m, y_m)\) by an edge<br />
+&#xa0;&#xa0;&#xa0;&#xa0;Connect the two endpoints by an edge<br />
+</p>
+</section>
+<section id="slide-orgcdd1564">
+<h3 id="orgcdd1564">Rok's Mail Route, Round 3</h3>
+<aside class="notes">
+<p>
+This configuration of desks doesn't work with closest pair
+either. It would have Rok zig-zagging back and forth between the
+rows of desks. In fact, if we moved the desks just close enough to
+one another that the horizontal distance is just trivially large
+enough to cause the zig-zag instead of completing them in a circle,
+we're still walking about 20% more than just going around them.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/rectangle_desks.png" alt="rectangle_desks.png" />
+</p>
+</div>
+</section>
+<section id="slide-orgf92ae2c">
+<h3 id="orgf92ae2c">Exhaustive Search</h3>
+<aside class="notes">
+<p>
+Have you thrown your hands in the air in frustration yet? You're
+probably wondering by now what the correct answer is, so here it
+is. The only correct solution to this problem is to evaluate every
+possible ordering of the points for the shortest path. By comparing
+every possible combination we are guaranteed to end up with the
+shortest route. However, this is ridiculously slow. As soon as you
+have more than a handful of points, the fastest computers available
+to you wouldn't be able to solve this problem in a reasonable
+time.
+</p>
+
+</aside>
+<p class="verse">
+OptimalTSP(\(P\))<br />
+&#xa0;&#xa0;&#xa0;&#xa0;\(d = \infty\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;For each of the \(n!\) permutations \(P_i\) of the set \(P\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;If \(cost(P_i) \le d\) then \(d = cost(P_i)\) and \(P_{min} = P_i\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;Return \(P_{min}\)<br />
+</p>
+<p>
+<i>135! &asymp; 2.690473e+230 &larr; 231-digit number of possible paths</i>
+</p>
+</section>
+</section>
+<section>
+<section id="slide-org1e4206b">
+<h2 id="org1e4206b">Hustle Problem</h2>
+<aside class="notes">
+<p>
+Let's take a look at another problem and try to reason about it
+in an algorithmic way. Imagine we have a number of possible jobs we
+can assign a particular team to in the coming year. Each of these
+jobs has a specific start and end day and the team can only be on
+one project at a time. Each of these jobs pays the same amount.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+The goal of the business team is as usual: they want to assign the
+team in a way to make as much money as possible. Because they each
+pay the same amount, the goal will be to assign the team to the
+maximum number of jobs such that no jobs conflict or
+overlap. Looking at the picture we can see that the best option is
+to assign them to 4 jobs, Pizza Frens, CrabCo and Casino folks, as
+well as either Sammiches to Go or More Cars, LLC.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/hustle.png" alt="hustle.png" />
+</p>
+</div>
+</section>
+<section id="slide-orgf7e1150">
+<h3 id="orgf7e1150">Hustle Problem</h3>
+<aside class="notes">
+<p>
+While we can guess the solution by drawing a picture, let's solve
+this as an algorithmic scheduling problem. What ideas do you have
+for how to solve it?
+</p>
+
+</aside>
+<p class="verse">
+Problem: Hustle Problem<br />
+<br />
+Input:   A set \(I\) of \(n\) intervals on the line<br />
+<br />
+Output:  The largest subset of mutually non-overlapping intervals selected from \(I\)<br />
+</p>
+</section>
+<section id="slide-org3069830">
+<h3 id="org3069830">Earliest Job</h3>
+<aside class="notes">
+<p>
+What about the earliest job? If we're not doing anything else, does it
+make sense to just take the first thing that comes up?
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+Taking work when there is no work makes sense, but we can easily
+think up a data set for which this does not produce the desired
+output, such as one very long job that starts before a series of
+many shorter jobs that do not overlap.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+Does this give you any ideas for another strategy? If longer jobs
+starting early block later, smaller jobs, should we go by short
+jobs instead?
+</p>
+
+</aside>
+<p class="verse">
+EarliestJobFirst(\(I\))<br />
+&#xa0;&#xa0;&#xa0;&#xa0;Accept the earliest starting job \(j\) from \(I\) which does not overlap<br />
+&#xa0;&#xa0;&#xa0;&#xa0;any previously accepted job. Repeat until no such jobs remain.<br />
+</p>
+</section>
+<section id="slide-org5f94212">
+<h3 id="org5f94212">Shortest Job</h3>
+<aside class="notes">
+<p>
+Doing the most jobs naturally lends itself to taking the shortest
+jobs possible, right? This seems to make sense until we once again
+realize that we can create a data set wherein short jobs overlap
+only the small gaps between several other large jobs that start
+before and end after them. Thus, the shortest jobs may block work
+on other jobs.
+</p>
+
+</aside>
+<p class="verse">
+ShortestJobFirst(\(I\))<br />
+&#xa0;&#xa0;&#xa0;&#xa0;While (\(I \ne \emptyset\)) do<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;Accept the shortest possible job \(j\) from \(I\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;Delete \(j\), and any interval which intersects \(j\) from \(I\).<br />
+</p>
+</section>
+<section id="slide-org9e679c8">
+<h3 id="org9e679c8">Exhaustive Search</h3>
+<aside class="notes">
+<p>
+So, is the exhaustive search the only algorithm that is ever going
+to work for solving problems? We know that "try all the
+possibilities and select the best result" will always provide the
+best result but that it's slow. We can see there that there are 2
+to the power of n subsets, which is better than n factorial like in
+the robot problem, but that's still a million subsets for n=20, but
+at 100 jobs, we're in the ballpark of a 30-digit number of subsets
+to generate. However, unlike the mail route problem, we can
+actually solve the scheduling problem without doing an exhaustive
+search.
+</p>
+
+</aside>
+<p class="verse">
+ExhaustiveJobs(\(I\))<br />
+&#xa0;&#xa0;&#xa0;&#xa0;\(j = 0\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;\(S_{max} = \emptyset\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;For each of the \(2^n\) subsets \(S_i\) of intervals \(I\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;If \(S_i\) is mutually non-overlapping and \(size(S_i) > j\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;then \(j = size(S_i)\) and \(S_{max} = S_i\)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;Return \(S_max\)<br />
+</p>
+</section>
+<section id="slide-org189c619">
+<h3 id="org189c619">Earliest Ending Job</h3>
+<aside class="notes">
+<p>
+We already looked at the jobs that start first or are shortest, but
+as it turns out, it is taking the jobs that end first that will
+supply the maximum amount of work completed. Always taking the next
+job to complete will always free us up the maximum number of times
+to take on more work.
+</p>
+
+<p>
+See if you can come up with a data set that this doesn't apply for.
+</p>
+
+</aside>
+<p class="verse">
+OptimalScheduling(\(I\))<br />
+&#xa0;&#xa0;&#xa0;&#xa0;While (\(I \ne \emptyset\)) do<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;Do job \(j\) from \(I\) which has the earliest end date.<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;Delete \(j\) and any interval which intersects \(j\) from \(I\).<br />
+</p>
+</section>
+</section>
+<section>
+<section id="slide-orgf3c58c7">
+<h2 id="orgf3c58c7">Incorrectness</h2>
+<aside class="notes">
+<p>
+For both of our problems today, we examined possible solutions to
+our problems by finding counterexamples to our data
+sets. Basically, we kept making data sets that break the previous
+algorithm until we can't break it anymore. The idea is to
+iteratively demonstrate the incorrectness of a heuristic until we
+can't find an incorrect one.
+</p>
+
+</aside>
+<p>
+Good Counter-examples are:
+</p>
+<ul>
+<li>Verifiable
+<ol>
+<li>Calculate the answer</li>
+<li>Show that a better answer exists</li>
+
+</ol></li>
+<li>Simple
+<ul>
+<li>No unnecessary details</li>
+<li>Clearly shows failure</li>
+
+</ul></li>
+
+</ul>
+</section>
+<section id="slide-org29e6e78">
+<h3 id="org29e6e78">Finding counterexamples</h3>
+<aside class="notes">
+<p>
+There are some strategies to finding good counterexamples. Try to
+isolate the smallest possible amount of data that you can prove an
+incorrectness on. Then, think of all the possible combinations of
+that small number. If a heuristic has words like "closest" or
+"shortest", try to find weaknesses, like making things equally
+close, or equally short. Also, try combining things extreme
+examples. Try very close with very far away, or very short with
+very long.
+</p>
+
+</aside>
+<ul>
+<li>Think small</li>
+<li>Think exhaustively</li>
+<li>Hunt for weakness</li>
+<li>Look for ties</li>
+<li>Seek extremes</li>
+
+</ul>
+</section>
+<section id="slide-orgde18613">
+<h3 id="orgde18613">Induction and Recursion</h3>
+<aside class="notes">
+<p>
+So, just because we can't find a counterexample doesn't mean we
+have found a correct algorithm. Often we show that an algorithm is
+correct by induction to create a demonstration of correctness. So
+to start, we might be solve this summation for n=1 and n=2 and just
+assume the rest is true all the way through n-1.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+This is similar how we implement recursive algorithms in
+programming languages. We might start with a base case, handle any
+exception cases, and then recur on the problem set until it reaches
+one of the base or exception cases.
+</p>
+
+</aside>
+<p>
+\[\sum_{i=1}^{n} i = {n(n+1) \over 2}\]
+Insertion sort:
+</p>
+<ul>
+<li>Base case: a single element array is sorted</li>
+<li>First n-1 elements are sorted after n-1 iterations</li>
+<li>To insert: move all elements to make room for new element</li>
+
+</ul>
+</section>
+<section id="slide-org285c0cd">
+<h3 id="org285c0cd">Summations</h3>
+<aside class="notes">
+<p>
+Just a quick aside in case you are unfamiliar with the notation on
+the previous slide. The uppercase sigma is used to represent a
+summation. So in this example, the summation of F of I from 1 to n
+is sum of adding all of the results of the function F applied to
+each of the numbers from 1 to N.
+</p>
+
+</aside>
+<p>
+\[\sum_{i=1}^{n} f(i) = f(1) + f(2) + ... f(n)\]
+</p>
+</section>
+<section id="slide-orgc468bf3">
+<h3 id="orgc468bf3">Modeling</h3>
+<aside class="notes">
+<p>
+So far, we know that we can approach solving problems by honing our
+intuition with examples and counter-examples, narrow down to a
+heuristic, and then try to prove our heuristic by
+induction. However, a lot of problems have already been solved in
+computer science, and there's no reason we shouldn't rely on those
+solutions to make our programs better. However, we will have
+real-world data, and our algorithms work on abstract
+structures. So, it's best for us to get good at modeling our data
+and problem abstractly so that we can match them up with common
+problems.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+Permutations are good for arrangements and orderings. Keywords to
+look for are "arrangement", "ordering", "sequence", or "tour".
+</p>
+
+<p>
+Subsets are for selecting thing. This is often a strategy when we
+need a "collection", "group" or "selection".
+</p>
+
+<p>
+Trees give us hierarchies. This is usually our model when we want a
+"hierarchy", "taxonomy", "history", or "inheritance".
+</p>
+
+<p>
+Graphs are arbitrary relationships between objects. We're looking
+at problems for "network", "circuit" or "relationship" here.
+</p>
+
+<p>
+Points are used to model some data geographically. They come up in
+problems around "location", "position" or "distance".
+</p>
+
+<p>
+Polygons are used for space and geometry problems. Watch out for
+"shapes", "regions", "configurations" and "boundaries".
+</p>
+
+<p>
+Strings are obviously sequences of characters or
+patterns. Obviously here we're looking at "text" or "label"
+problems, but also pattern recognition.
+</p>
+
+<p>
+You can find descriptions of how to think about these objects
+recursively at the end of the first chapter.
+</p>
+
+</aside>
+<ul>
+<li>Permutations</li>
+<li>Subsets</li>
+<li>Trees</li>
+<li>Graphs</li>
+<li>Points</li>
+<li>Polygons</li>
+<li>Strings</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-orgf0718d3">
+<h2 id="orgf0718d3">Algorithmic Analysis</h2>
+<aside class="notes">
+<p>
+So far, we've talked a lot about problems and how to think about
+solutions to those problems. However, so far all we've said is that
+one solution is "better" than the other because we had some
+reasoning around it. If we're going to keep talking about why some
+heuristics are better than others, we're going to need to establish
+some ways of talking about, qualifying and quantifying them. That's
+what we'll be establishing for the rest of this session.
+</p>
+
+</aside>
+</section>
+<section id="slide-org9834d5d">
+<h3 id="org9834d5d">RAM Computation Model</h3>
+<aside class="notes">
+<p>
+Even though computers get faster and faster, algorithms remain
+consistent because we use the RAM model to count operations. By
+treating these as units instead of time measurements, so long as
+computers continue to work approximately the same way our analysis
+of how they programs perform can remain consistent.
+</p>
+
+</aside>
+<ul>
+<li>Operations (+, -, =, if, call) = 1 step</li>
+<li>Memory Access = 1 step</li>
+<li>Loops and subroutines = composition of their steps</li>
+
+</ul>
+</section>
+<section id="slide-org4b66355">
+<h3 id="org4b66355">Best / Worse / Average Case</h3>
+<aside class="notes">
+<p>
+Now that we've established how we're going to count time with the
+RAM model, we can start to do analyses of performance. We can think
+about this in terms of sorting an array.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://www8.cs.umu.se/kurser/TDBAfl/VT06/algorithms/BOOK/BOOK17/IMG39.GIF" alt="IMG39.GIF" />
+</p>
+</div>
+<ul>
+<li>Worst-case: maximum number of steps
+<ul>
+<li>(reverse order)</li>
+
+</ul></li>
+<li>Best-case: minimum number of steps
+<ul>
+<li>(already sorted)</li>
+
+</ul></li>
+<li>Average-case: average number of steps
+<ul>
+<li>(randomly sorted)</li>
+
+</ul></li>
+
+</ul>
+</section>
+<section id="slide-orgbd19bff">
+<h3 id="orgbd19bff">Which one?</h3>
+<aside class="notes">
+<p>
+We almost always are concerned with the worst-case
+scenario. Generally, things like the best-case scenario aren't
+particularly interesting. We know the best-case scenario buying a
+lottery ticket, but you'd probably be much more interested in
+hearing about whether the worst-case scenario is one in a million
+or one in ten. Algorithms incorporating randomness are becoming
+more relevant with advances in computing, and average-case analysis
+is required to show off their advantages, but for many other
+algorithms, the average case simply reflects the worst case.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://cdn.pixabay.com/photo/2017/05/31/12/46/sausage-2360277_960_720.jpg" alt="sausage-2360277_960_720.jpg" />
+</p>
+</div>
+</section>
+<section id="slide-org4a3060b">
+<h3 id="org4a3060b">&Omega; / O / &theta; Notation</h3>
+<aside class="notes">
+<p>
+It's important to note that these time complexities actually
+represent numerical functions. However, they are too complex, so by
+combining the RAM model with these analyses we come to Big-O
+notation, which allows us to express complexity as a function
+abstracted around the steps it takes.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+Actual analysis of instances of algorithms is problematic as they
+are both bumpy (too many corner cases) and require too much detail
+to specify. Big-O simplifies analysis by ignoring unimportant
+details and focusing on the bounding functions that have the
+greatest impact on comparing algorithms. This includes ignoring
+multiplicative constants and focusing on the variables that most
+effect the complexity.
+</p>
+
+</aside>
+<p>
+\(f(n) = 2n\) is equivalent to \(g(n) = n\) in Big-O
+</p>
+
+<ul>
+<li>\(f(n) = O(g(n))\) &larr; upper bound / worst case</li>
+<li>\(f(n) = \Omega(g(n))\) &larr; lower bound / best case</li>
+<li>\(f(n) = \theta(g(n))\) &larr; upper &amp; lower bound / tight case</li>
+
+</ul>
+</section>
+<section id="slide-orgc27ec5d">
+<h3 id="orgc27ec5d">Growth and Dominance</h3>
+<aside class="notes">
+<p>
+How can we just toss out the constants and even the smaller
+exponential factors? Well, as our values of n grow, the largest
+exponential factor will always dominate the lower factors
+significantly. Asymptotic dominance matters because although we may
+think an algorithm runs "fast enough" for small cases, it will
+inevitably hit a problem large enough that the time becomes
+exponentially slow, so we should always seek an algorithm with
+better complexity if such a solution is available.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/dominance.png" alt="dominance.png" />
+</p>
+</div>
+</section>
+<section id="slide-org7956f8f">
+<h3 id="org7956f8f">Dominance Rankings</h3>
+<aside class="notes">
+<p>
+Constant functions don't do much real computation. Add two
+numbers. Print the first thing in a list. No dependence on n.
+</p>
+
+<p>
+Logarithmic functions eliminate more and more of their input as
+they process more, like binary search.
+</p>
+
+<p>
+Linear functions look at each thing a fixed number of times, like
+finding a minimum or an average.
+</p>
+
+<p>
+Superlinear functions are like quicksort and mergesort. They split
+up many comparisons to minimize duplicate work.
+</p>
+
+<p>
+Quadratic functions compare all the possible pairs of things, like
+insertion and selection sort.
+</p>
+
+<p>
+Cubic functions compare all the triples. Mostly Dynamic
+programming.
+</p>
+
+<p>
+Exponential functions show up when we need to look at all the
+subsets.
+</p>
+
+<p>
+Factorial functions are when we need to look at every ordering or
+permutation of n items.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+Explain Asymptotic dominance w/ rocket example.
+</p>
+
+</aside>
+<p>
+\(f(n)\) dominates \(g(n)\) if:
+</p>
+
+<p>
+\[lim_{n\rightarrow\infty }{g(n) \over f(n)} = 0\]
+</p>
+
+<p>
+This is the same as saying \(g(n) = o(f(n))\).
+</p>
+
+<p>
+n! &gt;&gt; 2<sup>n</sup> &gt;&gt; n<sup>3</sup> &gt;&gt; n<sup>2</sup> &gt;&gt; n &times; log n &gt;&gt; n &gt;&gt; log n &gt;&gt; 1
+</p>
+
+</section>
+<section id="slide-orgf9238e6">
+<h3 id="orgf9238e6">Reasoning About Complexity</h3>
+<aside class="notes">
+<p>
+Now that we've been through all of that, let's take a look at some
+code and see if we can reason through its complexity. This will be
+a little bit of a working backward, going from code to the
+inductive explanation.
+</p>
+
+</aside>
+</section>
+<section id="slide-org8475fee">
+<h3 id="org8475fee">Selection Sort</h3>
+<aside class="notes">
+<p>
+How does this implementation work?
+</p>
+
+<ul>
+<li>Go through all items</li>
+<li>find the smallest</li>
+<li>swap to position</li>
+<li>move to next position</li>
+
+</ul>
+
+<p>
+This is an O(n<sup>2</sup>) algorithm because it potentially loops through the
+whole set once for each element in the set.
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre><code class="c++" >selection_sort(int s[], int n) {
+    int i, j;
+    int min;        /* index of min */
+    for (i=0, i < n, i++) {
+        min = i;
+        for (j = i+1; j < n; j++)
+            if (s[j] < s[min])
+                min = j;
+        swap(&s[i], &s[min]);
+    }
+}
+</code></pre>
+</div>
+</section>
+<section id="slide-orgdbd8f0c">
+<h3 id="orgdbd8f0c">Worst-case for selection sort</h3>
+<aside class="notes">
+<p>
+What is the worst-case for the selection sort?
+</p>
+
+</aside>
+<p>
+Outer loop goes through \(n\) times.
+</p>
+
+<p>
+Inner loop goes through at most \(n\) times for each iteration of outer
+</p>
+
+<p>
+Takes at most \(n \times n\) &rarr; \(O(n^2)\) time in the worst case.
+</p>
+
+<p>
+This is actually \(\theta(n^2)\) because at least \({n \over 2}\) times it scans through
+at least \({n \over 2}\) elements, for a total of \({n^2 \over 4}\) steps.
+</p>
+</section>
+<section id="slide-org1fe5fdf">
+<h3 id="org1fe5fdf">Insertion Sort</h3>
+<aside class="notes">
+<p>
+How about the implementation for insertion sort?
+</p>
+
+<ul>
+<li>Go through each element</li>
+<li>swap element down until previous element is smaller</li>
+<li>move outer loop to next element</li>
+
+</ul>
+
+<p>
+This is also an O(n<sup>2</sup>) algorithm because n calls to an inner loop
+takes at most n steps on each call.
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre><code class="c" >insertion_sort(item s[], int n) {
+    int i, j;
+    for (i=1, i < n, i++) {
+        j = i;
+        while (j > 0 && s[j] < s[j-1]) {
+            swap(&s[j], &s[j-1]);
+            j = j - 1;
+        }
+    }
+}
+</code></pre>
+</div>
+</section>
+<section id="slide-org8c40601">
+<h3 id="org8c40601">Worst case for insertion sort</h3>
+<p>
+Outer loop goes through \(n\) times.
+</p>
+
+<p>
+Inner loop swaps at most \(n\) times.
+</p>
+
+<p>
+This is also \(O(n^2)\) time in the worst case.
+</p>
+
+<p>
+This is also \(\Omega(n^2)\) time and therefore \(\theta(n^2)\).
+</p>
+</section>
+<section id="slide-org4b21e79">
+<h3 id="org4b21e79">Logarithms</h3>
+<aside class="notes">
+<p>
+When was the last time you even saw the word logarithm in print or
+on a screen? Likely it's been since your last math class. So,
+Here's a refresher:
+</p>
+
+<p>
+A logarithm is an inverse exponential function. When dealing with
+powers of 2, logarithms reflect how many times we can multiply
+something by 2 to reach some number, or how many time we can divide
+that number by 2 to reach 1. However, as we'll see in a minute, the
+base of the logarithm is actually unimportant for our needs, so
+this works with powers of 3 or 5 or 10 or whatever.
+</p>
+
+<p>
+So if logarithms are an inverse of exponential functions, and
+exponential functions grow at an extremely fast rate as n gets
+larger, then logarithmic functions actually grow slower and slower
+as n gets larger. This makes sense when we take the nature of
+logarithms into account, as they show up when we repeatedly halve
+our data sets.
+</p>
+
+</aside>
+<p>
+\[b^x = y == x = \log_b y\]
+</p>
+</section>
+<section id="slide-org0a987b5">
+<h3 id="org0a987b5">Binary Search</h3>
+<aside class="notes">
+<p>
+Let's look at one of the most classic examples of an O(log n)
+algorithm, the binary search.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+We can halve a data set log<sub>2</sub> n times. With n = 10 this is 3.3219
+</p>
+
+</aside>
+<p>
+To find search item \(I\)
+</p>
+<ul>
+<li>Start in the middle (\(M\)) of a sorted set</li>
+<li>Compare \(I\) to \(M\), discard data where \(I\) will not be.</li>
+<li>Reset \(M\) to middle of remaining data.</li>
+
+</ul>
+
+<p>
+How many times can we halve \(n\) before getting to 1?
+</p>
+</section>
+<section id="slide-org023b7c0">
+<h3 id="org023b7c0">Trees</h3>
+<aside class="notes">
+<p>
+Here's another classic logarithm example:
+</p>
+
+<p>
+A height h tree with d children per node has d<sup>h</sup> leaves.
+</p>
+
+<p>
+For n leaves, n = d<sup>h</sup>, which implies h = log<sub>d</sub> n.
+</p>
+
+<p>
+So, in a binary tree, n = 2<sup>h</sup>, so h = log<sub>2</sub> n
+</p>
+
+</aside>
+<p>
+In a tree with \(n\) leaves, how tall is the tree?
+</p>
+
+<p>
+The number of leaves doubles with each level, so how many times can
+we double 1 until we get to \(n\)?
+</p>
+</section>
+<section id="slide-orgd6041cf">
+<h3 id="orgd6041cf">Bases and asymptotic dominance</h3>
+<aside class="notes">
+<p>
+Lastly, I want to point out that we often don't write the base when
+we're talking about logarithms in Big-O notation, and there is a
+reason for that. Normally we just say that it is "log of n" without
+stating something like "log sub 2 of n" and that's because the
+actual base of the logarithm is relatively unimportant so long as
+the algorithm is correct. Much like constants, the base can effect
+the specific rate of growth, but asymptotically, O(log n)
+algorithms will always grow faster than constant functions (which
+do not grow) and slower than all other functions. We can find the
+proof of this in the formula for changing the base of a log.
+</p>
+
+</aside>
+<p>
+\[\log_b a = {\log_c a \over \log_c b}\]
+</p>
+
+<p>
+\(\log_2 1,000,000 = 19.9316\)
+</p>
+
+<p>
+\(\log_3 1,000,000 = 12.5754\)
+</p>
+
+<p>
+\(\log_{100} 1,000,000 = 3\)
+</p>
+</section>
+</section>
+<section>
+<section id="slide-org993ce2c">
+<h2 id="org993ce2c">The Knapsack Problem</h2>
+<aside class="notes">
+<p>
+Why does this problem matter? This is a packing problem. What's the
+maximum amount of stuff you can fit in a shipment, a cargo
+container, a warehouse full of frozen crab&#x2026; etc.
+</p>
+
+</aside>
+<p>
+Given a set of integers \(S = \{s_1, s_2, ... , s_n\}\), and a given target
+number \(T\), find a subset of \(S\) which adds up exactly to \(T\).
+</p>
+
+<p>
+For example, within \(S = \{1, 2, 5, 7, 8\}\) there is a subset which
+adds up to \(T = 18\) but not \(T = 19\).
+</p>
+</section>
+<section id="slide-org5fd8528">
+<h3 id="org5fd8528">Knapsack Solutions</h3>
+<p>
+Find counter-examples disproving the following:
+</p>
+<ul>
+<li>Take elements from S in order if they fit? (first fit)</li>
+<li>Take elements from S from smallest to largest? (best fit)</li>
+<li>Take elements from S from largest to smallest?</li>
+
+</ul>
+</section>
+</section>
+</div>
+</div>
+<script src="./reveal.js/lib/js/head.min.js"></script>
+<script src="./reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+margin: 0.20,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: './reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+ { src: './reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>
