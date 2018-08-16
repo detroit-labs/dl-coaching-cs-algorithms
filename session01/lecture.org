@@ -34,8 +34,9 @@
    #+END_NOTES
    #+BEGIN_QUOTE
    "An algorithm is a procedure to accomplish a specific task."
+
+   -- S.S. Skiena, The Algorithm Design Manual 2nd ed.
    #+END_QUOTE
-   S.S. Skiena, The Algorithm Design Manual, 2nd ed.
 ** What is an Algorithm?
    #+BEGIN_NOTES
    Skiena also tells us that to be "interesting", an algorithm should
