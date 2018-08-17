@@ -32,21 +32,18 @@
 </section>
 
 <section>
-<section id="slide-org687bdff">
-<h2 id="org687bdff">Lecture 1</h2>
+<section id="slide-orgdf62694">
+<h2 id="orgdf62694">Lecture 1</h2>
 </section>
 </section>
 <section>
-<section id="slide-org7838ed1">
-<h2 id="org7838ed1">Introduction to Algorithms</h2>
-<div class="outline-text-2" id="text-org7838ed1">
+<section id="slide-org73de607">
+<h2 id="org73de607">Introduction to Algorithms</h2>
+<div class="outline-text-2" id="text-org73de607">
 </div>
 </section>
-<section id="slide-orgf2f82d3">
-<h3 id="orgf2f82d3">Specifying Problems</h3>
-</section>
-<section id="slide-orgbb17d49">
-<h3 id="orgbb17d49">What is an Algorithm?</h3>
+<section id="slide-orga6411cf">
+<h3 id="orga6411cf">What is an Algorithm?</h3>
 <aside class="notes">
 <p>
 These are the first 4 words of our book. Before we jump in too
@@ -56,8 +53,8 @@ algorithm?
 
 </aside>
 </section>
-<section id="slide-orge918998">
-<h3 id="orge918998">What is an Algorithm?</h3>
+<section id="slide-orga3c48e8">
+<h3 id="orga3c48e8">What is an Algorithm?</h3>
 <aside class="notes">
 <p>
 "An algorithm is a procedure to accomplish a specific task." or
@@ -78,8 +75,8 @@ in ruby on a web server or in Swift on an iPad.
 </p>
 </blockquote>
 </section>
-<section id="slide-orgb7008f0">
-<h3 id="orgb7008f0">What is an Algorithm?</h3>
+<section id="slide-org7e4c4b3">
+<h3 id="org7e4c4b3">What is an Algorithm?</h3>
 <aside class="notes">
 <p>
 Skiena also tells us that to be "interesting", an algorithm should
@@ -103,8 +100,8 @@ well-specified problem and an instance of that problem.
 
 </ul>
 </section>
-<section id="slide-orgc6ebbce">
-<h3 id="orgc6ebbce">Rigorous Specification</h3>
+<section id="slide-org17d2e6b">
+<h3 id="org17d2e6b">Rigorous Specification</h3>
 <aside class="notes">
 <p>
 So what does a rigorously specified problem look like? There is no
@@ -142,8 +139,8 @@ Input:   A sequence of \(n\) keys \(a_1 \rightarrow a_n\)<br />
 Output:  The permutation of the input such that \(a\prime_1 \le a\prime_2 \dots \le a\prime_n\)<br />
 </p>
 </section>
-<section id="slide-orgd154e17">
-<h3 id="orgd154e17">Algorithmic Thinking</h3>
+<section id="slide-org3678a0d">
+<h3 id="org3678a0d">Algorithmic Thinking</h3>
 <aside class="notes">
 <p>
 So, an algorithm is a procedure that takes any possible input
@@ -163,8 +160,8 @@ that the list remains sorted.
 </p>
 </div>
 </section>
-<section id="slide-orgb04eb49">
-<h3 id="orgb04eb49">Insertion Sort in C</h3>
+<section id="slide-orgb952f96">
+<h3 id="orgb952f96">Insertion Sort in C</h3>
 <aside class="notes">
 <p>
 Insertion sort is a generalized algorithm. It works with any data
@@ -203,13 +200,31 @@ a good solution.
 </code></pre>
 </div>
 </section>
-<section id="slide-orgaf0042f">
-<h3 id="orgaf0042f">Correct and Efficient</h3>
+<section id="slide-org3cb8da6">
+<h3 id="org3cb8da6">Correct and Efficient</h3>
+<aside class="notes">
+<p>
+Correct: the algorithm should be accurate for any input meeting
+the criteria
+Efficient: not as clear. Usually worst-case Big O notation
+analysis.
+</p>
+
+<p>
+We're interested in algorithms for large sets. 1 billion numbers, not 100.
+</p>
+
+<p>
+A faster algorithm running on a slower machine usually beats a
+slow algorithm running on a fast machine.
+</p>
+
+</aside>
 </section>
 </section>
 <section>
-<section id="slide-org8101704">
-<h2 id="org8101704">Rok's Mail Route</h2>
+<section id="slide-org61a2826">
+<h2 id="org61a2826">Rok's Mail Route</h2>
 <aside class="notes">
 <p>
 So, one thing Rok is nice enough to do for us is to deliver mail to
@@ -227,8 +242,8 @@ deliver the mail?
 </p>
 </div>
 </section>
-<section id="slide-org089c98f">
-<h3 id="org089c98f">Rok's Mail Route</h3>
+<section id="slide-orge7eb4e1">
+<h3 id="orge7eb4e1">Rok's Mail Route</h3>
 <aside class="notes">
 <p>
 So, before we get started, let's take a look at a statement of our problem.
@@ -252,8 +267,8 @@ Input: A set of points \(P\) of size \(n\) for which the distance between the po
 Output: An ordering of the input such that the total distance traveled from \(P\prime_o\) to \(P\prime_n\) is shorter than any other ordering.<br />
 </p>
 </section>
-<section id="slide-org41099c9">
-<h3 id="org41099c9">Nearest Neighbor</h3>
+<section id="slide-orgdca1d45">
+<h3 id="orgdca1d45">Nearest Neighbor</h3>
 <aside class="notes">
 <p>
 Nearest Neighbor is common answer to this question. Pick some
@@ -287,8 +302,8 @@ NearestNeighbor(\(P\))<br />
 &#xa0;&#xa0;&#xa0;&#xa0;Return to \(p_0\) from \(p_{n-1}\)<br />
 </p>
 </section>
-<section id="slide-org14ce856">
-<h3 id="org14ce856">Rok's Mail Route, Round 2</h3>
+<section id="slide-org404dac5">
+<h3 id="org404dac5">Rok's Mail Route, Round 2</h3>
 <aside class="notes">
 <p>
 Here is a configuration of desks for which the nearest neighbor
@@ -315,8 +330,8 @@ plane breaks this strategy yet again!
 </p>
 </div>
 </section>
-<section id="slide-org702e24c">
-<h3 id="org702e24c">Closest Pair</h3>
+<section id="slide-org602c50a">
+<h3 id="org602c50a">Closest Pair</h3>
 <aside class="notes">
 <p>
 We could try another strategy. We could repeatedly connect the
@@ -351,8 +366,8 @@ ClosestPair(\(P\))<br />
 &#xa0;&#xa0;&#xa0;&#xa0;Connect the two endpoints by an edge<br />
 </p>
 </section>
-<section id="slide-org7139f37">
-<h3 id="org7139f37">Rok's Mail Route, Round 3</h3>
+<section id="slide-orgcb9f480">
+<h3 id="orgcb9f480">Rok's Mail Route, Round 3</h3>
 <aside class="notes">
 <p>
 This configuration of desks doesn't work with closest pair
@@ -370,8 +385,8 @@ we're still walking about 20% more than just going around them.
 </p>
 </div>
 </section>
-<section id="slide-orge030c26">
-<h3 id="orge030c26">Exhaustive Search</h3>
+<section id="slide-orgc246da4">
+<h3 id="orgc246da4">Exhaustive Search</h3>
 <aside class="notes">
 <p>
 Have you thrown your hands in the air in frustration yet? You're
@@ -399,8 +414,8 @@ OptimalTSP(\(P\))<br />
 </section>
 </section>
 <section>
-<section id="slide-org3a000d7">
-<h2 id="org3a000d7">Hustle Problem</h2>
+<section id="slide-orgc8e1413">
+<h2 id="orgc8e1413">Hustle Problem</h2>
 <aside class="notes">
 <p>
 Let's take a look at another problem and try to reason about it
@@ -431,8 +446,8 @@ well as either Sammiches to Go or More Cars, LLC.
 </p>
 </div>
 </section>
-<section id="slide-orga19041c">
-<h3 id="orga19041c">Hustle Problem</h3>
+<section id="slide-org30f9f2b">
+<h3 id="org30f9f2b">Hustle Problem</h3>
 <aside class="notes">
 <p>
 While we can guess the solution by drawing a picture, let's solve
@@ -449,8 +464,8 @@ Input:   A set \(I\) of \(n\) intervals on the line<br />
 Output:  The largest subset of mutually non-overlapping intervals selected from \(I\)<br />
 </p>
 </section>
-<section id="slide-org0d691d0">
-<h3 id="org0d691d0">Earliest Job</h3>
+<section id="slide-orgdcd128c">
+<h3 id="orgdcd128c">Earliest Job</h3>
 <aside class="notes">
 <p>
 What about the earliest job? If we're not doing anything else, does it
@@ -485,8 +500,8 @@ EarliestJobFirst(\(I\))<br />
 &#xa0;&#xa0;&#xa0;&#xa0;any previously accepted job. Repeat until no such jobs remain.<br />
 </p>
 </section>
-<section id="slide-org2974040">
-<h3 id="org2974040">Shortest Job</h3>
+<section id="slide-org001db51">
+<h3 id="org001db51">Shortest Job</h3>
 <aside class="notes">
 <p>
 Doing the most jobs naturally lends itself to taking the shortest
@@ -505,8 +520,8 @@ ShortestJobFirst(\(I\))<br />
 &#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;Delete \(j\), and any interval which intersects \(j\) from \(I\).<br />
 </p>
 </section>
-<section id="slide-org008d60e">
-<h3 id="org008d60e">Exhaustive Search</h3>
+<section id="slide-org6cd1570">
+<h3 id="org6cd1570">Exhaustive Search</h3>
 <aside class="notes">
 <p>
 So, is the exhaustive search the only algorithm that is ever going
@@ -532,8 +547,8 @@ ExhaustiveJobs(\(I\))<br />
 &#xa0;&#xa0;&#xa0;&#xa0;Return \(S_max\)<br />
 </p>
 </section>
-<section id="slide-org81a60bc">
-<h3 id="org81a60bc">Earliest Ending Job</h3>
+<section id="slide-orgdff7321">
+<h3 id="orgdff7321">Earliest Ending Job</h3>
 <aside class="notes">
 <p>
 We already looked at the jobs that start first or are shortest, but
@@ -557,8 +572,8 @@ OptimalScheduling(\(I\))<br />
 </section>
 </section>
 <section>
-<section id="slide-org9343b36">
-<h2 id="org9343b36">Incorrectness</h2>
+<section id="slide-orgcb5b2ee">
+<h2 id="orgcb5b2ee">Incorrectness</h2>
 <aside class="notes">
 <p>
 For both of our problems today, we examined possible solutions to
@@ -589,8 +604,8 @@ Good Counter-examples are:
 
 </ul>
 </section>
-<section id="slide-org2ca4ab2">
-<h3 id="org2ca4ab2">Finding counterexamples</h3>
+<section id="slide-org52739dc">
+<h3 id="org52739dc">Finding counterexamples</h3>
 <aside class="notes">
 <p>
 There are some strategies to finding good counterexamples. Try to
@@ -613,8 +628,8 @@ very long.
 
 </ul>
 </section>
-<section id="slide-orgab7110e">
-<h3 id="orgab7110e">Induction and Recursion</h3>
+<section id="slide-org3ef653e">
+<h3 id="org3ef653e">Induction and Recursion</h3>
 <aside class="notes">
 <p>
 So, just because we can't find a counterexample doesn't mean we
@@ -647,8 +662,8 @@ Insertion sort:
 
 </ul>
 </section>
-<section id="slide-org824074a">
-<h3 id="org824074a">Summations</h3>
+<section id="slide-org54620cd">
+<h3 id="org54620cd">Summations</h3>
 <aside class="notes">
 <p>
 Just a quick aside in case you are unfamiliar with the notation on
@@ -663,8 +678,8 @@ each of the numbers from 1 to N.
 \[\sum_{i=1}^{n} f(i) = f(1) + f(2) + ... f(n)\]
 </p>
 </section>
-<section id="slide-org2370a8d">
-<h3 id="org2370a8d">Modeling</h3>
+<section id="slide-org39d6d68">
+<h3 id="org39d6d68">Modeling</h3>
 <aside class="notes">
 <p>
 So far, we know that we can approach solving problems by honing our
@@ -738,8 +753,8 @@ recursively at the end of the first chapter.
 </section>
 </section>
 <section>
-<section id="slide-org86d32fd">
-<h2 id="org86d32fd">Algorithmic Analysis</h2>
+<section id="slide-orgab8e4f0">
+<h2 id="orgab8e4f0">Algorithmic Analysis</h2>
 <aside class="notes">
 <p>
 So far, we've talked a lot about problems and how to think about
@@ -753,8 +768,8 @@ what we'll be establishing for the rest of this session.
 
 </aside>
 </section>
-<section id="slide-orga690232">
-<h3 id="orga690232">RAM Computation Model</h3>
+<section id="slide-org057df70">
+<h3 id="org057df70">RAM Computation Model</h3>
 <aside class="notes">
 <p>
 Even though computers get faster and faster, algorithms remain
@@ -772,8 +787,8 @@ of how they programs perform can remain consistent.
 
 </ul>
 </section>
-<section id="slide-orgf9ccb1f">
-<h3 id="orgf9ccb1f">Best / Worse / Average Case</h3>
+<section id="slide-org0de6d96">
+<h3 id="org0de6d96">Best / Worse / Average Case</h3>
 <aside class="notes">
 <p>
 Now that we've established how we're going to count time with the
@@ -806,8 +821,8 @@ about this in terms of sorting an array.
 
 </ul>
 </section>
-<section id="slide-orgc72cb19">
-<h3 id="orgc72cb19">Which one?</h3>
+<section id="slide-org1c20f7a">
+<h3 id="org1c20f7a">Which one?</h3>
 <aside class="notes">
 <p>
 We almost always are concerned with the worst-case
@@ -828,8 +843,8 @@ algorithms, the average case simply reflects the worst case.
 </p>
 </div>
 </section>
-<section id="slide-orgb968f40">
-<h3 id="orgb968f40">&Omega; / O / &theta; Notation</h3>
+<section id="slide-orgd2a9f7f">
+<h3 id="orgd2a9f7f">&Omega; / O / &theta; Notation</h3>
 <aside class="notes">
 <p>
 It's important to note that these time complexities actually
@@ -865,8 +880,8 @@ effect the complexity.
 
 </ul>
 </section>
-<section id="slide-org3855c09">
-<h3 id="org3855c09">Growth and Dominance</h3>
+<section id="slide-org5489c2f">
+<h3 id="org5489c2f">Growth and Dominance</h3>
 <aside class="notes">
 <p>
 How can we just toss out the constants and even the smaller
@@ -886,8 +901,8 @@ better complexity if such a solution is available.
 </p>
 </div>
 </section>
-<section id="slide-orgd859c2a">
-<h3 id="orgd859c2a">Dominance Rankings</h3>
+<section id="slide-org5565ad7">
+<h3 id="org5565ad7">Dominance Rankings</h3>
 <aside class="notes">
 <p>
 Constant functions don't do much real computation. Add two
@@ -955,8 +970,8 @@ n! &gt;&gt; 2<sup>n</sup> &gt;&gt; n<sup>3</sup> &gt;&gt; n<sup>2</sup> &gt;&gt;
 </p>
 
 </section>
-<section id="slide-orgb3a0fc7">
-<h3 id="orgb3a0fc7">Reasoning About Complexity</h3>
+<section id="slide-org109e9ea">
+<h3 id="org109e9ea">Reasoning About Complexity</h3>
 <aside class="notes">
 <p>
 Now that we've been through all of that, let's take a look at some
@@ -967,8 +982,8 @@ inductive explanation.
 
 </aside>
 </section>
-<section id="slide-orgaa81c76">
-<h3 id="orgaa81c76">Selection Sort</h3>
+<section id="slide-org4632546">
+<h3 id="org4632546">Selection Sort</h3>
 <aside class="notes">
 <p>
 How does this implementation work?
@@ -1004,8 +1019,8 @@ whole set once for each element in the set.
 </code></pre>
 </div>
 </section>
-<section id="slide-org588b924">
-<h3 id="org588b924">Worst-case for selection sort</h3>
+<section id="slide-orgc2a4d37">
+<h3 id="orgc2a4d37">Worst-case for selection sort</h3>
 <aside class="notes">
 <p>
 What is the worst-case for the selection sort?
@@ -1029,8 +1044,8 @@ This is actually \(\theta(n^2)\) because at least \({n \over 2}\) times it scans
 at least \({n \over 2}\) elements, for a total of \({n^2 \over 4}\) steps.
 </p>
 </section>
-<section id="slide-org436f522">
-<h3 id="org436f522">Insertion Sort</h3>
+<section id="slide-orgfa7899a">
+<h3 id="orgfa7899a">Insertion Sort</h3>
 <aside class="notes">
 <p>
 How about the implementation for insertion sort?
@@ -1064,8 +1079,8 @@ takes at most n steps on each call.
 </code></pre>
 </div>
 </section>
-<section id="slide-orgeb1d087">
-<h3 id="orgeb1d087">Worst case for insertion sort</h3>
+<section id="slide-orge87e995">
+<h3 id="orge87e995">Worst case for insertion sort</h3>
 <p>
 Outer loop goes through \(n\) times.
 </p>
@@ -1082,8 +1097,8 @@ This is also \(O(n^2)\) time in the worst case.
 This is also \(\Omega(n^2)\) time and therefore \(\theta(n^2)\).
 </p>
 </section>
-<section id="slide-orgdf88ca7">
-<h3 id="orgdf88ca7">Logarithms</h3>
+<section id="slide-org43ca864">
+<h3 id="org43ca864">Logarithms</h3>
 <aside class="notes">
 <p>
 When was the last time you even saw the word logarithm in print or
@@ -1114,8 +1129,8 @@ our data sets.
 \[b^x = y == x = \log_b y\]
 </p>
 </section>
-<section id="slide-org4204573">
-<h3 id="org4204573">Binary Search</h3>
+<section id="slide-orgb970503">
+<h3 id="orgb970503">Binary Search</h3>
 <aside class="notes">
 <p>
 Let's look at one of the most classic examples of an O(log n)
@@ -1145,8 +1160,8 @@ To find search item \(I\)
 How many times can we halve \(n\) before getting to 1?
 </p>
 </section>
-<section id="slide-org1a62e05">
-<h3 id="org1a62e05">Trees</h3>
+<section id="slide-org5d59208">
+<h3 id="org5d59208">Trees</h3>
 <aside class="notes">
 <p>
 Here's another classic logarithm example:
@@ -1174,8 +1189,8 @@ The number of leaves doubles with each level, so how many times can
 we double 1 until we get to \(n\)?
 </p>
 </section>
-<section id="slide-org043e736">
-<h3 id="org043e736">Bases and asymptotic dominance</h3>
+<section id="slide-org9d6f188">
+<h3 id="org9d6f188">Bases and asymptotic dominance</h3>
 <aside class="notes">
 <p>
 Lastly, I want to point out that we often don't write the base when
@@ -1209,8 +1224,8 @@ proof of this in the formula for changing the base of a log.
 </section>
 </section>
 <section>
-<section id="slide-orgf82dc63">
-<h2 id="orgf82dc63">The Knapsack Problem</h2>
+<section id="slide-orgd90a458">
+<h2 id="orgd90a458">The Knapsack Problem</h2>
 <aside class="notes">
 <p>
 Why does this problem matter? This is a packing problem. What's the
@@ -1229,8 +1244,8 @@ For example, within \(S = \{1, 2, 5, 7, 8\}\) there is a subset which
 adds up to \(T = 18\) but not \(T = 19\).
 </p>
 </section>
-<section id="slide-org0482a66">
-<h3 id="org0482a66">Knapsack Solutions</h3>
+<section id="slide-org41637df">
+<h3 id="org41637df">Knapsack Solutions</h3>
 <p>
 Find counter-examples disproving the following:
 </p>

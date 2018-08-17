@@ -17,7 +17,6 @@
 
 * Lecture 1
 * Introduction to Algorithms
-** Specifying Problems
 ** What is an Algorithm?
    #+BEGIN_NOTES
    These are the first 4 words of our book. Before we jump in too
@@ -123,6 +122,17 @@
    }
    #+END_SRC
 ** Correct and Efficient
+   #+BEGIN_NOTES
+   Correct: the algorithm should be accurate for any input meeting
+   the criteria
+   Efficient: not as clear. Usually worst-case Big O notation
+   analysis.
+
+   We're interested in algorithms for large sets. 1 billion numbers, not 100.
+
+   A faster algorithm running on a slower machine usually beats a
+   slow algorithm running on a fast machine.
+   #+END_NOTES
 * Rok's Mail Route
   #+BEGIN_NOTES
   So, one thing Rok is nice enough to do for us is to deliver mail to
