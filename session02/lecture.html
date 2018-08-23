@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Computer Science 2: Algorithms</title>
+<meta name="author" content="(Detroit Labs Dev Coaching)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="./reveal.js/css/theme/league.css" id="theme"/>
+
+<link rel="stylesheet" href="./presentation.css"/>
+<link rel="stylesheet" href="./reveal.js/lib/css/zenburn.css"/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Computer Science 2: Algorithms</h1><h2 class="author">Detroit Labs Dev Coaching</h2><h2 class="date">2018</h2>
+</section>
+
+<section>
+<section id="slide-org47ac5b6">
+<h2 id="org47ac5b6">Lecture 2</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-org8e49f8e">
+<h2 id="org8e49f8e">Big-O Review</h2>
+<aside class="notes">
+<p>
+Let's kick off with some Big O practice to get warmed up. We're
+going to evaluate this equation.
+</p>
+
+</aside>
+<p>
+\[3n^2 - 100n + 6\]
+</p>
+
+</section>
+<section id="slide-orgbb104cb">
+<h3 id="orgbb104cb">Big-O Review</h3>
+<aside class="notes">
+<p>
+True.
+</p>
+
+<p>
+Choose C=3, 3n<sup>2</sup> &gt; 3n<sup>2</sup> - 100n + 6
+</p>
+
+</aside>
+<p>
+<i>True or false?</i>
+</p>
+
+<p>
+\[3n^2 - 100n + 6 = O(n^2)\]
+</p>
+
+</section>
+<section id="slide-org0b134f5">
+<h3 id="org0b134f5">Big-O Review</h3>
+<aside class="notes">
+<p>
+True.
+</p>
+
+<p>
+Choose C=1 when n&ge;3, 3n<sup>2</sup> &gt; 3n<sup>2</sup> - 100n + 6
+</p>
+
+</aside>
+<p>
+<i>True or false?</i>
+</p>
+
+<p>
+\[3n^2 - 100n + 6 = O(n^3)\]
+</p>
+</section>
+<section id="slide-org09878a5">
+<h3 id="org09878a5">Big-O Review</h3>
+<aside class="notes">
+<p>
+False.
+</p>
+
+<p>
+For any C, c &times; n will be less than 3n<sup>2</sup> when n &gt; c
+</p>
+
+</aside>
+<p>
+<i>True or false?</i>
+</p>
+
+<p>
+\[3n^2 - 100n + 6 = O(n)\]
+</p>
+</section>
+<section id="slide-orgc2be018">
+<h3 id="orgc2be018">Big-O Review</h3>
+<aside class="notes">
+<p>
+True.
+</p>
+
+<p>
+C=2.99 provides 2.99n<sup>2</sup> &lt; 3n<sup>2</sup> - 100n when n &gt; 33
+</p>
+
+</aside>
+<p>
+<i>True or false?</i>
+</p>
+
+<p>
+\[3n^2 - 100n + 6 = \Omega(n^2)\]
+</p>
+
+</section>
+<section id="slide-orga20a9db">
+<h3 id="orga20a9db">Big-O Review</h3>
+<aside class="notes">
+<p>
+False.
+</p>
+
+<p>
+For n &gt; 3, n<sup>3</sup> is always greater than 3n<sup>2</sup>
+</p>
+
+</aside>
+<p>
+<i>True or false?</i>
+</p>
+
+<p>
+\[3n^2 - 100n + 6 = \Omega(n^3)\]
+</p>
+</section>
+<section id="slide-org9628404">
+<h3 id="org9628404">Big-O Review</h3>
+<aside class="notes">
+<p>
+True.
+</p>
+
+<p>
+For any C, C &times; n will be less than 3n<sup>2</sup>
+</p>
+
+</aside>
+<p>
+<i>True or false?</i>
+</p>
+
+<p>
+\[3n^2 - 100n + 6 = \Omega(n)\]
+</p>
+</section>
+<section id="slide-org607bdf3">
+<h3 id="org607bdf3">Big-O Review</h3>
+<aside class="notes">
+<p>
+True.
+</p>
+
+<p>
+O(n<sup>2</sup>) and &Omega;(n<sup>2</sup>), therefore &theta;(n<sup>2</sup>)
+</p>
+
+</aside>
+<p>
+Given \[3n^2 - 100n + 6 = O(n^2)\]
+      \[3n^2 - 100n + 6 = \Omega(n^2)\]
+</p>
+
+<p>
+<i>True or false?</i>
+</p>
+
+<p>
+\[3n^2 - 100n + 6 = \theta(n^2)\]
+</p>
+</section>
+<section id="slide-orgd35ba7e">
+<h3 id="orgd35ba7e">Big-O Review</h3>
+<aside class="notes">
+<p>
+False.
+</p>
+
+<p>
+O(n<sup>3</sup>) but not &Omega;(n<sup>3</sup>), so &theta;(n<sup>3</sup>) does not apply
+</p>
+
+</aside>
+<p>
+Given \[3n^2 - 100n + 6 = O(n^3)\]
+      \[3n^2 - 100n + 6 \ne \Omega(n^3)\]
+</p>
+
+<p>
+<i>True or false?</i>
+</p>
+
+<p>
+\[3n^2 - 100n + 6 = \theta(n^3)\]
+</p>
+</section>
+<section id="slide-orgbdb21e5">
+<h3 id="orgbdb21e5">Big-O Review</h3>
+<aside class="notes">
+<p>
+False.
+</p>
+
+<p>
+&Omega;(n), but not O(n), so &theta;(n) does not apply
+</p>
+
+</aside>
+<p>
+Given \[3n^2 - 100n + 6 \ne O(n)\]
+      \[3n^2 - 100n + 6 = \Omega(n)\]
+</p>
+
+<p>
+<i>True or false?</i>
+</p>
+
+<p>
+\[3n^2 - 100n + 6 = \theta(n)\]
+</p>
+</section>
+</section>
+<section>
+<section id="slide-org3dc85a5">
+<h2 id="org3dc85a5">Big-O Practice</h2>
+<aside class="notes">
+<p>
+Ok, now I'm going to hand it over to you. As a group, I'd like you
+to classify the following function relationships.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+Go to definition:
+</p>
+
+<p>
+f(n) = O(g(n)) if f(n) &le; C &times; g(n)
+</p>
+
+<p>
+f(n) = &Omega;(g(n)) if f(n) &ge; C &times; g(n)
+</p>
+
+<ol>
+<li>There is no constant to multiply 6n+7 by that will make it always
+bigger than n<sup>2</sup>, so f(n) &ne; O(g(n)). For n&ge;7, f(n) &gt; C &times; g(n), so
+f(n) = &Omega;(g(n)).</li>
+
+<li>comparing n<sup>3/2</sup> = n<sup>2</sup>. C=1 for any value of n, n<sup>2</sup> will be greater
+than n<sup>3/2</sup> so f(n) = O(g(n)). Likewise, because C=1 provides O,
+there is no C where f(n) &gt; C &times; g(n), so f(n) &ne; &Omega;(g(n))</li>
+
+<li>2<sup>n</sup> always greater than n<sup>4</sup>, so f(n) = &Omega;(g(n)), but f(n) &ne; O(g(n))</li>
+
+</ol>
+
+<p>
+If g will always be greater than f, f(n) = O(g(n)), if f will always
+be greater than g, f(n) = &Omega;(g(n)). If you can make it go either way
+by picking different constants, you have &theta; on your hands.
+</p>
+
+</aside>
+<p>
+For each of the following pairs of functions \(f(n)\) and \(g(n)\)
+</p>
+
+<ol>
+<li>\(f(n)=n^2+3n+4, g(n)=6n+7\)</li>
+<li>\(f(n)=n {\sqrt n}, g(n)=n^2−n\)</li>
+<li>\(f(n)=2^n−n^2, g(n)=n^4+n^2\)</li>
+
+</ol>
+
+<p>
+state whether
+</p>
+
+<ul>
+<li>\(f(n)=O(g(n))\)</li>
+<li>\(f(n)=\Omega(g(n))\)</li>
+<li>\(f(n)=\theta(g(n))\)</li>
+<li>none of the above.</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org2eba86f">
+<h2 id="org2eba86f">Why Data Structures Matter</h2>
+<aside class="notes">
+<p>
+Most languages come with off-the-shelf components that we build our
+algorithms from. These are our arrays, stacks, queues, lists,
+etc. These are the off-the-shelf data structures that are at the
+heart of our algorithms. There is immense power in data structures,
+and swapping one data structure for another can have a massive
+impact in the time to execute the program based on its trade-offs
+without changing the correctness of the program, improving or
+decimating the program's performance.
+</p>
+
+</aside>
+<blockquote nil>
+<p>
+"Mankind’s progress is measured by the number of things we can do
+without thinking."
+</p>
+
+<p>
+&#x2013; Alfred North Whitehead
+</p>
+</blockquote>
+
+</section>
+<section id="slide-orga1bdb64">
+<h3 id="orga1bdb64">Aspects of Data Structures</h3>
+<aside class="notes">
+<p>
+There's an important distinction we want to make clear when we're
+talking about data structures, and that is the two major aspects of
+the data structure&#x2026; the abstraction of the operations it
+supports, and the actual implementation of those operations.
+</p>
+
+</aside>
+<ul>
+<li>The abstraction data type</li>
+<li>The implementation of its operations</li>
+
+</ul>
+
+</section>
+<section id="slide-orgc32bd00">
+<h3 id="orgc32bd00">ADTs</h3>
+<aside class="notes">
+<p>
+An abstraction allows us to use a data structure "without thinking"
+because we can focus on what the data structure is supposed to do
+without worrying about how it is doing it.
+</p>
+
+<p>
+A stack could implement these with a list or an array, or something
+else depending on which language we're using! There might even be
+multiple implementations of the same abstract data type included in
+your language or the standard library for it, and though they
+support the same API, the underlying implementation of that API
+could have drastic effects on the speed of your program based on
+how you use it.
+</p>
+
+</aside>
+<p>
+Here is the API for a Stack:
+</p>
+<ul>
+<li><code>push(s, x)</code> - insert \(x\) at the top of stack \(s\)</li>
+<li><code>pop(s)</code> - return and remove the top of stack \(s\)</li>
+
+</ul>
+
+<p>
+How these are implemented on the stack will have an effect on
+performance depending on the circumstance.
+</p>
+
+</section>
+<section id="slide-org17924c7">
+<h3 id="org17924c7">Contiguous vs Linked</h3>
+<p>
+There are two classes of data structures when it comes to storage
+and organization.
+</p>
+
+<ul>
+<li>Contiguous: memory allocated in contiguous chunks
+<ul>
+<li>arrays, matrices, heaps, hash tables</li>
+
+</ul></li>
+<li>Linked: distinct memory location joined by pointers
+<ul>
+<li>lists, trees, graph adjacency lists</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org98f6b57">
+<h2 id="org98f6b57">Arrays</h2>
+<aside class="notes">
+<p>
+So, let's take a look a the quintessential contiguous data
+structure, the array.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+Amusingly enough, the languages that we use most commonly don't make
+any guarantees about contiguous memory storage by default, if
+ever. Swift offers the ContiguousArray class, but Javascript arrays
+are an abstraction built on maps, and Java will happily reorganize
+its memory on GC.
+</p>
+
+</aside>
+<p>
+An array is a fixed sized structure of data records, stored so that
+each element can be accessed efficiently by its index or address.
+</p>
+
+<p>
+Good stuff:
+</p>
+<ul>
+<li>Constant time access with a provided index</li>
+<li>Strictly data - no metadata for lengths, links, etc</li>
+<li>Faster caching due to continuity in memory</li>
+
+</ul>
+
+</section>
+<section id="slide-org275a88f">
+<h3 id="org275a88f">Dynamic Arrays</h3>
+<aside class="notes">
+<p>
+As we just mentioned, a normal array is a fixed size, meaning that
+during execution there is no way to change the size. But what
+happens if we might need a lot of space, but we're not sure?
+Compensating for this by allocating excessively large amounts of
+memory is wasteful.
+</p>
+
+</aside>
+<ul>
+<li>Work like arrays but expand as necessary.</li>
+<li>Start at 1 capacity and double in size each time they run out of
+space - meaning \(\log_2 n\) expansions for \(n\) items.</li>
+
+</ul>
+
+</section>
+<section id="slide-orgb49881b">
+<h3 id="orgb49881b">Are Dynamic Arrays worth it?</h3>
+<aside class="notes">
+<p>
+Copying items to a new memory space every time the array is full
+seems wasteful, right? Well, think about it. If half the elements
+move once, then a quarter of the elements move twice, an eighth
+move 3 times&#x2026; you get the idea. We can represent this number of
+copies with this summation as C.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+This property is called geometric series convergence and it can be
+thought of as the free lunch of algorithm analysis.
+</p>
+
+</aside>
+<p>
+\[C = \sum_{i=1}^{\log n} i \times {n \over 2^i} \le n \sum_{i=1}^\infty {i \over 2^i} = 2n\]
+</p>
+
+<p>
+On average, each element moves only twice.
+</p>
+
+<p>
+The total work for managing this is O(n), the same as an array.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org1aa64e1">
+<h2 id="org1aa64e1">Lists</h2>
+<p>
+Lists are one of the fundamental linked data structures. Linked
+structures use pointers to connect their elements.
+</p>
+
+<ul>
+<li>Allocated as needed, no unutilized memory</li>
+<li>Can operate in fragmented memory</li>
+<li>Constant-time access to head</li>
+
+</ul>
+
+</section>
+<section id="slide-orgaa20ec4">
+<h3 id="orgaa20ec4">Searching a list</h3>
+<aside class="notes">
+<p>
+What steps would we need to take to find an element in a linked
+list?
+</p>
+
+</aside>
+
+
+<div class="figure">
+<p><img src="./img/list_search.png" alt="list_search.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-orgdc3bfb0">
+<h3 id="orgdc3bfb0">Insert into a list</h3>
+<aside class="notes">
+<p>
+What about inserting into a list? What's the effort required to add
+new elements to a list?
+</p>
+
+</aside>
+
+
+<div class="figure">
+<p><img src="./img/list_insert.png" alt="list_insert.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-orgef29098">
+<h3 id="orgef29098">Delete from a list</h3>
+<aside class="notes">
+<p>
+OK, let's try one more, deletion. What effort is necessary to
+remove a specific item from a list?
+</p>
+
+</aside>
+
+
+<div class="figure">
+<p><img src="./img/list_delete.png" alt="list_delete.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org907b352">
+<h3 id="org907b352">Linked list Goodies</h3>
+<aside class="notes">
+<p>
+So what are the advantages of linked lists? Well, aside from the
+complexity differences of the operations compared to arrays, we're
+only limited by the amount of memory available. Because we're
+allocating heap memory as need when items are added, there's no
+need to have a contiguous chunk of memory of the size necessary to
+allocate.
+</p>
+
+</aside>
+<ul>
+<li>Theoretically no overflow</li>
+<li>Insertion and deletion simpler than arrays</li>
+<li>For large records, moving pointers is simpler than moving items
+in physical memory</li>
+
+</ul>
+
+</section>
+<section id="slide-org53a8399">
+<h3 id="org53a8399">Singly or Doubly linked?</h3>
+<aside class="notes">
+<p>
+What are the advantages or disadvantages of using a singly or
+doubly-linked list? How much more work is a doubly-linked list than
+a singly-linked list?
+</p>
+
+
+<p>
+We gain flexibility on predecessor queries at a cost of doubling
+the number of pointers by using a doubly linked list.
+</p>
+
+<p>
+A doubly linked list means more operations for insertions and
+deletions as well as more storage space, but what is the overhead?
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+The increase is a constant between n and 2n, so the Big-O
+complexity remains the same for these operations.
+</p>
+
+</aside>
+
+
+<div class="figure">
+<p><img src="./img/singly_linked_list.png" alt="singly_linked_list.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="./img/list_search.png" alt="list_search.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgf034820">
+<h2 id="orgf034820">Stacks and Queues</h2>
+<aside class="notes">
+<p>
+With the array and list, we're probably most concerned with the
+content of the things we're storing, and perhaps secondarily
+concerned with the order that content is stored.
+</p>
+
+<p>
+Sometimes we're not so much concerned with the content of data we
+need to collect, but the order which we retrieve it based on when it
+arrived.
+</p>
+
+</aside>
+
+<p>
+Stack: LIFO (last-in, first-out)
+</p>
+<ul>
+<li><code>push(s, x)</code> - add item <code>x</code> to stack <code>s</code></li>
+<li><code>pop(s)</code> - return and delete the top item in stack <code>s</code></li>
+
+</ul>
+
+<p>
+Queue: FIFO (first-in, first-out)
+</p>
+<ul>
+<li><code>enqueue(q, x)</code> - add item <code>x</code> to queue <code>q</code></li>
+<li><code>dequeue(q)</code> - return and delete front item from queue <code>q</code></li>
+
+</ul>
+
+</section>
+<section id="slide-org0477d9d">
+<h3 id="org0477d9d">Implementing Stacks and Queues</h3>
+<aside class="notes">
+<p>
+In the prerequisites for this class, you implemented a stack and a
+queue. Let's take a moment to discuss what strategies you used to
+implement those, and which you found were most successful. How did
+most of you do it? What do you think was the complexity of the code
+you wrote and what do you think the complexity should have been in
+the ideal case?
+</p>
+
+</aside>
+<p>
+Group Discussion: What were the strategies you found successful
+when implementing stacks and queues at the end of CS1?
+</p>
+
+</section>
+<section id="slide-org0c641db">
+<h3 id="org0c641db">Implementing Stacks and Queues</h3>
+<aside class="notes">
+<p>
+All operations for stacks and queues can be implemented in O(1)
+time for both structures with either arrays or lists.
+</p>
+
+</aside>
+<p>
+Stack: easily implemented with an array, push and pop increment
+and decrement a pointer.
+</p>
+
+<p>
+Queue: easily implemented as a doubly linked list with enqueue and
+dequeue operating on opposite ends of the list.
+</p>
+
+</section>
+<section id="slide-org9508e80">
+<h3 id="org9508e80">Why use stacks and queues?</h3>
+<aside class="notes">
+<p>
+Both of these containers embed a strategy for graph traversal. The
+difference between a Depth-first search and a Breadth-first search
+is whether a stack or a queue holds the items to process.
+</p>
+
+</aside>
+<ul>
+<li>Both are good options when order doesn't matter</li>
+<li>If order does matter, choose appropriate container</li>
+<li>BFS vs. DFS</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org1e7899c">
+<h2 id="org1e7899c">Dictionaries</h2>
+<aside class="notes">
+<p>
+What may be the most important class of data structures are those
+that maintain a set of items indexed by keys. These are commonly
+known as dictionaries, maps, or dynamic sets.
+</p>
+
+</aside>
+
+<ul>
+<li><code>search(s, k)</code> - Given a set <code>s</code> and key <code>k</code>, return a pointer to an
+element in <code>s</code> or nil if no such element</li>
+<li><code>insert(s, x)</code> - modify <code>s</code> to contain <code>x</code></li>
+<li><code>delete(s, x)</code> - remove <code>x</code> from <code>s</code>.</li>
+<li><code>min(s)</code>, <code>max(s)</code> - returns the element of <code>s</code> which has the
+smallest/largest key.</li>
+<li><code>predecessor(s,x)</code>, <code>successor(s,x)</code> - Given some element <code>x</code> whose key
+is from an ordered set <code>s</code>, return the next/previous element or
+nil if no such element. (Logical successor, not storage order)</li>
+
+</ul>
+
+</section>
+<section id="slide-org2374e6a">
+<h3 id="org2374e6a">Implementing Dictionaries</h3>
+<p>
+Group practice:
+</p>
+
+<p>
+What's the asymptotic worst-case run time for each of a
+dictionary's operations if we implement them with:
+</p>
+
+<ul>
+<li>An unsorted array</li>
+<li>An array sorted by value</li>
+
+</ul>
+
+</section>
+<section id="slide-orgfba3a37">
+<h3 id="orgfba3a37">Implementing Dictionaries</h3>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Operation</th>
+<th scope="col" class="org-left">Unsorted Array</th>
+<th scope="col" class="org-left">Sorted Array</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">search</td>
+<td class="org-left">sequential search - O(n)</td>
+<td class="org-left">binary search - O(lg n)</td>
+</tr>
+
+<tr>
+<td class="org-left">insert</td>
+<td class="org-left">first empty spot - O(1)</td>
+<td class="org-left">search, make room - O(n)</td>
+</tr>
+
+<tr>
+<td class="org-left">delete</td>
+<td class="org-left">delete, decrement - O(1)</td>
+<td class="org-left">delete, make room - O(n)</td>
+</tr>
+
+<tr>
+<td class="org-left">min/max</td>
+<td class="org-left">sequential search - O(n)</td>
+<td class="org-left">first or last - O(1)</td>
+</tr>
+
+<tr>
+<td class="org-left">pred/succ</td>
+<td class="org-left">sequential search - O(n)</td>
+<td class="org-left">increment pointer - O(1)</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+<section id="slide-org98bcf4d">
+<h3 id="org98bcf4d">What about lists?</h3>
+<aside class="notes">
+<p>
+Search: O(n) for all, because we must always start traversal at head
+</p>
+
+<p>
+Insert: O(1) for unsorted, O(n) for sorted
+</p>
+
+<p>
+Delete: O(n) for singly-linked, O(1) for doubly-linked
+</p>
+
+<p>
+Succ/Pred: O(n) for singly-linked, O(1) for doubly-linked
+</p>
+
+<p>
+Min/Max: O(n) for unsorted, O(1) for sorted
+</p>
+
+</aside>
+<p>
+Group practice:
+</p>
+
+<p>
+What's the asymptotic worst-case run time for each of a
+dictionary's operations if we implement them with:
+</p>
+
+<ul>
+<li>A singly linked list</li>
+<li>A doubly linked list</li>
+<li>A singly linked sorted list</li>
+<li>A doubly linked sorted list</li>
+
+</ul>
+
+</section>
+<section id="slide-org6b29a7f">
+<h3 id="org6b29a7f">Dictionaries backed by lists</h3>
+<aside class="notes">
+<p>
+search: No matter what we do, we'll always need to check all elements
+</p>
+
+<p>
+insert: this mostly depends on sorting. we need to traverse for
+sorted whereas we can add a head for unsorted
+</p>
+
+<p>
+delete: because we don't have the predecessor for singly-linked
+lists, we'll need to do a search for them, maintaining the
+predecessor to put the list back together. for doubly-linked lists
+this is a constant time operation.
+</p>
+
+<p>
+successor: for sorted operations, we can always find the next
+because it's a direct pointer, but in an unsorted list we will
+always need to search for it
+</p>
+
+<p>
+predecessor: again, always search for unsorted, but constant for
+doubly linked sorted, since we just go back one. for singly-linked,
+unsorted lists we still need to search because we're not
+maintaining the previous pointer.
+</p>
+
+<p>
+min: singly-linked unsorted means searching, but it's always the
+head for sorted lists
+</p>
+
+<p>
+max: always need to search unsorted. should be the last element in
+sorted list, so maintaining a pointer to it to support this
+operation is constant time. Singly linked is tricky here, because
+we can use the same strategy and update this end pointer on delete,
+making it 2n instead of n, which is still O(n) complexity.
+</p>
+
+</aside>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Operation</th>
+<th scope="col" class="org-left">SU</th>
+<th scope="col" class="org-left">DU</th>
+<th scope="col" class="org-left">SS</th>
+<th scope="col" class="org-left">DS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">search</td>
+<td class="org-left">O(n)</td>
+<td class="org-left">O(n)</td>
+<td class="org-left">O(n)</td>
+<td class="org-left">O(n)</td>
+</tr>
+
+<tr>
+<td class="org-left">insert</td>
+<td class="org-left">O(1)</td>
+<td class="org-left">O(1)</td>
+<td class="org-left">O(n)</td>
+<td class="org-left">O(n)</td>
+</tr>
+
+<tr>
+<td class="org-left">delete</td>
+<td class="org-left">O(n)*</td>
+<td class="org-left">O(1)</td>
+<td class="org-left">O(n)*</td>
+<td class="org-left">O(1)</td>
+</tr>
+
+<tr>
+<td class="org-left">successor</td>
+<td class="org-left">O(n)</td>
+<td class="org-left">O(n)</td>
+<td class="org-left">O(1)</td>
+<td class="org-left">O(1)</td>
+</tr>
+
+<tr>
+<td class="org-left">predecessor</td>
+<td class="org-left">O(n)</td>
+<td class="org-left">O(n)</td>
+<td class="org-left">O(n)*</td>
+<td class="org-left">O(1)</td>
+</tr>
+
+<tr>
+<td class="org-left">min</td>
+<td class="org-left">O(n)</td>
+<td class="org-left">O(n)</td>
+<td class="org-left">O(1)</td>
+<td class="org-left">O(1)</td>
+</tr>
+
+<tr>
+<td class="org-left">max</td>
+<td class="org-left">O(n)</td>
+<td class="org-left">O(n)</td>
+<td class="org-left">O(1)*</td>
+<td class="org-left">O(1)</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</div>
+</div>
+<script src="./reveal.js/lib/js/head.min.js"></script>
+<script src="./reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+margin: 0.20,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: './reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+ { src: './reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>

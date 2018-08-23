@@ -1,0 +1,488 @@
+#+TITLE:  Computer Science 2: Algorithms
+#+AUTHOR: Detroit Labs Dev Coaching
+#+DATE:   2018
+#+EMAIL:  ndotz@detroitlabs.com
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   skip:nil d:nil todo:t pri:nil tags:not-in-toc timestamp:nil
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+REVEAL_PLUGINS: (highlight notes)
+#+REVEAL_THEME: league
+#+REVEAL_MARGIN: 0.2
+# #+REVEAL_MIN_SCALE: 0.5
+# #+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_EXTRA_CSS: ./presentation.css
+
+* Lecture 2
+
+* Big-O Review
+  #+BEGIN_NOTES
+  Let's kick off with some Big O practice to get warmed up. We're
+  going to evaluate this equation.
+  #+END_NOTES
+  $$3n^2 - 100n + 6$$
+
+** Big-O Review
+   #+BEGIN_NOTES
+   True.
+
+   Choose C=3, 3n^2 > 3n^2 - 100n + 6
+   #+END_NOTES
+   /True or false?/
+
+   $$3n^2 - 100n + 6 = O(n^2)$$
+
+** Big-O Review
+   #+BEGIN_NOTES
+   True.
+
+   Choose C=1 when n\ge3, 3n^2 > 3n^2 - 100n + 6
+   #+END_NOTES
+   /True or false?/
+
+   $$3n^2 - 100n + 6 = O(n^3)$$
+** Big-O Review
+   #+BEGIN_NOTES
+   False.
+
+   For any C, c \times n will be less than 3n^2 when n > c
+   #+END_NOTES
+   /True or false?/
+
+   $$3n^2 - 100n + 6 = O(n)$$
+** Big-O Review
+   #+BEGIN_NOTES
+   True.
+
+   C=2.99 provides 2.99n^2 < 3n^2 - 100n when n > 33
+   #+END_NOTES
+   /True or false?/
+
+   $$3n^2 - 100n + 6 = \Omega(n^2)$$
+
+** Big-O Review
+   #+BEGIN_NOTES
+   False.
+
+   For n > 3, n^3 is always greater than 3n^2
+   #+END_NOTES
+   /True or false?/
+
+   $$3n^2 - 100n + 6 = \Omega(n^3)$$
+** Big-O Review
+   #+BEGIN_NOTES
+   True.
+
+   For any C, C \times n will be less than 3n^2
+   #+END_NOTES
+   /True or false?/
+
+   $$3n^2 - 100n + 6 = \Omega(n)$$
+** Big-O Review
+   #+BEGIN_NOTES
+   True.
+
+   O(n^2) and \Omega(n^2), therefore \theta(n^2)
+   #+END_NOTES
+   Given $$3n^2 - 100n + 6 = O(n^2)$$
+         $$3n^2 - 100n + 6 = \Omega(n^2)$$
+
+   /True or false?/
+
+   $$3n^2 - 100n + 6 = \theta(n^2)$$
+** Big-O Review
+   #+BEGIN_NOTES
+   False.
+
+   O(n^3) but not \Omega(n^3), so \theta(n^3) does not apply
+   #+END_NOTES
+   Given $$3n^2 - 100n + 6 = O(n^3)$$
+         $$3n^2 - 100n + 6 \ne \Omega(n^3)$$
+
+   /True or false?/
+
+   $$3n^2 - 100n + 6 = \theta(n^3)$$
+** Big-O Review
+   #+BEGIN_NOTES
+   False.
+
+   \Omega(n), but not O(n), so \theta(n) does not apply
+   #+END_NOTES
+   Given $$3n^2 - 100n + 6 \ne O(n)$$
+         $$3n^2 - 100n + 6 = \Omega(n)$$
+
+   /True or false?/
+
+   $$3n^2 - 100n + 6 = \theta(n)$$
+* Big-O Practice
+  #+BEGIN_NOTES
+  Ok, now I'm going to hand it over to you. As a group, I'd like you
+  to classify the following function relationships.
+
+  ---
+
+  Go to definition:
+
+  f(n) = O(g(n)) if f(n) \le C \times g(n)
+
+  f(n) = \Omega(g(n)) if f(n) \ge C \times g(n)
+
+  1. There is no constant to multiply 6n+7 by that will make it always
+     bigger than n^2, so f(n) \ne O(g(n)). For n\ge7, f(n) > C \times g(n), so
+     f(n) = \Omega(g(n)).
+
+  2. comparing n^{3/2} = n^2. C=1 for any value of n, n^2 will be greater
+     than n^{3/2} so f(n) = O(g(n)). Likewise, because C=1 provides O,
+     there is no C where f(n) > C \times g(n), so f(n) \ne \Omega(g(n))
+
+  3. 2^n always greater than n^4, so f(n) = \Omega(g(n)), but f(n) \ne O(g(n))
+
+  If g will always be greater than f, f(n) = O(g(n)), if f will always
+  be greater than g, f(n) = \Omega(g(n)). If you can make it go either way
+  by picking different constants, you have \theta on your hands.
+
+  #+END_NOTES
+  For each of the following pairs of functions $f(n)$ and $g(n)$
+
+  1. $f(n)=n^2+3n+4, g(n)=6n+7$
+  2. $f(n)=n {\sqrt n}, g(n)=n^2−n$
+  3. $f(n)=2^n−n^2, g(n)=n^4+n^2$
+
+  state whether
+
+  - $f(n)=O(g(n))$
+  - $f(n)=\Omega(g(n))$
+  - $f(n)=\theta(g(n))$
+  - none of the above.
+
+* Why Data Structures Matter
+  #+BEGIN_NOTES
+   Most languages come with off-the-shelf components that we build our
+   algorithms from. These are our arrays, stacks, queues, lists,
+   etc. These are the off-the-shelf data structures that are at the
+   heart of our algorithms. There is immense power in data structures,
+   and swapping one data structure for another can have a massive
+   impact in the time to execute the program based on its trade-offs
+   without changing the correctness of the program, improving or
+   decimating the program's performance.
+  #+END_NOTES
+  #+BEGIN_QUOTE
+  "Mankind’s progress is measured by the number of things we can do
+  without thinking."
+
+  -- Alfred North Whitehead
+  #+END_QUOTE
+
+** Aspects of Data Structures
+   #+BEGIN_NOTES
+   There's an important distinction we want to make clear when we're
+   talking about data structures, and that is the two major aspects of
+   the data structure... the abstraction of the operations it
+   supports, and the actual implementation of those operations.
+   #+END_NOTES
+   - The abstraction data type
+   - The implementation of its operations
+
+** ADTs
+   #+BEGIN_NOTES
+   An abstraction allows us to use a data structure "without thinking"
+   because we can focus on what the data structure is supposed to do
+   without worrying about how it is doing it.
+
+   A stack could implement these with a list or an array, or something
+   else depending on which language we're using! There might even be
+   multiple implementations of the same abstract data type included in
+   your language or the standard library for it, and though they
+   support the same API, the underlying implementation of that API
+   could have drastic effects on the speed of your program based on
+   how you use it.
+   #+END_NOTES
+   Here is the API for a Stack:
+   - ~push(s, x)~ - insert $x$ at the top of stack $s$
+   - ~pop(s)~ - return and remove the top of stack $s$
+
+   How these are implemented on the stack will have an effect on
+   performance depending on the circumstance.
+
+** Contiguous vs Linked
+   There are two classes of data structures when it comes to storage
+   and organization.
+
+   - Contiguous: memory allocated in contiguous chunks
+     - arrays, matrices, heaps, hash tables
+   - Linked: distinct memory location joined by pointers
+     - lists, trees, graph adjacency lists
+
+* Arrays
+  #+BEGIN_NOTES
+  So, let's take a look a the quintessential contiguous data
+  structure, the array.
+
+  ---
+
+  Amusingly enough, the languages that we use most commonly don't make
+  any guarantees about contiguous memory storage by default, if
+  ever. Swift offers the ContiguousArray class, but Javascript arrays
+  are an abstraction built on maps, and Java will happily reorganize
+  its memory on GC.
+  #+END_NOTES
+  An array is a fixed sized structure of data records, stored so that
+  each element can be accessed efficiently by its index or address.
+
+  Good stuff:
+  - Constant time access with a provided index
+  - Strictly data - no metadata for lengths, links, etc
+  - Faster caching due to continuity in memory
+
+** Dynamic Arrays
+   #+BEGIN_NOTES
+   As we just mentioned, a normal array is a fixed size, meaning that
+   during execution there is no way to change the size. But what
+   happens if we might need a lot of space, but we're not sure?
+   Compensating for this by allocating excessively large amounts of
+   memory is wasteful.
+   #+END_NOTES
+   - Work like arrays but expand as necessary.
+   - Start at 1 capacity and double in size each time they run out of
+     space - meaning $\log_2 n$ expansions for $n$ items.
+
+** Are Dynamic Arrays worth it?
+   #+BEGIN_NOTES
+   Copying items to a new memory space every time the array is full
+   seems wasteful, right? Well, think about it. If half the elements
+   move once, then a quarter of the elements move twice, an eighth
+   move 3 times... you get the idea. We can represent this number of
+   copies with this summation as C.
+
+   ---
+
+   This property is called geometric series convergence and it can be
+   thought of as the free lunch of algorithm analysis.
+   #+END_NOTES
+   $$C = \sum_{i=1}^{\log n} i \times {n \over 2^i} \le n \sum_{i=1}^\infty {i \over 2^i} = 2n$$
+
+   On average, each element moves only twice.
+
+   The total work for managing this is O(n), the same as an array.
+
+* Lists
+  Lists are one of the fundamental linked data structures. Linked
+  structures use pointers to connect their elements.
+
+  - Allocated as needed, no unutilized memory
+  - Can operate in fragmented memory
+  - Constant-time access to head
+
+** Searching a list
+   #+BEGIN_NOTES
+   What steps would we need to take to find an element in a linked
+   list?
+   #+END_NOTES
+
+   [[./img/list_search.png]]
+
+** Insert into a list
+   #+BEGIN_NOTES
+   What about inserting into a list? What's the effort required to add
+   new elements to a list?
+   #+END_NOTES
+
+   [[./img/list_insert.png]]
+
+** Delete from a list
+   #+BEGIN_NOTES
+   OK, let's try one more, deletion. What effort is necessary to
+   remove a specific item from a list?
+   #+END_NOTES
+
+   [[./img/list_delete.png]]
+
+** Linked list Goodies
+   #+BEGIN_NOTES
+   So what are the advantages of linked lists? Well, aside from the
+   complexity differences of the operations compared to arrays, we're
+   only limited by the amount of memory available. Because we're
+   allocating heap memory as need when items are added, there's no
+   need to have a contiguous chunk of memory of the size necessary to
+   allocate.
+   #+END_NOTES
+   - Theoretically no overflow
+   - Insertion and deletion simpler than arrays
+   - For large records, moving pointers is simpler than moving items
+     in physical memory
+
+** Singly or Doubly linked?
+   #+BEGIN_NOTES
+   What are the advantages or disadvantages of using a singly or
+   doubly-linked list? How much more work is a doubly-linked list than
+   a singly-linked list?
+
+
+   We gain flexibility on predecessor queries at a cost of doubling
+   the number of pointers by using a doubly linked list.
+
+   A doubly linked list means more operations for insertions and
+   deletions as well as more storage space, but what is the overhead?
+
+   ---
+
+   The increase is a constant between n and 2n, so the Big-O
+   complexity remains the same for these operations.
+   #+END_NOTES
+
+   [[./img/singly_linked_list.png]]
+
+   [[./img/list_search.png]]
+
+* Stacks and Queues
+  #+BEGIN_NOTES
+  With the array and list, we're probably most concerned with the
+  content of the things we're storing, and perhaps secondarily
+  concerned with the order that content is stored.
+
+  Sometimes we're not so much concerned with the content of data we
+  need to collect, but the order which we retrieve it based on when it
+  arrived.
+  #+END_NOTES
+
+  Stack: LIFO (last-in, first-out)
+  - ~push(s, x)~ - add item ~x~ to stack ~s~
+  - ~pop(s)~ - return and delete the top item in stack ~s~
+
+  Queue: FIFO (first-in, first-out)
+  - ~enqueue(q, x)~ - add item ~x~ to queue ~q~
+  - ~dequeue(q)~ - return and delete front item from queue ~q~
+
+** Implementing Stacks and Queues
+   #+BEGIN_NOTES
+   In the prerequisites for this class, you implemented a stack and a
+   queue. Let's take a moment to discuss what strategies you used to
+   implement those, and which you found were most successful. How did
+   most of you do it? What do you think was the complexity of the code
+   you wrote and what do you think the complexity should have been in
+   the ideal case?
+   #+END_NOTES
+   Group Discussion: What were the strategies you found successful
+   when implementing stacks and queues at the end of CS1?
+
+** Implementing Stacks and Queues
+   #+BEGIN_NOTES
+   All operations for stacks and queues can be implemented in O(1)
+   time for both structures with either arrays or lists.
+   #+END_NOTES
+   Stack: easily implemented with an array, push and pop increment
+   and decrement a pointer.
+
+   Queue: easily implemented as a doubly linked list with enqueue and
+   dequeue operating on opposite ends of the list.
+
+** Why use stacks and queues?
+   #+BEGIN_NOTES
+   Both of these containers embed a strategy for graph traversal. The
+   difference between a Depth-first search and a Breadth-first search
+   is whether a stack or a queue holds the items to process.
+   #+END_NOTES
+   - Both are good options when order doesn't matter
+   - If order does matter, choose appropriate container
+   - BFS vs. DFS
+
+* Dictionaries
+  #+BEGIN_NOTES
+  What may be the most important class of data structures are those
+  that maintain a set of items indexed by keys. These are commonly
+  known as dictionaries, maps, or dynamic sets.
+  #+END_NOTES
+
+   - ~search(s, k)~ - Given a set ~s~ and key ~k~, return a pointer to an
+     element in ~s~ or nil if no such element
+   - ~insert(s, x)~ - modify ~s~ to contain ~x~
+   - ~delete(s, x)~ - remove ~x~ from ~s~.
+   - ~min(s)~, ~max(s)~ - returns the element of ~s~ which has the
+     smallest/largest key.
+   - ~predecessor(s,x)~, ~successor(s,x)~ - Given some element ~x~ whose key
+     is from an ordered set ~s~, return the next/previous element or
+     nil if no such element. (Logical successor, not storage order)
+
+** Implementing Dictionaries
+   Group practice:
+
+   What's the asymptotic worst-case run time for each of a
+   dictionary's operations if we implement them with:
+
+   - An unsorted array
+   - An array sorted by value
+
+** Implementing Dictionaries
+
+   | Operation | Unsorted Array           | Sorted Array             |
+   |-----------+--------------------------+--------------------------|
+   | search    | sequential search - O(n) | binary search - O(lg n)  |
+   | insert    | first empty spot - O(1)  | search, make room - O(n) |
+   | delete    | delete, decrement - O(1) | delete, make room - O(n) |
+   | min/max   | sequential search - O(n) | first or last - O(1)     |
+   | pred/succ | sequential search - O(n) | increment pointer - O(1) |
+
+** What about lists?
+   #+BEGIN_NOTES
+   Search: O(n) for all, because we must always start traversal at head
+
+   Insert: O(1) for unsorted, O(n) for sorted
+
+   Delete: O(n) for singly-linked, O(1) for doubly-linked
+
+   Succ/Pred: O(n) for singly-linked, O(1) for doubly-linked
+
+   Min/Max: O(n) for unsorted, O(1) for sorted
+   #+END_NOTES
+   Group practice:
+
+   What's the asymptotic worst-case run time for each of a
+   dictionary's operations if we implement them with:
+
+   - A singly linked list
+   - A doubly linked list
+   - A singly linked sorted list
+   - A doubly linked sorted list
+
+** Dictionaries backed by lists
+   #+BEGIN_NOTES
+   search: No matter what we do, we'll always need to check all elements
+
+   insert: this mostly depends on sorting. we need to traverse for
+   sorted whereas we can add a head for unsorted
+
+   delete: because we don't have the predecessor for singly-linked
+   lists, we'll need to do a search for them, maintaining the
+   predecessor to put the list back together. for doubly-linked lists
+   this is a constant time operation.
+
+   successor: for sorted operations, we can always find the next
+   because it's a direct pointer, but in an unsorted list we will
+   always need to search for it
+
+   predecessor: again, always search for unsorted, but constant for
+   doubly linked sorted, since we just go back one. for singly-linked,
+   unsorted lists we still need to search because we're not
+   maintaining the previous pointer.
+
+   min: singly-linked unsorted means searching, but it's always the
+   head for sorted lists
+
+   max: always need to search unsorted. should be the last element in
+   sorted list, so maintaining a pointer to it to support this
+   operation is constant time. Singly linked is tricky here, because
+   we can use the same strategy and update this end pointer on delete,
+   making it 2n instead of n, which is still O(n) complexity.
+   #+END_NOTES
+
+   | Operation   | SU    | DU   | SS    | DS   |
+   |-------------+-------+------+-------+------|
+   | search      | O(n)  | O(n) | O(n)  | O(n) |
+   | insert      | O(1)  | O(1) | O(n)  | O(n) |
+   | delete      | O(n)* | O(1) | O(n)* | O(1) |
+   | successor   | O(n)  | O(n) | O(1)  | O(1) |
+   | predecessor | O(n)  | O(n) | O(n)* | O(1) |
+   | min         | O(n)  | O(n) | O(1)  | O(1) |
+   | max         | O(n)  | O(n) | O(1)* | O(1) |
