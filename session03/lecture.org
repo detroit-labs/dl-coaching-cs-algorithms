@@ -1,0 +1,534 @@
+#+TITLE:  Computer Science 2: Algorithms
+#+AUTHOR: Detroit Labs Dev Coaching
+#+DATE:   2018
+#+EMAIL:  ndotz@detroitlabs.com
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   skip:nil d:nil todo:t pri:nil tags:not-in-toc timestamp:nil
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+REVEAL_PLUGINS: (highlight notes)
+#+REVEAL_THEME: league
+#+REVEAL_MARGIN: 0.2
+# #+REVEAL_MIN_SCALE: 0.5
+# #+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_EXTRA_CSS: ./presentation.css
+
+* Lecture 3
+
+* Binary Search Trees
+  #+BEGIN_NOTES
+  Last session we used our previous experience with building data
+  structures out of arrays and linked lists to think about the
+  implications of building a new type that we haven't looked at
+  before, the Dictionary. We saw that storing things in unsorted
+  structures gave us benefits for insertion and deletions, while
+  storing them sorted gave us benefits for querying the
+  data. Likewise, there were some trade-offs and workarounds whether
+  we wanted to use an array or a list. However, there exists a data
+  structure that efficiently supports all of the dictionary
+  operations - the binary search tree.
+  #+END_NOTES
+  [[./img/binary_tree.png]]
+
+  - Rooted tree
+  - Each node contains at most 2 children
+  - Child nodes identified as "left" or "right" child
+
+** BST rules
+   #+BEGIN_NOTES
+   A binary search tree labels each node x in a binary tree such that
+   all nodes in the left subtree of x have keys < x and all nodes in
+   the right have keys > x. This allows us to find where any key is.
+   #+END_NOTES
+   [[./img/binary_search_tree.svg]]
+
+   For any node $x$ in a binary search tree
+   - All nodes in the left subtree of $x$ have keys < $x$
+   - All nodes in the right subtree of $x$ have keys > $x$
+
+** Implementing BSTs
+   #+BEGIN_SRC c
+   typedef struct tree {
+     item_type item;
+     struct tree *left;
+     struct tree *right;
+   } tree;
+   #+END_SRC
+
+   #+BEGIN_SRC c
+   tree *search_tree(tree *t, item_type x) {
+       if (t == NULL) return(NULL);
+       if (t->item == x) return(t);
+       if (x < t->item)
+           return(search_tree(t->left, x));
+       else
+           return(search_tree(t->right, x));
+   }
+   #+END_SRC
+
+** Binary Search Properties
+   - Subtrees of a tree are also binary search trees
+   - Binary search trees are recursive structures
+   - Binary search trees may be searched recursively
+   - Search time proportional to height, so $O(\log n)$
+   - Worst case is $O(h)$
+
+** BST Min and Max
+   Where are the minimum and maximum values in a binary search tree?
+
+   [[./img/binary_search_tree.svg]]
+
+   #+ATTR_REVEAL: :frag t
+   - Minimum is the left-most node
+   - Maximum is the right-most node
+
+** Implementing Minimum
+   #+BEGIN_NOTES
+   To implement the minimum, we can simply iterate on the left pointer
+   of a tree until we find a left pointer that is null, indicating
+   that we've reached the left-most node of the tree. Implementing max
+   is as simple as replacing the references to the left pointer with
+   references to the right pointer.
+
+   Of course, we can also implement this recursively, given the
+   recursive nature of the data structure.
+
+   Just like a binary search, this is going to be O(h), or O(log n) if
+   the tree is perfectly balanced.
+   #+END_NOTES
+
+   #+BEGIN_SRC c
+   tree *find_minimum(tree *t) {
+       tree *min; /* pointer to minimum */
+       if (t == NULL) return(NULL);
+       min = t;
+       while (min->left != NULL)
+           min = min->left;
+       return(min);
+   }
+   #+END_SRC
+   #+BEGIN_SRC c
+   tree *find_minimum(tree *t) {
+       if (t == NULL) return(NULL);
+       if (t->left == NULL) return t;
+       return find_minimum(t->left);
+   }
+   #+END_SRC
+
+** Predecessor and Successor
+   #+BEGIN_NOTES
+   How can we find the predecessor of a given node? What about the
+   successor?
+   #+END_NOTES
+
+   [[./img/pred_succ_1.png]]
+
+** Predecessor and Successor
+   #+BEGIN_NOTES
+   If a node has two children, its predecessor is the maximum of the
+   left subtree, while its successor is the minimum of the right
+   subtree.
+   #+END_NOTES
+   [[./img/pred_succ_2.png]]
+
+** Predecessor and Successor
+   #+BEGIN_NOTES
+   If the node is a leaf, the predecessor is the corresponding parent
+   that has the opposite-direction parentage. What are the complexity
+   implications of needing to retain the parent node to make
+   predecessor queries?
+   #+END_NOTES
+   [[./img/pred_succ_3.png]]
+
+** Predecessor and Successor
+   #+BEGIN_NOTES
+   What about a more complex example though? What if we want to find
+   the predecessor to this node n?
+   #+END_NOTES
+   [[./img/pred_succ_4.png]]
+
+** Predecessor and Successor
+   #+BEGIN_NOTES
+   If it does not have a left child, a node’s predecessor is its first
+   left ancestor. We can see that this is true if we take a look at an
+   in-order traversal of a tree.
+   #+END_NOTES
+   [[./img/pred_succ_5.png]]
+
+** In-Order Traversal
+   #+BEGIN_NOTES
+   Given the root of some tree, if we want to traverse the tree in
+   order, we want to start with the left-most nodes first. So, before
+   we process any of the elements, we will recursively call traverse
+   on the left-hand side of the tree, eventually reaching the
+   left-most node, or the min. Once each left tree is processed, the
+   node will be visited by our function, and then its right tree will
+   be processed recursively.
+
+   So, we can see that the visiting function will be called on the
+   left-most node first, then on the node itself, and then on the
+   right side tree of that node. Thus for the first node in the
+   right-side tree, the parent of the entire right tree is the
+   predecessor node.
+   #+END_NOTES
+   #+BEGIN_SRC c
+   void traverse_tree(tree *l, void (*f)(item_type)) {
+       if (l != NULL) {
+           traverse_tree(l->left, f);
+           f(l->item);
+           traverse_tree(l->right, f);
+       }
+   }
+   #+END_SRC
+
+** In-Order Traversal
+   #+BEGIN_NOTES
+   This diagram shows the order that the visiting function will be
+   called on for this particular tree.
+
+   If the visiting function is considered to be O(1), what is the
+   complexity of this traversal? It is O(h), which is O(log n) in the
+   best case.
+
+   Likewise, what can we deduce about the worst, case scenario of
+   predecessor and successor? Can you draw an example of the
+   worst-case scenario and tell me how it relates to the number of nodes?
+   #+END_NOTES
+
+   [[./img/pred_succ_6.png]]
+
+** Insertion into BST
+   #+BEGIN_NOTES
+   So, we know that search, min, max, pred and succ are all O(h), but
+   what about insertion? What process is necessary to insert values
+   into this tree?
+
+   10? 5? 1? 13? 15?
+
+   What's the complexity of that? Once again, it's O(h), a time that
+   is proportional to the height of the tree.
+   #+END_NOTES
+
+   [[./img/insertion_1.png]]
+
+** Insertion Code
+   #+BEGIN_SRC c
+    insert_tree(tree **l, item type x, tree *parent) {
+        tree *p;
+        if (*l == NULL) {
+            p = malloc(sizeof(tree));
+            p->item = x;
+            p->left = p->right = NULL;
+            p->parent = parent;
+            *l = p;
+            return;
+        }
+        if (x < (*l)->item)
+            insert_tree(&((*l)->left), x, *l);
+        else
+            insert_tree(&((*l)->right), x, *l);
+    }
+   #+END_SRC
+** Deletion from BST
+   #+BEGIN_NOTES
+   What about deletion? This is going to be a more sticky situation,
+   right? What are the cases for deleting various nodes from a tree?
+   #+END_NOTES
+
+   [[./img/deletion_1.png]]
+
+   #+ATTR_REVEAL: :frag (roll-in)
+   - Node is a leaf
+     - Delete parent node's child pointer
+   - Node has one child
+     - Make child node the parent's child node
+   - Node has two children
+     - Relabel node as its successor, delete successor
+
+** Deletion from BST
+   #+BEGIN_NOTES
+   To delete a leaf node, we can simply null out the pointer to that
+   node in the parent node and do any necessary de-allocation.
+   #+END_NOTES
+   [[./img/deletion_2.png]]
+
+   [[./img/deletion_3.png]]
+
+** Deletion from BST
+   #+BEGIN_NOTES
+   To delete a node with one child, we re-assign the child to the
+   parent's pointer that used to point to the node to be deleted.
+   #+END_NOTES
+   [[./img/deletion_4.png]]
+
+   [[./img/deletion_5.png]]
+
+** Deletion from BST
+   #+BEGIN_NOTES
+   Lastly, if we are deleting a node that has multiple children, we
+   need to do a successor query, then relabel the node that we are
+   deleting as its successor.
+   #+END_NOTES
+   [[./img/deletion_6.png]]
+
+   [[./img/deletion_7.png]]
+
+** BSTs for Dictionaries
+   #+BEGIN_NOTES
+   So all of the functions operate in time proportional to the
+   height. Why don't we say this is log n time?
+
+   ---
+
+   log n time is only if the tree is perfectly balanced! If we're
+   unlucky, our binary tree may well become a linked list!
+   #+END_NOTES
+
+   | Operation | Complexity |
+   |-----------+------------|
+   | Search    | O(h)       |
+   | Insert    | O(h)       |
+   | Delete    | O(h)       |
+   | Min/Max   | O(h)       |
+   | Pred/Succ | O(h)       |
+
+   Why not $O(\log n)$?
+
+   $$\sum_{i=0}^{\log n} 2^i \approx n$$
+
+** Worst case for BST
+   #+BEGIN_NOTES
+   For example, if we insert a set of integers in sorted order, and
+   make no steps to balance the tree, all operations will be in \theta(n)
+   #+END_NOTES
+   [[./img/worst_case.png]]
+
+** Average case
+   #+BEGIN_NOTES
+   When we talk about quicksort later on, we'll see why the expected
+   height will *usually* be \theta(log n).
+   #+END_NOTES
+   On average, binary search trees constructed with random insertion
+   orders operate in $\theta(\log n)$. Half of the time, the value will be
+   closer to the median than to the min or max.
+
+** Balanced Search Trees
+   #+BEGIN_NOTES
+   A perfectly balanced tree would allow all dictionary operations to
+   operate in O(log n) instead of \theta(log n).
+
+   ---
+
+   So where do we get the idea of O(log n) for binary trees? It might
+   come from special binary trees that maintain a balanced structure
+   like red-black trees or B-trees, but likely it's that when people
+   think of a tree, they think of a nicely drawn picture of a well
+   balanced binary tree, and from the idea of dropping half of the
+   search results each time, such as in binary search.
+   #+END_NOTES
+   - Balanced = Height is $O(\log n)$
+   - No data structure can beat $\theta(\log n)$ for dictionary ops
+   - Balancing must be done every insert or delete
+
+* BST as Dictionary Practice.
+  Sort $n$ numbers. You have access to a dictionary data structure
+  backed by a balanced binary tree which supports each of the
+  dictionary functions in $O(\log n)$ time.
+
+  - Sort in $O(n \log n)$ using only ~min~, ~succ~, ~insert~ and ~search~
+  - Sort in $O(n \log n)$ using only ~min~, ~insert~, ~delete~ and ~search~
+  - Sort in $O(n \log n)$ using only ~insert~ and in-order traversal
+
+* Hashing
+
+** Hash Tables
+   #+BEGIN_NOTES
+   Another very practical data structure to maintain a dictionary is a
+   hash table. A hash table uses a hash function to compute an index
+   into an array of "buckets". Why is this good for implementing a
+   dictionary? Simply looking up an item in an array is \theta(n) once you
+   have the index, even though the worst-case guarantee is O(n)
+   #+END_NOTES
+   [[./img/hash_table.svg]]
+
+** Hash collisions
+   #+BEGIN_NOTES
+   When we map multiple keys to the same "bucket", we get what is
+   known as a collision. If the keys are evenly distributed, each
+   bucket should contain very few keys. There are a few ways of
+   dealing with collisions, such as chaining. Chaining is essentially
+   placing a linked list at the hash position to allow very short
+   lists of values to be assigned to the same key. However, this uses
+   up memory that could just as easily be used to increase the size of
+   the tables. Likewise, open addressing with sequential probing
+   allows utilization of an array even if the hash function provides
+   frequent collisions.
+   #+END_NOTES
+   [[./img/hash_chaining.png]]
+
+** Hash functions
+   #+BEGIN_NOTES
+   Hash functions jobs are generally to map keys to integers. We want
+   them to be cheap to evaluate, so running in constant time, and we
+   want them to use the key space available relatively uniformly, so
+   that there are minimal collisions.
+   #+END_NOTES
+   Good hash functions:
+   - are cheap to evaluate
+   - use the space available with uniform frequency
+
+** Hash function properties
+   #+BEGIN_NOTES
+   A good first step is usually to map the key to a big integer. So if
+   we're using stings as keys, we might use something like this
+   summation.
+
+   As we can see, this creates very large numbers. There's a good
+   chance we aren't allocating that many buckets in an array, so we
+   need to reduce this. A common strategy is to take the modulo of
+   this large number and some large prime. This prime should be near
+   the available storage space, but not too near 2^i - 1 as this would
+   mask off the high bits! So if we have 64 spaces available, we might
+   select 61, and this would provide indices to store in between 0 and 60.
+   #+END_NOTES
+   $$h = \sum_{i=0}^{keylength} 128^i \times char(key[i])$$
+
+   For the string "hello" this is ~30024610504~.
+
+   For the string "Detroit Labs is cool" it's
+   ~1185532983286754203132857547208457428218564~
+
+   #+BEGIN_SRC c
+   hash("hello") % 61 = 6
+   hash("Detroit Labs is cool") % 61 = 21
+   #+END_SRC
+
+** Social Security Numbers
+   #+BEGIN_NOTES
+   Let's map out the digits in our social security numbers. We want to
+   compare the quality of the hashing between the first three digits
+   of your social security number versus the last 3 digits of social
+   security numbers.
+
+   ---
+
+   First 5 digits of soc # are based on place you are born and what
+   year it was. The last 4 digits are assigned sequentially. Because
+   of this, the last 3 digits of a social security number are a much
+   better hash code than the first 3.
+   #+END_NOTES
+
+   Good hashing or bad hashing?
+
+** Performance for Sets/Dictionaries
+   #+BEGIN_NOTES
+   Here is the performance of hash tables for maintaining a
+   dictionary. n is the number of elements and m is the number of
+   buckets available.
+
+   A hash table is often pragmatically the best data structure to
+   maintain a dictionary especially if we want to focus on insertion
+   and retrieval. As we can see though, the worst-case is highly
+   unpredictable.
+   #+END_NOTES
+   |             | Expected         | Worst Case |
+   |-------------+------------------+------------|
+   | Search      | $O({n \over m})$ | $O(n)$     |
+   | Insert      | $O(1)$           | $O(n)$     |
+   | Delete      | $O(1)$           | $O(n)$     |
+   | Predecessor | $\theta(n+m)$         | $\theta(n+m)$   |
+   | Successor   | $\theta(n+m)$         | $\theta(n+m)$   |
+   | Minimum     | $\theta(n+m)$         | $\theta(n+m)$   |
+   | Maximum     | $\theta(n+m)$         | $\theta(n+m)$   |
+
+** Hashing, Hashing and hashing
+   #+BEGIN_NOTES
+   Udi Manber, formerly of Google, is said to have claimed that the
+   three most important algorithms at Google are hashing, hashing and
+   hashing.
+   #+END_NOTES
+   Hashing is used for all kinds of clever things outside of doing
+   fast searches, as it gives us a short but highly distinct
+   representation of a large document.
+
+** Hashing, Hashing and hashing
+   Is some record different from the rest in a collection?
+
+   Hash the record and compare to existing hash codes.
+
+** Hashing, Hashing and hashing
+   Does part of this record exist in part of another record?
+
+    Hash overlapping windows of the documents, if hash codes match,
+    possible match in partial records.
+
+** Hashing, Hashing and hashing
+   Detecting changes in a file?
+
+   Hash the file and compare against the hash of the original - git
+   works this way.
+
+** Substring Pattern Matching
+   #+BEGIN_NOTES
+   Worst case is O(n \times m) for brute force.
+
+   A hashing solution has us computing a hash on the pattern, then
+   hashing sections of the search text piece by piece at lengths
+   equivalent to the pattern. This search occurs in O(n).
+   #+END_NOTES
+   Input: A text string t and a pattern string p
+   Problem: Does t contain the pattern p as a substring and if so,
+   where?
+   e.g. Is "Dotz" in the Poetic Edda? Is "Ee-Ei-Ee-Ei-Oh" in the Bible?
+
+* Priority Queues
+  #+BEGIN_NOTES
+  Because the book introduces the concept, I wanted to touch on
+  priority queues for a moment. They support 3 operations.
+  #+END_NOTES
+  + $insert(q, x)$: Given an item $x$ with key $k$, insert into queue $q$
+  + $find-min(q)$: Return item whose value is smaller than others in $q$
+  + $delete-min(q)$: Delete item from $q$ whose key is minimum in $q$
+
+** Priority queue implementations
+   #+BEGIN_NOTES
+   unsorted - O(1), O(1)* keep pointer, O(n)
+
+   sorted - O(n), O(1), O(1)
+
+   bst - O(log n), O(1), O(log n)
+
+   ---
+
+   We'll be covering the priority queue more in-depth when we start to
+   look much more closely at sorting algorithms and their related data
+   structures next week.
+   #+END_NOTES
+   What is the complexity of implementing such a queue with each of
+   the following data structures?
+
+   |            | Unsorted Array | Sorted Array | Balanced Binary Tree |
+   |------------+----------------+--------------+----------------------|
+   | insert     |                |              |                      |
+   | find-min   |                |              |                      |
+   | delete-min |                |              |                      |
+
+* Specialized Data Structures
+  #+BEGIN_NOTES
+  There are a myriad of other data structures out there, and
+  considering they're all built out of the fundamental parts of our
+  programming languages (which we all know at some point are just
+  pointers to bits) there's no way we can cover all of them. We make
+  our own data structures every time we combine our fundamental types
+  into classes containing arrays and records pointers. What important
+  to understand is that when we create those types, just like these
+  data structures, how they are constructed incurs some kind of
+  performance rules. The rules don't change just because we're leaving
+  C++ to go back to our day jobs.
+  #+END_NOTES
+  - Strings
+  - Geometric data structures - points, regions, polygons
+  - Graph data structures
+  - Set data structures

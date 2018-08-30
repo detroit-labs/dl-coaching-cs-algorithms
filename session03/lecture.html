@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Computer Science 2: Algorithms</title>
+<meta name="author" content="(Detroit Labs Dev Coaching)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="./reveal.js/css/theme/league.css" id="theme"/>
+
+<link rel="stylesheet" href="./presentation.css"/>
+<link rel="stylesheet" href="./reveal.js/lib/css/zenburn.css"/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Computer Science 2: Algorithms</h1><h2 class="author">Detroit Labs Dev Coaching</h2><h2 class="date">2018</h2>
+</section>
+
+<section>
+<section id="slide-org30f8482">
+<h2 id="org30f8482">Lecture 3</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-org053c295">
+<h2 id="org053c295">Binary Search Trees</h2>
+<aside class="notes">
+<p>
+Last session we used our previous experience with building data
+structures out of arrays and linked lists to think about the
+implications of building a new type that we haven't looked at
+before, the Dictionary. We saw that storing things in unsorted
+structures gave us benefits for insertion and deletions, while
+storing them sorted gave us benefits for querying the
+data. Likewise, there were some trade-offs and workarounds whether
+we wanted to use an array or a list. However, there exists a data
+structure that efficiently supports all of the dictionary
+operations - the binary search tree.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/binary_tree.png" alt="binary_tree.png" />
+</p>
+</div>
+
+<ul>
+<li>Rooted tree</li>
+<li>Each node contains at most 2 children</li>
+<li>Child nodes identified as "left" or "right" child</li>
+
+</ul>
+
+</section>
+<section id="slide-orgbdc5bcf">
+<h3 id="orgbdc5bcf">BST rules</h3>
+<aside class="notes">
+<p>
+A binary search tree labels each node x in a binary tree such that
+all nodes in the left subtree of x have keys &lt; x and all nodes in
+the right have keys &gt; x. This allows us to find where any key is.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/binary_search_tree.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+<p>
+For any node \(x\) in a binary search tree
+</p>
+<ul>
+<li>All nodes in the left subtree of \(x\) have keys &lt; \(x\)</li>
+<li>All nodes in the right subtree of \(x\) have keys &gt; \(x\)</li>
+
+</ul>
+
+</section>
+<section id="slide-orgb798d07">
+<h3 id="orgb798d07">Implementing BSTs</h3>
+<div class="org-src-container">
+
+<pre><code class="c" >typedef struct tree {
+  item_type item;
+  struct tree *left;
+  struct tree *right;
+} tree;
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="c" >tree *search_tree(tree *t, item_type x) {
+    if (t == NULL) return(NULL);
+    if (t->item == x) return(t);
+    if (x < t->item)
+        return(search_tree(t->left, x));
+    else
+        return(search_tree(t->right, x));
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orgf652aea">
+<h3 id="orgf652aea">Binary Search Properties</h3>
+<ul>
+<li>Subtrees of a tree are also binary search trees</li>
+<li>Binary search trees are recursive structures</li>
+<li>Binary search trees may be searched recursively</li>
+<li>Search time proportional to height, so \(O(\log n)\)</li>
+<li>Worst case is \(O(h)\)</li>
+
+</ul>
+
+</section>
+<section id="slide-orgec7d451">
+<h3 id="orgec7d451">BST Min and Max</h3>
+<p>
+Where are the minimum and maximum values in a binary search tree?
+</p>
+
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/binary_search_tree.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+<ul class="fragment">
+<li>Minimum is the left-most node</li>
+<li>Maximum is the right-most node</li>
+
+</ul>
+
+</section>
+<section id="slide-org5f435b6">
+<h3 id="org5f435b6">Implementing Minimum</h3>
+<aside class="notes">
+<p>
+To implement the minimum, we can simply iterate on the left pointer
+of a tree until we find a left pointer that is null, indicating
+that we've reached the left-most node of the tree. Implementing max
+is as simple as replacing the references to the left pointer with
+references to the right pointer.
+</p>
+
+<p>
+Of course, we can also implement this recursively, given the
+recursive nature of the data structure.
+</p>
+
+<p>
+Just like a binary search, this is going to be O(h), or O(log n) if
+the tree is perfectly balanced.
+</p>
+
+</aside>
+
+<div class="org-src-container">
+
+<pre><code class="c" >tree *find_minimum(tree *t) {
+    tree *min; /* pointer to minimum */
+    if (t == NULL) return(NULL);
+    min = t;
+    while (min->left != NULL)
+        min = min->left;
+    return(min);
+}
+</code></pre>
+</div>
+<div class="org-src-container">
+
+<pre><code class="c" >tree *find_minimum(tree *t) {
+    if (t == NULL) return(NULL);
+    if (t->left == NULL) return t;
+    return find_minimum(t->left);
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orgcfff7a7">
+<h3 id="orgcfff7a7">Predecessor and Successor</h3>
+<aside class="notes">
+<p>
+How can we find the predecessor of a given node? What about the
+successor?
+</p>
+
+</aside>
+
+
+<div class="figure">
+<p><img src="./img/pred_succ_1.png" alt="pred_succ_1.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org7c22ee3">
+<h3 id="org7c22ee3">Predecessor and Successor</h3>
+<aside class="notes">
+<p>
+If a node has two children, its predecessor is the maximum of the
+left subtree, while its successor is the minimum of the right
+subtree.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/pred_succ_2.png" alt="pred_succ_2.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org0a0d16f">
+<h3 id="org0a0d16f">Predecessor and Successor</h3>
+<aside class="notes">
+<p>
+If the node is a leaf, the predecessor is the corresponding parent
+that has the opposite-direction parentage. What are the complexity
+implications of needing to retain the parent node to make
+predecessor queries?
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/pred_succ_3.png" alt="pred_succ_3.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-orge17ad5f">
+<h3 id="orge17ad5f">Predecessor and Successor</h3>
+<aside class="notes">
+<p>
+What about a more complex example though? What if we want to find
+the predecessor to this node n?
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/pred_succ_4.png" alt="pred_succ_4.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-orgdd9279f">
+<h3 id="orgdd9279f">Predecessor and Successor</h3>
+<aside class="notes">
+<p>
+If it does not have a left child, a node’s predecessor is its first
+left ancestor. We can see that this is true if we take a look at an
+in-order traversal of a tree.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/pred_succ_5.png" alt="pred_succ_5.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org6324e61">
+<h3 id="org6324e61">In-Order Traversal</h3>
+<aside class="notes">
+<p>
+Given the root of some tree, if we want to traverse the tree in
+order, we want to start with the left-most nodes first. So, before
+we process any of the elements, we will recursively call traverse
+on the left-hand side of the tree, eventually reaching the
+left-most node, or the min. Once each left tree is processed, the
+node will be visited by our function, and then its right tree will
+be processed recursively.
+</p>
+
+<p>
+So, we can see that the visiting function will be called on the
+left-most node first, then on the node itself, and then on the
+right side tree of that node. Thus for the first node in the
+right-side tree, the parent of the entire right tree is the
+predecessor node.
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre><code class="c" >void traverse_tree(tree *l, void (*f)(item_type)) {
+    if (l != NULL) {
+        traverse_tree(l->left, f);
+        f(l->item);
+        traverse_tree(l->right, f);
+    }
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orgeb6ab5b">
+<h3 id="orgeb6ab5b">In-Order Traversal</h3>
+<aside class="notes">
+<p>
+This diagram shows the order that the visiting function will be
+called on for this particular tree.
+</p>
+
+<p>
+If the visiting function is considered to be O(1), what is the
+complexity of this traversal? It is O(h), which is O(log n) in the
+best case.
+</p>
+
+<p>
+Likewise, what can we deduce about the worst, case scenario of
+predecessor and successor? Can you draw an example of the
+worst-case scenario and tell me how it relates to the number of nodes?
+</p>
+
+</aside>
+
+
+<div class="figure">
+<p><img src="./img/pred_succ_6.png" alt="pred_succ_6.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org5f137b0">
+<h3 id="org5f137b0">Insertion into BST</h3>
+<aside class="notes">
+<p>
+So, we know that search, min, max, pred and succ are all O(h), but
+what about insertion? What process is necessary to insert values
+into this tree?
+</p>
+
+<p>
+10? 5? 1? 13? 15?
+</p>
+
+<p>
+What's the complexity of that? Once again, it's O(h), a time that
+is proportional to the height of the tree.
+</p>
+
+</aside>
+
+
+<div class="figure">
+<p><img src="./img/insertion_1.png" alt="insertion_1.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org18a03fc">
+<h3 id="org18a03fc">Insertion Code</h3>
+<div class="org-src-container">
+
+<pre><code class="c" >insert_tree(tree **l, item type x, tree *parent) {
+    tree *p;
+    if (*l == NULL) {
+        p = malloc(sizeof(tree));
+        p->item = x;
+        p->left = p->right = NULL;
+        p->parent = parent;
+        *l = p;
+        return;
+    }
+    if (x < (*l)->item)
+        insert_tree(&((*l)->left), x, *l);
+    else
+        insert_tree(&((*l)->right), x, *l);
+}
+</code></pre>
+</div>
+</section>
+<section id="slide-org621a948">
+<h3 id="org621a948">Deletion from BST</h3>
+<aside class="notes">
+<p>
+What about deletion? This is going to be a more sticky situation,
+right? What are the cases for deleting various nodes from a tree?
+</p>
+
+</aside>
+
+
+<div class="figure">
+<p><img src="./img/deletion_1.png" alt="deletion_1.png" />
+</p>
+</div>
+
+<ul>
+<li class="fragment roll-in">Node is a leaf
+<ul>
+<li>Delete parent node's child pointer</li>
+
+</ul></li>
+<li class="fragment roll-in">Node has one child
+<ul>
+<li>Make child node the parent's child node</li>
+
+</ul></li>
+<li class="fragment roll-in">Node has two children
+<ul>
+<li>Relabel node as its successor, delete successor</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section id="slide-org03df5c2">
+<h3 id="org03df5c2">Deletion from BST</h3>
+<aside class="notes">
+<p>
+To delete a leaf node, we can simply null out the pointer to that
+node in the parent node and do any necessary de-allocation.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/deletion_2.png" alt="deletion_2.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="./img/deletion_3.png" alt="deletion_3.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org5f33beb">
+<h3 id="org5f33beb">Deletion from BST</h3>
+<aside class="notes">
+<p>
+To delete a node with one child, we re-assign the child to the
+parent's pointer that used to point to the node to be deleted.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/deletion_4.png" alt="deletion_4.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="./img/deletion_5.png" alt="deletion_5.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-orgb11b0b4">
+<h3 id="orgb11b0b4">Deletion from BST</h3>
+<aside class="notes">
+<p>
+Lastly, if we are deleting a node that has multiple children, we
+need to do a successor query, then relabel the node that we are
+deleting as its successor.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/deletion_6.png" alt="deletion_6.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="./img/deletion_7.png" alt="deletion_7.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org0ce3b3b">
+<h3 id="org0ce3b3b">BSTs for Dictionaries</h3>
+<aside class="notes">
+<p>
+So all of the functions operate in time proportional to the
+height. Why don't we say this is log n time?
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+log n time is only if the tree is perfectly balanced! If we're
+unlucky, our binary tree may well become a linked list!
+</p>
+
+</aside>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Operation</th>
+<th scope="col" class="org-left">Complexity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Search</td>
+<td class="org-left">O(h)</td>
+</tr>
+
+<tr>
+<td class="org-left">Insert</td>
+<td class="org-left">O(h)</td>
+</tr>
+
+<tr>
+<td class="org-left">Delete</td>
+<td class="org-left">O(h)</td>
+</tr>
+
+<tr>
+<td class="org-left">Min/Max</td>
+<td class="org-left">O(h)</td>
+</tr>
+
+<tr>
+<td class="org-left">Pred/Succ</td>
+<td class="org-left">O(h)</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Why not \(O(\log n)\)?
+</p>
+
+<p>
+\[\sum_{i=0}^{\log n} 2^i \approx n\]
+</p>
+
+</section>
+<section id="slide-orgcc1410e">
+<h3 id="orgcc1410e">Worst case for BST</h3>
+<aside class="notes">
+<p>
+For example, if we insert a set of integers in sorted order, and
+make no steps to balance the tree, all operations will be in &theta;(n)
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/worst_case.png" alt="worst_case.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org857c550">
+<h3 id="org857c550">Average case</h3>
+<aside class="notes">
+<p>
+When we talk about quicksort later on, we'll see why the expected
+height will <b>usually</b> be &theta;(log n).
+</p>
+
+</aside>
+<p>
+On average, binary search trees constructed with random insertion
+orders operate in \(\theta(\log n)\). Half of the time, the value will be
+closer to the median than to the min or max.
+</p>
+
+</section>
+<section id="slide-org642ccbe">
+<h3 id="org642ccbe">Balanced Search Trees</h3>
+<aside class="notes">
+<p>
+A perfectly balanced tree would allow all dictionary operations to
+operate in O(log n) instead of &theta;(log n).
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+So where do we get the idea of O(log n) for binary trees? It might
+come from special binary trees that maintain a balanced structure
+like red-black trees or B-trees, but likely it's that when people
+think of a tree, they think of a nicely drawn picture of a well
+balanced binary tree, and from the idea of dropping half of the
+search results each time, such as in binary search.
+</p>
+
+</aside>
+<ul>
+<li>Balanced = Height is \(O(\log n)\)</li>
+<li>No data structure can beat \(\theta(\log n)\) for dictionary ops</li>
+<li>Balancing must be done every insert or delete</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org0ae0bed">
+<h2 id="org0ae0bed">BST as Dictionary Practice.</h2>
+<p>
+Sort \(n\) numbers. You have access to a dictionary data structure
+backed by a balanced binary tree which supports each of the
+dictionary functions in \(O(\log n)\) time.
+</p>
+
+<ul>
+<li>Sort in \(O(n \log n)\) using only <code>min</code>, <code>succ</code>, <code>insert</code> and <code>search</code></li>
+<li>Sort in \(O(n \log n)\) using only <code>min</code>, <code>insert</code>, <code>delete</code> and <code>search</code></li>
+<li>Sort in \(O(n \log n)\) using only <code>insert</code> and in-order traversal</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org293143e">
+<h2 id="org293143e">Hashing</h2>
+<div class="outline-text-2" id="text-org293143e">
+</div>
+</section>
+<section id="slide-orgece2dad">
+<h3 id="orgece2dad">Hash Tables</h3>
+<aside class="notes">
+<p>
+Another very practical data structure to maintain a dictionary is a
+hash table. A hash table uses a hash function to compute an index
+into an array of "buckets". Why is this good for implementing a
+dictionary? Simply looking up an item in an array is &theta;(n) once you
+have the index, even though the worst-case guarantee is O(n)
+</p>
+
+</aside>
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/hash_table.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+</section>
+<section id="slide-org5f80a95">
+<h3 id="org5f80a95">Hash collisions</h3>
+<aside class="notes">
+<p>
+When we map multiple keys to the same "bucket", we get what is
+known as a collision. If the keys are evenly distributed, each
+bucket should contain very few keys. There are a few ways of
+dealing with collisions, such as chaining. Chaining is essentially
+placing a linked list at the hash position to allow very short
+lists of values to be assigned to the same key. However, this uses
+up memory that could just as easily be used to increase the size of
+the tables. Likewise, open addressing with sequential probing
+allows utilization of an array even if the hash function provides
+frequent collisions.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/hash_chaining.png" alt="hash_chaining.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org2331761">
+<h3 id="org2331761">Hash functions</h3>
+<aside class="notes">
+<p>
+Hash functions jobs are generally to map keys to integers. We want
+them to be cheap to evaluate, so running in constant time, and we
+want them to use the key space available relatively uniformly, so
+that there are minimal collisions.
+</p>
+
+</aside>
+<p>
+Good hash functions:
+</p>
+<ul>
+<li>are cheap to evaluate</li>
+<li>use the space available with uniform frequency</li>
+
+</ul>
+
+</section>
+<section id="slide-orgf9cc304">
+<h3 id="orgf9cc304">Hash function properties</h3>
+<aside class="notes">
+<p>
+A good first step is usually to map the key to a big integer. So if
+we're using stings as keys, we might use something like this
+summation.
+</p>
+
+<p>
+As we can see, this creates very large numbers. There's a good
+chance we aren't allocating that many buckets in an array, so we
+need to reduce this. A common strategy is to take the modulo of
+this large number and some large prime. This prime should be near
+the available storage space, but not too near 2<sup>i</sup> - 1 as this would
+mask off the high bits! So if we have 64 spaces available, we might
+select 61, and this would provide indices to store in between 0 and 60.
+</p>
+
+</aside>
+<p>
+\[h = \sum_{i=0}^{keylength} 128^i \times char(key[i])\]
+</p>
+
+<p>
+For the string "hello" this is <code>30024610504</code>.
+</p>
+
+<p>
+For the string "Detroit Labs is cool" it's
+<code>1185532983286754203132857547208457428218564</code>
+</p>
+
+<div class="org-src-container">
+
+<pre><code class="c" >hash("hello") % 61 = 6
+hash("Detroit Labs is cool") % 61 = 21
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org13a56bb">
+<h3 id="org13a56bb">Social Security Numbers</h3>
+<aside class="notes">
+<p>
+Let's map out the digits in our social security numbers. We want to
+compare the quality of the hashing between the first three digits
+of your social security number versus the last 3 digits of social
+security numbers.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+First 5 digits of soc # are based on place you are born and what
+year it was. The last 4 digits are assigned sequentially. Because
+of this, the last 3 digits of a social security number are a much
+better hash code than the first 3.
+</p>
+
+</aside>
+
+<p>
+Good hashing or bad hashing?
+</p>
+
+</section>
+<section id="slide-orgc7a2a03">
+<h3 id="orgc7a2a03">Performance for Sets/Dictionaries</h3>
+<aside class="notes">
+<p>
+Here is the performance of hash tables for maintaining a
+dictionary. n is the number of elements and m is the number of
+buckets available.
+</p>
+
+<p>
+A hash table is often pragmatically the best data structure to
+maintain a dictionary especially if we want to focus on insertion
+and retrieval. As we can see though, the worst-case is highly
+unpredictable.
+</p>
+
+</aside>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">Expected</th>
+<th scope="col" class="org-left">Worst Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Search</td>
+<td class="org-left">\(O({n \over m})\)</td>
+<td class="org-left">\(O(n)\)</td>
+</tr>
+
+<tr>
+<td class="org-left">Insert</td>
+<td class="org-left">\(O(1)\)</td>
+<td class="org-left">\(O(n)\)</td>
+</tr>
+
+<tr>
+<td class="org-left">Delete</td>
+<td class="org-left">\(O(1)\)</td>
+<td class="org-left">\(O(n)\)</td>
+</tr>
+
+<tr>
+<td class="org-left">Predecessor</td>
+<td class="org-left">\(\theta(n+m)\)</td>
+<td class="org-left">\(\theta(n+m)\)</td>
+</tr>
+
+<tr>
+<td class="org-left">Successor</td>
+<td class="org-left">\(\theta(n+m)\)</td>
+<td class="org-left">\(\theta(n+m)\)</td>
+</tr>
+
+<tr>
+<td class="org-left">Minimum</td>
+<td class="org-left">\(\theta(n+m)\)</td>
+<td class="org-left">\(\theta(n+m)\)</td>
+</tr>
+
+<tr>
+<td class="org-left">Maximum</td>
+<td class="org-left">\(\theta(n+m)\)</td>
+<td class="org-left">\(\theta(n+m)\)</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+<section id="slide-org495c57d">
+<h3 id="org495c57d">Hashing, Hashing and hashing</h3>
+<aside class="notes">
+<p>
+Udi Manber, formerly of Google, is said to have claimed that the
+three most important algorithms at Google are hashing, hashing and
+hashing.
+</p>
+
+</aside>
+<p>
+Hashing is used for all kinds of clever things outside of doing
+fast searches, as it gives us a short but highly distinct
+representation of a large document.
+</p>
+
+</section>
+<section id="slide-org6dd554f">
+<h3 id="org6dd554f">Hashing, Hashing and hashing</h3>
+<p>
+Is some record different from the rest in a collection?
+</p>
+
+<p>
+Hash the record and compare to existing hash codes.
+</p>
+
+</section>
+<section id="slide-org17b5481">
+<h3 id="org17b5481">Hashing, Hashing and hashing</h3>
+<p>
+Does part of this record exist in part of another record?
+</p>
+
+<p>
+Hash overlapping windows of the documents, if hash codes match,
+possible match in partial records.
+</p>
+
+</section>
+<section id="slide-orgbf63870">
+<h3 id="orgbf63870">Hashing, Hashing and hashing</h3>
+<p>
+Detecting changes in a file?
+</p>
+
+<p>
+Hash the file and compare against the hash of the original - git
+works this way.
+</p>
+
+</section>
+<section id="slide-org886e07c">
+<h3 id="org886e07c">Substring Pattern Matching</h3>
+<aside class="notes">
+<p>
+Worst case is O(n &times; m) for brute force.
+</p>
+
+<p>
+A hashing solution has us computing a hash on the pattern, then
+hashing sections of the search text piece by piece at lengths
+equivalent to the pattern. This search occurs in O(n).
+</p>
+
+</aside>
+<p>
+Input: A text string t and a pattern string p
+Problem: Does t contain the pattern p as a substring and if so,
+where?
+e.g. Is "Dotz" in the Poetic Edda? Is "Ee-Ei-Ee-Ei-Oh" in the Bible?
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgaf3cce0">
+<h2 id="orgaf3cce0">Priority Queues</h2>
+<aside class="notes">
+<p>
+Because the book introduces the concept, I wanted to touch on
+priority queues for a moment. They support 3 operations.
+</p>
+
+</aside>
+<ul>
+<li>\(insert(q, x)\): Given an item \(x\) with key \(k\), insert into queue \(q\)</li>
+<li>\(find-min(q)\): Return item whose value is smaller than others in \(q\)</li>
+<li>\(delete-min(q)\): Delete item from \(q\) whose key is minimum in \(q\)</li>
+
+</ul>
+
+</section>
+<section id="slide-org4762db3">
+<h3 id="org4762db3">Priority queue implementations</h3>
+<aside class="notes">
+<p>
+unsorted - O(1), O(1)* keep pointer, O(n)
+</p>
+
+<p>
+sorted - O(n), O(1), O(1)
+</p>
+
+<p>
+bst - O(log n), O(1), O(log n)
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+We'll be covering the priority queue more in-depth when we start to
+look much more closely at sorting algorithms and their related data
+structures next week.
+</p>
+
+</aside>
+<p>
+What is the complexity of implementing such a queue with each of
+the following data structures?
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">Unsorted Array</th>
+<th scope="col" class="org-left">Sorted Array</th>
+<th scope="col" class="org-left">Balanced Binary Tree</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">insert</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">find-min</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">delete-min</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+</section>
+<section>
+<section id="slide-org2b02f4b">
+<h2 id="org2b02f4b">Specialized Data Structures</h2>
+<aside class="notes">
+<p>
+There are a myriad of other data structures out there, and
+considering they're all built out of the fundamental parts of our
+programming languages (which we all know at some point are just
+pointers to bits) there's no way we can cover all of them. We make
+our own data structures every time we combine our fundamental types
+into classes containing arrays and records pointers. What important
+to understand is that when we create those types, just like these
+data structures, how they are constructed incurs some kind of
+performance rules. The rules don't change just because we're leaving
+C++ to go back to our day jobs.
+</p>
+
+</aside>
+<ul>
+<li>Strings</li>
+<li>Geometric data structures - points, regions, polygons</li>
+<li>Graph data structures</li>
+<li>Set data structures</li>
+
+</ul>
+</section>
+</section>
+</div>
+</div>
+<script src="./reveal.js/lib/js/head.min.js"></script>
+<script src="./reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+margin: 0.20,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: './reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+ { src: './reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>
