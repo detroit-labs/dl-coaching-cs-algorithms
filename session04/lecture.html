@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Computer Science 2: Algorithms</title>
+<meta name="author" content="(Detroit Labs Dev Coaching)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="./reveal.js/css/theme/league.css" id="theme"/>
+
+<link rel="stylesheet" href="./presentation.css"/>
+<link rel="stylesheet" href="./reveal.js/lib/css/zenburn.css"/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Computer Science 2: Algorithms</h1><h2 class="author">Detroit Labs Dev Coaching</h2><h2 class="date">2018</h2>
+</section>
+
+<section>
+<section id="slide-orgb7f8727">
+<h2 id="orgb7f8727">Lecture 4</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-orge78f19b">
+<h2 id="orge78f19b">Balanced Teams Problem</h2>
+<aside class="notes">
+<p>
+Sort the numbers, then take from opposite ends.
+</p>
+
+</aside>
+<p>
+Design an algorithm that runs in \(O(n \log n)\) to partition \(2n\)
+numbers into \(n\) pairs such that the partition minimizes the maximum
+of the pair.
+</p>
+
+<p>
+Example:
+</p>
+
+<p>
+(1, 3, 5, 9) = ((1,3),(5,9)), ((1,5),(3,9)) or ((1,9),(3,5)).
+</p>
+
+<p>
+Sums:
+</p>
+
+<p>
+(4,14), (6,12) and (10,8)
+</p>
+
+<p>
+(10,8) minimizes the maximum of the pairs.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc413f08">
+<h2 id="orgc413f08">Sorting</h2>
+<aside class="notes">
+<p>
+Why is it that computer science people won't shut up about sorting?
+Well for one, computers spend a lot of time sorting. This was
+measured back in the day on mainframes and about 25% of the
+computing power was spent on sorting. Because of its prevalence,
+sorting is the best-studied problem in computer science, so there is
+an abundance of material, and a huge number of the most interesting
+algorithm concepts can be applied to sorting, so it's a great lens
+to look at algorithmic thinking through.
+</p>
+
+</aside>
+<ul>
+<li>Computers do a lot of sorting</li>
+<li>Most-studied problem in computer science</li>
+<li>Many interesting algorithm concepts can be taught through the
+context of sorting</li>
+
+</ul>
+
+</section>
+<section id="slide-org4618e49">
+<h3 id="org4618e49">Efficiency</h3>
+<aside class="notes">
+<p>
+One of the reasons sorting is so important, is that once an order
+is established, many other problems become easy.
+</p>
+
+<p>
+Using O(n log n) algorithms leads to sub-quadratic algorithms for
+these problems. Large-scale data processing simply cannot be done
+sorting at &Omega;(n<sup>2</sup>). An n<sup>2</sup>/4 algorithm will still take 250 billion
+operations for 1 million items, while n log n takes a measly 13.8
+million.
+</p>
+
+</aside>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">\(n\)</th>
+<th scope="col" class="org-left">\({n^2 \over 4}\)</th>
+<th scope="col" class="org-left">\(n \log n\)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">10</td>
+<td class="org-left">25</td>
+<td class="org-left">33</td>
+</tr>
+
+<tr>
+<td class="org-left">100</td>
+<td class="org-left">2,500</td>
+<td class="org-left">664</td>
+</tr>
+
+<tr>
+<td class="org-left">1,000</td>
+<td class="org-left">250,000</td>
+<td class="org-left">9,965</td>
+</tr>
+
+<tr>
+<td class="org-left">10,000</td>
+<td class="org-left">25,000,000</td>
+<td class="org-left">132,877</td>
+</tr>
+
+<tr>
+<td class="org-left">100,000</td>
+<td class="org-left">2,500,000,000</td>
+<td class="org-left">1,660,960</td>
+</tr>
+
+<tr>
+<td class="org-left">1,000,000</td>
+<td class="org-left">250,000,000,000</td>
+<td class="org-left">13,815,551</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+<section id="slide-orgafb46b0">
+<h3 id="orgafb46b0">Searching</h3>
+<p>
+Can we search in \(O(n \log n)\)?
+</p>
+
+<ul class="fragment">
+<li>Binary search runs in \(O(\log n)\)</li>
+<li>If we sort fast enough, we can search fast</li>
+
+</ul>
+
+<p class="fragment">
+Search pre-processing is probably the most important application of
+sorting.
+</p>
+
+</section>
+<section id="slide-orgfdf153d">
+<h3 id="orgfdf153d">Closest Pair</h3>
+<p>
+Can we quickly find the 2 closest numbers in a set?
+</p>
+
+<ul class="fragment">
+<li>Subsets are found in exponential (\(2^n\)) time</li>
+<li>Closest pairs will be adjacent when sorted</li>
+<li>Linear scan takes \(O(n)\)</li>
+
+</ul>
+
+<p class="fragment">
+Sorting provides adjacency and distance only checking relevant
+neighbors.
+</p>
+
+</section>
+<section id="slide-orgfe46a7d">
+<h3 id="orgfe46a7d">Element Uniqueness</h3>
+<p>
+Can we efficiently find if there are duplicates in a set of \(n\)
+items?
+</p>
+
+<ul class="fragment">
+<li>Comparing every pair takes quadratic (\(n^2\)) time</li>
+<li>Duplicates will be adjacent in a sorted set</li>
+
+</ul>
+
+<p class="fragment">
+Sorting provides adjacency. This is just a special case of closest
+pair.
+</p>
+
+</section>
+<section id="slide-org80ea561">
+<h3 id="org80ea561">Mode</h3>
+<p>
+Can we quickly show what value occurs most frequently in a set of
+\(n\) items?
+</p>
+
+<ul class="fragment">
+<li>Sorting places duplicates as neighbors</li>
+<li>A linear scan (\(n\)) can count adjacent runs</li>
+<li>Occurrences of some \(k\) can be found in \(O(\log n)\) with binary
+search to find \(k \pm \epsilon\)</li>
+
+</ul>
+
+<p class="fragment">
+Sorting provides adjacency.
+</p>
+
+</section>
+<section id="slide-orgeac372b">
+<h3 id="orgeac372b">Median and Selection</h3>
+<p>
+Can we efficiently find the median of a set? How about the \(k\) th
+largest element?
+</p>
+
+<ul class="fragment">
+<li>By sorting, the elements are placed in order.</li>
+<li>The \(k\) th element can be found at index \(k\) in constant time</li>
+<li>Likewise the median is at \(k = { n \over 2 }\)</li>
+
+</ul>
+
+<p class="fragment">
+There are faster ways to do this in linear time, but this idea
+comes from partial sorting.
+</p>
+
+</section>
+<section id="slide-orga6771c1">
+<h3 id="orga6771c1">Convex Hulls</h3>
+<aside class="notes">
+<p>
+For those unfamiliar with a convex hull, it's like a rubber band
+wrapped around some set of pegs at given coordinates. We want to
+incorporate all the points inside a single border.
+</p>
+
+</aside>
+<p>
+Can we quickly find the convex hull of a set of points?
+</p>
+
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/ConvexHull.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+<ul class="fragment">
+<li>Sorting by one axis (\(x\) or \(y\)) gives us boundaries</li>
+<li>Insert from least to most in that axis continually expands
+boundary</li>
+
+</ul>
+
+<p class="fragment">
+Sorting assures all points between boundaries are within the hull
+</p>
+
+</section>
+<section id="slide-org4491ff7">
+<h3 id="org4491ff7">Comparison Functions</h3>
+<aside class="notes">
+<p>
+Explicitly controlling the order of keys is the job of a comparison
+function. These are applied to pairs of elements to determine how
+they are ordered.
+</p>
+
+</aside>
+<p>
+Comparison functions determine the rules for ordering.
+</p>
+
+<p>
+"Alphabetizing" is the sorting function of strings.
+</p>
+
+<p>
+Software libraries have complex rules for ordering all kinds of
+types, including collations of characters.
+</p>
+
+<div class="org-src-container">
+
+<pre><code class="java" >"Detroit Labs" = "detroit labs"  // ?
+"Red-black trees" > "Red, White & Blue" > "Red Blackbirds"  // ?
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org27d0780">
+<h3 id="org27d0780">Libraries</h3>
+<aside class="notes">
+<p>
+In every day practice, we shouldn't be writing our own sorting
+algorithms. Every reasonable programming language should have built
+in sort and search routines. The built-in sorting algorithms that
+come with your language are likely optimized to work with the data
+structures and object types.
+</p>
+
+</aside>
+
+<div class="org-src-container">
+
+<pre><code class="c" >void qsort (void* base, size_t num, size_t size,
+         int (*comparator)(const void*,const void*));
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="java" >public static &lt;T> void sort(T[] a,
+          Comparator&lt;? super T> c)
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org0a63953">
+<h3 id="org0a63953">Equality</h3>
+<aside class="notes">
+<p>
+What do you do with equal values? Equal elements end up bunched
+together in any total ordering, but we may also be concerned with a
+secondary characteristic of the value. If we're sorting numbers it
+might not matter so much, but if we're sorting people by name, we
+might compare their given names if their surnames are the same.
+</p>
+
+</aside>
+<ul>
+<li>Do nothing</li>
+<li>Secondary key</li>
+
+</ul>
+
+<p>
+The worst-case scenario of Quicksort is when all elements are equal.
+</p>
+
+</section>
+<section id="slide-org57d3925">
+<h3 id="org57d3925">Selection Sort</h3>
+<aside class="notes">
+<p>
+You probably remember selection sort from earlier in the course, or
+also when you learned about arrays and got "implement selection
+sort" as your homework. It scans an array, repeatedly finding the
+smallest element in the unsorted part and putting it in the first
+unsorted position.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/selection_sort.gif" alt="selection_sort.gif" />
+</p>
+</div>
+
+<p>
+This takes \(n \times (find + swap)\) operations
+</p>
+
+</section>
+<section id="slide-org08aa54f">
+<h3 id="org08aa54f">Which Data Structure?</h3>
+<aside class="notes">
+<p>
+A selection sort performed on a heap is a different algorithm,
+known as heapsort. It is often important to ask if we can achieve
+better performance by using a different data structure.
+</p>
+
+</aside>
+<p>
+Using arrays or unsorted lists makes "find" take \(O(n)\) and "swap"
+takes \(O(1)\), making selection sort \(O(n^2)\)
+</p>
+
+<p>
+Balanced trees and heaps support "find" in \(O(\log n)\). Can we sort
+in \(O(n \log n)\)?
+</p>
+
+<p>
+Balancing work between operations can achieve a performance benefit.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org7edb130">
+<h2 id="org7edb130">Priority Queues</h2>
+<aside class="notes">
+<p>
+If you'll remember, last week we brought up priority queues
+briefly. A priority queue gives us a flexibility over sorting. We
+can put items in them in an arbitrary order, and it is more
+cost-effective to insert items into a priority queue than to
+re-sort the collection on each new arrival.
+</p>
+
+</aside>
+
+<ul>
+<li>\(insert(q, x)\): Given an item \(x\) with key \(k\), insert into queue \(q\)</li>
+<li>\(find-min(q)\): Return item whose value is smaller than others in \(q\)</li>
+<li>\(delete-min(q)\): Delete item from \(q\) whose key is minimum in \(q\)</li>
+
+</ul>
+
+<p>
+All of these operations can be implemented with a heap or balanced
+binary tree in \(O(\log n)\)
+</p>
+
+</section>
+<section id="slide-org4af9fb9">
+<h3 id="org4af9fb9">Preferences</h3>
+<aside class="notes">
+<p>
+One way we could use a priority queue is to suggest preferences
+based on desirability.
+</p>
+
+</aside>
+
+<ul>
+<li>Retrieve items by desirability, not by name</li>
+<li>Desirability changes, so re-insert the max value with a new score
+after each encounter</li>
+<li>New items can be inserted with perceived desirability</li>
+<li>No reason to delete except from top</li>
+
+</ul>
+
+</section>
+<section id="slide-orgd1a605e">
+<h3 id="orgd1a605e">Discrete Event Simulations</h3>
+<aside class="notes">
+<p>
+We could also use priority queues for any kind of time-based
+simulation. Stack and queue orders are just special cases of
+orderings. In real life, people cut in line or break traffic laws,
+and we can use a priority queue to model such behavior.
+</p>
+
+</aside>
+
+<ul>
+<li>Traffic</li>
+<li>Games</li>
+<li>Store check-out queues</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org67cb5b9">
+<h2 id="org67cb5b9">Heaps</h2>
+<aside class="notes">
+<p>
+So, This whole time I've been talking about heaps, but if you
+haven't read the reading material for this session yet you're
+probably wondering what exactly a heap is. Heaps maintain partial
+ordering. This weaker ordering than sorted order, but it's stronger
+than random. However, we can always find the largest (or smallest,
+for a min-heap) element in O(1), and we can maintain our heap for
+inserts and deletes in O(log n)
+</p>
+
+</aside>
+<p>
+A binary heap is a form of binary tree, in which:
+</p>
+
+<ul>
+<li>the tree is always filled except the bottom level</li>
+<li>the root node is &ge; all of its children</li>
+
+</ul>
+
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/max_heap.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+</section>
+<section id="slide-orge40fa41">
+<h3 id="orge40fa41">Heapsort</h3>
+<aside class="notes">
+<p>
+So, let's take a look at how heapsort works. Notice as we go that
+the partial sorting makes this easier to build than balanced binary
+tree we did last week. If we get particularly lucky, this whole
+thing can happen in linear time.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/Heapsort-example.gif" alt="Heapsort-example.gif" />
+</p>
+</div>
+
+</section>
+<section id="slide-org635ccda">
+<h3 id="org635ccda">Implementing heaps</h3>
+<aside class="notes">
+<p>
+Naturally, we might tend to want to represent a heap with a linked
+tree structure, with pointers to lower elements. However, we can
+store a tree as an array of keys, using the position of the keys to
+implicitly satisfy the role of pointers. This tactic lets us create
+a heap in O(n log n) by insertion.
+</p>
+
+</aside>
+
+<p>
+Arrays can implement the heap with the following
+</p>
+
+<ul>
+<li>Left child of \(k\) sits in position \(2k\) and right is in \(2k + 1\)</li>
+<li>The parent of \(k\) is at \(k \over 2\)</li>
+
+</ul>
+
+
+<div class="figure">
+<p><img src="./img/binary_heap_array.jpg" alt="binary_heap_array.jpg" />
+</p>
+</div>
+
+</section>
+<section id="slide-org42005b1">
+<h3 id="org42005b1">Implicit Representation</h3>
+<aside class="notes">
+<p>
+This implicit representation of a heap is only beneficial when the
+tree isn't full or "sparse". If there are holes in the tree
+structure, we would need to navigate around them, which is why we
+insist on always placing in the bottom-left available space, which
+lines up with filling our array representation linearly.
+</p>
+
+</aside>
+<ul>
+<li>only efficient when \(n < 2^height\)</li>
+<li>missing internal nodes still take space</li>
+<li>why we keep levels full</li>
+<li>not as flexible to arbitrary changes as linked structure</li>
+
+</ul>
+
+</section>
+<section id="slide-orge799693">
+<h3 id="orge799693">Construction</h3>
+<ul>
+<li>insert into left-most open spot</li>
+<li>if new element greater than parent, swap and recur.</li>
+<li>each level will always be full, so \(height = \log n\)</li>
+
+</ul>
+
+<p>
+Construction takes $&theta;(n log n) because the last \(n \over 2\)
+insertions take \(O(\log n)\)
+</p>
+
+</section>
+<section id="slide-org3ed6e60">
+<h3 id="org3ed6e60">Heap Insert Code</h3>
+<div class="org-src-container">
+
+<pre><code class="c" >pq_insert(priority_queue *q, item type x) {
+    if (q->n >= PQ_SIZE)
+        printf(”Warning: overflow insert”);
+    else {
+        q->n = (q->n) + 1;
+        q->q[q->n] = x;
+        bubble_up(q, q->n);
+    }
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org0f32a76">
+<h3 id="org0f32a76">Bubble Up code</h3>
+<div class="org-src-container">
+
+<pre><code class="c" >bubble_up(priority_queue *q, int p) {
+    if (pq_parent(p) == -1)
+        return;    /* at root of heap, no parent */
+
+    if (q->q[pq_parent(p)] > q->q[p]) {
+        pq_swap(q, p, pq_parent(p));
+        bubble_up(q, pq_parent(p));
+    }
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orga037795">
+<h3 id="orga037795">Faster construction</h3>
+<p>
+Can we construct a heap faster than \(O(n \log n)\)?
+</p>
+
+<p>
+What if we merged two smaller trees? Would readjusting the heap to
+balance it take less time?
+</p>
+
+</section>
+<section id="slide-orga3f4ea0">
+<h3 id="orga3f4ea0">Heapify</h3>
+<aside class="notes">
+<p>
+There are faster ways to construct a heap though. If we have an
+arbitrary binary tree, heapify is a function which can restore the
+partial ordering.
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre><code class="c" >heapify(priority_queue *q, int p) {
+    int c;          /* child index */
+    int i;          /* counter */
+    int min_index;  /* index of lightest child */
+
+    c = pq_young_child(p);
+    min_index = p;
+
+    for (i=0; i<=1; i++)
+        if ((c+i) <= q->n) {
+            if (q->q[min_index] > q->q[c+i])
+                min_index = c+i;
+        }
+
+        if (min_index != p) {
+            pq_swap(q,p,min_index);
+            heapify(q, min_index);
+        }
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org3801346">
+<h3 id="org3801346">Analysis of Heapify construction</h3>
+<aside class="notes">
+<p>
+2n complexity.
+</p>
+
+</aside>
+<p>
+Building a heap by merging ends up being faster than \(O(n \log n)\)
+since most heaps we merge will tend to be small.
+</p>
+
+<p>
+This works similarly to the convergence for dynamic arrays we
+talked about in session 2.
+</p>
+
+<p>
+What do you think the complexity of this will be?
+</p>
+</section>
+</section>
+</div>
+</div>
+<script src="./reveal.js/lib/js/head.min.js"></script>
+<script src="./reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+margin: 0.20,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: './reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+ { src: './reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>

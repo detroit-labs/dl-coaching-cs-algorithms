@@ -1,0 +1,402 @@
+#+TITLE:  Computer Science 2: Algorithms
+#+AUTHOR: Detroit Labs Dev Coaching
+#+DATE:   2018
+#+EMAIL:  ndotz@detroitlabs.com
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   skip:nil d:nil todo:t pri:nil tags:not-in-toc timestamp:nil
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+REVEAL_PLUGINS: (highlight notes)
+#+REVEAL_THEME: league
+#+REVEAL_MARGIN: 0.2
+# #+REVEAL_MIN_SCALE: 0.5
+# #+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_EXTRA_CSS: ./presentation.css
+
+* Lecture 4
+
+* Balanced Teams Problem
+  #+BEGIN_NOTES
+  Sort the numbers, then take from opposite ends.
+  #+END_NOTES
+  Design an algorithm that runs in $O(n \log n)$ to partition $2n$
+  numbers into $n$ pairs such that the partition minimizes the maximum
+  of the pair.
+
+  Example:
+
+  (1, 3, 5, 9) = ((1,3),(5,9)), ((1,5),(3,9)) or ((1,9),(3,5)).
+
+  Sums:
+
+  (4,14), (6,12) and (10,8)
+
+  (10,8) minimizes the maximum of the pairs.
+
+* Sorting
+  #+BEGIN_NOTES
+  Why is it that computer science people won't shut up about sorting?
+  Well for one, computers spend a lot of time sorting. This was
+  measured back in the day on mainframes and about 25% of the
+  computing power was spent on sorting. Because of its prevalence,
+  sorting is the best-studied problem in computer science, so there is
+  an abundance of material, and a huge number of the most interesting
+  algorithm concepts can be applied to sorting, so it's a great lens
+  to look at algorithmic thinking through.
+  #+END_NOTES
+  - Computers do a lot of sorting
+  - Most-studied problem in computer science
+  - Many interesting algorithm concepts can be taught through the
+    context of sorting
+
+** Efficiency
+   #+BEGIN_NOTES
+   One of the reasons sorting is so important, is that once an order
+   is established, many other problems become easy.
+
+   Using O(n log n) algorithms leads to sub-quadratic algorithms for
+   these problems. Large-scale data processing simply cannot be done
+   sorting at \Omega(n^2). An n^2/4 algorithm will still take 250 billion
+   operations for 1 million items, while n log n takes a measly 13.8
+   million.
+   #+END_NOTES
+   | $n$       | ${n^2 \over 4}$  | $n \log n$ |
+   |-----------+-----------------+------------|
+   | 10        | 25              | 33         |
+   | 100       | 2,500           | 664        |
+   | 1,000     | 250,000         | 9,965      |
+   | 10,000    | 25,000,000      | 132,877    |
+   | 100,000   | 2,500,000,000   | 1,660,960  |
+   | 1,000,000 | 250,000,000,000 | 13,815,551 |
+
+** Searching
+   Can we search in $O(n \log n)$?
+
+   #+ATTR_REVEAL: :frag t
+   - Binary search runs in $O(\log n)$
+   - If we sort fast enough, we can search fast
+
+   #+ATTR_REVEAL: :frag t
+   Search pre-processing is probably the most important application of
+   sorting.
+
+** Closest Pair
+   Can we quickly find the 2 closest numbers in a set?
+
+   #+ATTR_REVEAL: :frag t
+   - Subsets are found in exponential ($2^n$) time
+   - Closest pairs will be adjacent when sorted
+   - Linear scan takes $O(n)$
+
+   #+ATTR_REVEAL: :frag t
+   Sorting provides adjacency and distance only checking relevant
+   neighbors.
+
+** Element Uniqueness
+   Can we efficiently find if there are duplicates in a set of $n$
+   items?
+
+   #+ATTR_REVEAL: :frag t
+   - Comparing every pair takes quadratic ($n^2$) time
+   - Duplicates will be adjacent in a sorted set
+
+   #+ATTR_REVEAL: :frag t
+   Sorting provides adjacency. This is just a special case of closest
+   pair.
+
+** Mode
+   Can we quickly show what value occurs most frequently in a set of
+   $n$ items?
+
+   #+ATTR_REVEAL: :frag t
+   - Sorting places duplicates as neighbors
+   - A linear scan ($n$) can count adjacent runs
+   - Occurrences of some $k$ can be found in $O(\log n)$ with binary
+     search to find $k \pm \epsilon$
+
+   #+ATTR_REVEAL: :frag t
+   Sorting provides adjacency.
+
+** Median and Selection
+   Can we efficiently find the median of a set? How about the $k$ th
+   largest element?
+
+   #+ATTR_REVEAL: :frag t
+   - By sorting, the elements are placed in order.
+   - The $k$ th element can be found at index $k$ in constant time
+   - Likewise the median is at $k = { n \over 2 }$
+
+   #+ATTR_REVEAL: :frag t
+   There are faster ways to do this in linear time, but this idea
+   comes from partial sorting.
+
+** Convex Hulls
+   #+BEGIN_NOTES
+   For those unfamiliar with a convex hull, it's like a rubber band
+   wrapped around some set of pegs at given coordinates. We want to
+   incorporate all the points inside a single border.
+   #+END_NOTES
+   Can we quickly find the convex hull of a set of points?
+
+   [[./img/ConvexHull.svg]]
+
+   #+ATTR_REVEAL: :frag t
+   - Sorting by one axis ($x$ or $y$) gives us boundaries
+   - Insert from least to most in that axis continually expands
+     boundary
+
+   #+ATTR_REVEAL: :frag t
+   Sorting assures all points between boundaries are within the hull
+
+** Comparison Functions
+   #+BEGIN_NOTES
+   Explicitly controlling the order of keys is the job of a comparison
+   function. These are applied to pairs of elements to determine how
+   they are ordered.
+   #+END_NOTES
+   Comparison functions determine the rules for ordering.
+
+   "Alphabetizing" is the sorting function of strings.
+
+   Software libraries have complex rules for ordering all kinds of
+   types, including collations of characters.
+
+   #+BEGIN_SRC java
+   "Detroit Labs" = "detroit labs"  // ?
+   "Red-black trees" > "Red, White & Blue" > "Red Blackbirds"  // ?
+   #+END_SRC
+
+** Libraries
+   #+BEGIN_NOTES
+   In every day practice, we shouldn't be writing our own sorting
+   algorithms. Every reasonable programming language should have built
+   in sort and search routines. The built-in sorting algorithms that
+   come with your language are likely optimized to work with the data
+   structures and object types.
+   #+END_NOTES
+
+   #+BEGIN_SRC c
+   void qsort (void* base, size_t num, size_t size,
+            int (*comparator)(const void*,const void*));
+   #+END_SRC
+
+   #+BEGIN_SRC java
+   public static &lt;T> void sort(T[] a,
+             Comparator&lt;? super T> c)
+   #+END_SRC
+
+** Equality
+   #+BEGIN_NOTES
+   What do you do with equal values? Equal elements end up bunched
+   together in any total ordering, but we may also be concerned with a
+   secondary characteristic of the value. If we're sorting numbers it
+   might not matter so much, but if we're sorting people by name, we
+   might compare their given names if their surnames are the same.
+   #+END_NOTES
+   - Do nothing
+   - Secondary key
+
+   The worst-case scenario of Quicksort is when all elements are equal.
+
+** Selection Sort
+   #+BEGIN_NOTES
+   You probably remember selection sort from earlier in the course, or
+   also when you learned about arrays and got "implement selection
+   sort" as your homework. It scans an array, repeatedly finding the
+   smallest element in the unsorted part and putting it in the first
+   unsorted position.
+   #+END_NOTES
+   [[./img/selection_sort.gif]]
+
+   This takes $n \times (find + swap)$ operations
+
+** Which Data Structure?
+   #+BEGIN_NOTES
+   A selection sort performed on a heap is a different algorithm,
+   known as heapsort. It is often important to ask if we can achieve
+   better performance by using a different data structure.
+   #+END_NOTES
+   Using arrays or unsorted lists makes "find" take $O(n)$ and "swap"
+   takes $O(1)$, making selection sort $O(n^2)$
+
+   Balanced trees and heaps support "find" in $O(\log n)$. Can we sort
+   in $O(n \log n)$?
+
+   Balancing work between operations can achieve a performance benefit.
+
+* Priority Queues
+  #+BEGIN_NOTES
+  If you'll remember, last week we brought up priority queues
+  briefly. A priority queue gives us a flexibility over sorting. We
+  can put items in them in an arbitrary order, and it is more
+  cost-effective to insert items into a priority queue than to
+  re-sort the collection on each new arrival.
+  #+END_NOTES
+
+  + $insert(q, x)$: Given an item $x$ with key $k$, insert into queue $q$
+  + $find-min(q)$: Return item whose value is smaller than others in $q$
+  + $delete-min(q)$: Delete item from $q$ whose key is minimum in $q$
+
+  All of these operations can be implemented with a heap or balanced
+  binary tree in $O(\log n)$
+
+** Preferences
+   #+BEGIN_NOTES
+   One way we could use a priority queue is to suggest preferences
+   based on desirability.
+   #+END_NOTES
+
+   - Retrieve items by desirability, not by name
+   - Desirability changes, so re-insert the max value with a new score
+     after each encounter
+   - New items can be inserted with perceived desirability
+   - No reason to delete except from top
+
+** Discrete Event Simulations
+   #+BEGIN_NOTES
+   We could also use priority queues for any kind of time-based
+   simulation. Stack and queue orders are just special cases of
+   orderings. In real life, people cut in line or break traffic laws,
+   and we can use a priority queue to model such behavior.
+   #+END_NOTES
+
+   - Traffic
+   - Games
+   - Store check-out queues
+
+* Heaps
+  #+BEGIN_NOTES
+  So, This whole time I've been talking about heaps, but if you
+  haven't read the reading material for this session yet you're
+  probably wondering what exactly a heap is. Heaps maintain partial
+  ordering. This weaker ordering than sorted order, but it's stronger
+  than random. However, we can always find the largest (or smallest,
+  for a min-heap) element in O(1), and we can maintain our heap for
+  inserts and deletes in O(log n)
+  #+END_NOTES
+  A binary heap is a form of binary tree, in which:
+
+  - the tree is always filled except the bottom level
+  - the root node is \ge all of its children
+
+  [[./img/max_heap.svg]]
+
+** Heapsort
+   #+BEGIN_NOTES
+   So, let's take a look at how heapsort works. Notice as we go that
+   the partial sorting makes this easier to build than balanced binary
+   tree we did last week. If we get particularly lucky, this whole
+   thing can happen in linear time.
+   #+END_NOTES
+   [[https://upload.wikimedia.org/wikipedia/commons/4/4d/Heapsort-example.gif]]
+
+** Implementing heaps
+   #+BEGIN_NOTES
+   Naturally, we might tend to want to represent a heap with a linked
+   tree structure, with pointers to lower elements. However, we can
+   store a tree as an array of keys, using the position of the keys to
+   implicitly satisfy the role of pointers. This tactic lets us create
+   a heap in O(n log n) by insertion.
+   #+END_NOTES
+
+   Arrays can implement the heap with the following
+
+   - Left child of $k$ sits in position $2k$ and right is in $2k + 1$
+   - The parent of $k$ is at $k \over 2$
+
+   [[./img/binary_heap_array.jpg]]
+
+** Implicit Representation
+   #+BEGIN_NOTES
+   This implicit representation of a heap is only beneficial when the
+   tree isn't full or "sparse". If there are holes in the tree
+   structure, we would need to navigate around them, which is why we
+   insist on always placing in the bottom-left available space, which
+   lines up with filling our array representation linearly.
+   #+END_NOTES
+   - only efficient when $n < 2^height$
+   - missing internal nodes still take space
+   - why we keep levels full
+   - not as flexible to arbitrary changes as linked structure
+
+** Construction
+   - insert into left-most open spot
+   - if new element greater than parent, swap and recur.
+   - each level will always be full, so $height = \log n$
+
+   Construction takes $\theta(n \log n) because the last $n \over 2$
+   insertions take $O(\log n)$
+
+** Heap Insert Code
+   #+BEGIN_SRC c
+   pq_insert(priority_queue *q, item type x) {
+       if (q->n >= PQ_SIZE)
+           printf(”Warning: overflow insert”);
+       else {
+           q->n = (q->n) + 1;
+           q->q[q->n] = x;
+           bubble_up(q, q->n);
+       }
+   }
+   #+END_SRC
+
+** Bubble Up code
+   #+BEGIN_SRC c
+   bubble_up(priority_queue *q, int p) {
+       if (pq_parent(p) == -1)
+           return;    /* at root of heap, no parent */
+
+       if (q->q[pq_parent(p)] > q->q[p]) {
+           pq_swap(q, p, pq_parent(p));
+           bubble_up(q, pq_parent(p));
+       }
+   }
+   #+END_SRC
+
+** Faster construction
+   Can we construct a heap faster than $O(n \log n)$?
+
+   What if we merged two smaller trees? Would readjusting the heap to
+   balance it take less time?
+
+** Heapify
+   #+BEGIN_NOTES
+   There are faster ways to construct a heap though. If we have an
+   arbitrary binary tree, heapify is a function which can restore the
+   partial ordering.
+   #+END_NOTES
+   #+BEGIN_SRC c
+   heapify(priority_queue *q, int p) {
+       int c;          /* child index */
+       int i;          /* counter */
+       int min_index;  /* index of lightest child */
+
+       c = pq_young_child(p);
+       min_index = p;
+
+       for (i=0; i<=1; i++)
+           if ((c+i) <= q->n) {
+               if (q->q[min_index] > q->q[c+i])
+                   min_index = c+i;
+           }
+
+           if (min_index != p) {
+               pq_swap(q,p,min_index);
+               heapify(q, min_index);
+           }
+   }
+   #+END_SRC
+
+** Analysis of Heapify construction
+   #+BEGIN_NOTES
+   2n complexity.
+   #+END_NOTES
+   Building a heap by merging ends up being faster than $O(n \log n)$
+   since most heaps we merge will tend to be small.
+
+   This works similarly to the convergence for dynamic arrays we
+   talked about in session 2.
+
+   What do you think the complexity of this will be?
