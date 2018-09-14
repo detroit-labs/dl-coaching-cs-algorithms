@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Computer Science 2: Algorithms</title>
+<meta name="author" content="(Detroit Labs Dev Coaching)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="./reveal.js/css/theme/league.css" id="theme"/>
+
+<link rel="stylesheet" href="./presentation.css"/>
+<link rel="stylesheet" href="./reveal.js/lib/css/zenburn.css"/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Computer Science 2: Algorithms</h1><h2 class="author">Detroit Labs Dev Coaching</h2><h2 class="date">2018</h2>
+</section>
+
+<section>
+<section id="slide-orgc83fee3">
+<h2 id="orgc83fee3">Lecture 5</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-orgd9658f1">
+<h2 id="orgd9658f1">Practice Problem</h2>
+<aside class="notes">
+<p>
+Let's start with a warm-up problem. Two sets are disjoint if they
+share no common elements.
+</p>
+
+</aside>
+<p>
+What is an efficient algorithm for discovering whether two sets are
+disjoint? Analyze the complexity of your algorithm. What happens
+when the sets have very different sizes?
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org1c2c78a">
+<h2 id="org1c2c78a">Mergesort</h2>
+<aside class="notes">
+<p>
+Here's a gif from Wikipedia to get us started. Last session we
+focused on sorting through iteration with priority queue and
+heapsort. However, mergesort here is a recursive
+algorithm. Recursive algorithms are based on reducing big problems
+into smaller ones until there is some trivial problem to be solved.
+</p>
+
+<p>
+We can certainly apply this to sorting. What's the trivial case for
+sorting? A single element is always in the correct order. So,
+mergesort does just that, dividing the problem into smaller and
+smaller arrays until they are down to single elements, and then
+merging the sorted arrays back into a larger collection.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Merge-sort-example-300px.gif" alt="Merge-sort-example-300px.gif" />
+</p>
+</div>
+
+</section>
+<section id="slide-org2443110">
+<h3 id="org2443110">Implementation</h3>
+<aside class="notes">
+<p>
+The implementation of the recursive part of mergesort is actually
+remarkably simple. We set a base case of the low index being less
+than the high index to stop the recursion when we hit single
+elements. Then, we call merge on the appropriate section of the
+array. So clearly, the efficiency of mergesort is going to come
+down to what happens in the merge function.
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre><code class="c" >mergesort(item type s[], int low, int high) {
+    int i;      /* counter */
+    int middle; /* index of middle element */
+    if (low < high) {
+        middle = (low+high)/2;
+        mergesort(s,low,middle);
+        mergesort(s,middle+1,high);
+        merge(s, low, middle, high);
+    }
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org570e500">
+<h3 id="org570e500">Merging strategy</h3>
+<aside class="notes">
+<p>
+So, our last level of recursion before returning, we might have
+these two sets of numbers to merge. As we saw in the animation, we
+want to compare the front of these sorted lists and remove
+whichever is smaller, placing it in the sorted list. How many
+operations will this take?
+</p>
+
+<p>
+&#x2014;
+At most, n-1 comparisons and at least n/2, with an average of 3n/4,
+so this is O(n)
+</p>
+
+</aside>
+<p>
+<code>[1, 3, 5, 6] ++ [2, 4, 7, 8]</code>
+</p>
+
+</section>
+<section id="slide-org05b0963">
+<h3 id="org05b0963">Mergesort analysis</h3>
+<aside class="notes">
+<p>
+So, we know we're going to do a linear amount of work at each
+level. Since this is a tree-like iteration, we're going to need to
+do that linear amount of work for each level of the tree, so the
+height is going to be log n. Linear work on log n levels leaves us
+O(n log n)
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/mergesort_tree.png" alt="mergesort_tree.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org8dbdcbf">
+<h3 id="org8dbdcbf">Divide and Conquer</h3>
+<aside class="notes">
+<p>
+The strategy employed in mergesort is called divide and conquer. We
+continually divide the problem into multiple sub-problems which we
+solve recursively, then merge the partial solutions back together.
+</p>
+
+<p>
+So long as we can merge the solutions in less time than it takes to
+solve the subproblems, we have an efficient algorithm.
+</p>
+
+</aside>
+<ul>
+<li>binary search</li>
+<li>mergesort</li>
+<li>quicksort</li>
+<li>FFT</li>
+<li>matrix multiplication</li>
+
+</ul>
+
+<p>
+\[T(n) = 2 \times T({n \over 2}) + \theta(n) \rightarrow \theta(n \log n)\]
+</p>
+
+</section>
+<section id="slide-org0fbd914">
+<h3 id="org0fbd914">External vs Internal</h3>
+<aside class="notes">
+<p>
+Although we can write a version of mergesort that does the sorting
+internally - that is, in memory. However this only works
+so long as all of the data to be sorted fits in memory! Often if
+data are small, we might favor a more complex algorithm just to
+save the efficiency of sorting in memory, but if we need to sort
+gigabytes or terabytes of information, we will want an algorithm
+that performs well on data that is split into parts. As a
+corollary, algorithms efficient at external sorting also tend to be
+good for parallelism.
+</p>
+
+</aside>
+<ul>
+<li>internal: fully in memory (RAM)</li>
+<li>external: using external storage (hard drive, other processors)</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orga1a22ad">
+<h2 id="orga1a22ad">Quicksort</h2>
+<aside class="notes">
+<p>
+The fastest internal sort algorithm is the quicksort, and it's no
+surprise that it is the default sorting algorithm for many
+programming languages' standard libraries. It uses the principal of
+partitioning, choosing a "pivot" and using it to divide the array
+into partitions. Every element less than the pivot goes in one side
+of the array, with the greater elements on the other side of the
+array. The smaller arrays on either side of the pivot are then
+quicksorted recursively.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Quicksort-example.gif" alt="Quicksort-example.gif" />
+</p>
+</div>
+
+</section>
+<section id="slide-org2687ff8">
+<h3 id="org2687ff8">Partitioning</h3>
+<aside class="notes">
+<p>
+There are a number of strategies for choosing a pivot and
+organizing around it. The Lomuto partitioning scheme is often what
+you'll see taught when introducing quicksort. It starts by taking
+the last element and moving it down until all elements lower than
+it are on the left and all elements greater are on the right. Tony
+Hoare's original algorithm started at both ends of an array,
+walking towards the middle and swapping elements that were in the
+wrong side relative to the pivot.
+</p>
+
+</aside>
+<ul>
+<li>Could make up to \(n\) swaps.</li>
+<li>Pivot ends up in right place</li>
+<li>Elements never "jump" sides</li>
+<li>Allows recursive sorting of sub-arrays</li>
+
+</ul>
+
+</section>
+<section id="slide-org66e0cc5">
+<h3 id="org66e0cc5">Pseudocode</h3>
+<aside class="notes">
+nil
+</aside>
+<p class="verse">
+Quicksort(A, low, high)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;if (low &lt; high)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;pivot-index = Partition(A,low,high)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;Quicksort(A,low, pivot-index - 1)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;Quicksort(A, pivot-index + 1, high)<br />
+</p>
+
+</section>
+<section id="slide-orge6516b9">
+<h3 id="orge6516b9">Pseudocode</h3>
+<p class="verse">
+Partition(A,low,high)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;pivot = A[low]<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;leftwall = low<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;for i = low+1 to high<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;if (A[i] &lt; pivot) then<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;leftwall = leftwall+1<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;swap(A[i],A[leftwall])<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;swap(A[low],A[leftwall])<br />
+</p>
+
+</section>
+<section id="slide-org0438c09">
+<h3 id="org0438c09">Quicksort Best Case</h3>
+<aside class="notes">
+<p>
+We have shown that the we can get the numbers into the right place
+in the array, but how the heck long does it take? You will probably
+say "that depends on how you partition it", which is true. However,
+unless we've done something disastrous, all partition operations
+should happen in O(n).
+</p>
+
+</aside>
+
+<ul>
+<li class="fragment roll-in">Partitions happen in \(O(n)\)</li>
+<li class="fragment roll-in">Best case: pivot perfectly divides data</li>
+<li class="fragment roll-in">Subproblems would be \(n \over 2\) size</li>
+<li class="fragment roll-in">\(n \over 2^d\) partitioning work</li>
+<li class="fragment roll-in">Perfectly divided tree are \(\log n\) divisions</li>
+<li class="fragment roll-in">Best case time is \(O(n \log n)\)</li>
+
+</ul>
+
+</section>
+<section id="slide-org7a7d6a9">
+<h3 id="org7a7d6a9">Quicksort Worst Case</h3>
+<aside class="notes">
+<p>
+So the best case is that we make as even of a tree of recursion as
+possible. What would the worst case be?
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+What situation would create this worst case?
+</p>
+
+</aside>
+
+<ul>
+<li class="fragment roll-in">Partition still takes \(O(n)\) time</li>
+<li class="fragment roll-in">Worst case: pivot does not divide data</li>
+<li class="fragment roll-in">Subproblems are \(n - 1\) size</li>
+<li class="fragment roll-in">\((n - d)\) partitioning work</li>
+<li class="fragment roll-in">Non-divided trees are lists</li>
+<li class="fragment roll-in">Worst case time is \(O(n^2)\)</li>
+
+</ul>
+
+</section>
+<section id="slide-org27b2285">
+<h3 id="org27b2285">Quicksort Worst Case</h3>
+<aside class="notes">
+<p>
+If we always pick the least or greatest element, we reverse the
+advantage of splitting into subproblems at all, leaving us with
+&theta;(n<sup>2</sup>) since the n/2 elements each have more than n/2 elements to
+partition. So if the best case provides a relatively fast O(n log
+n) time but could lead to an expensive worst-case of O(n<sup>2</sup>), why is
+quicksort so revered?
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/quicksort_worst_case.png" alt="quicksort_worst_case.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org9e418fc">
+<h3 id="org9e418fc">Quicksort Average Case</h3>
+<aside class="notes">
+<p>
+If we pick points at random from some set of numbers, half the
+time the point will be closer to the center than it is to either
+end. So, anytime a pivot is selected that will end up in this
+center half, neither of the sides will contain less than n/4
+elements or more than 3n/4 elements.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/quicksort_avg_case.png" alt="quicksort_avg_case.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org442a959">
+<h3 id="org442a959">Good Partitions</h3>
+<aside class="notes">
+<p>
+So, if we can always find a pivot that will end up in the
+middle-ish part of the array, how deep do we need to recur to get
+from n elements to one?
+</p>
+
+</aside>
+<p>
+\[(3/4)^d \times n = 1 → n = (4/3)^d\]
+</p>
+
+<p>
+\[\log n = d \times \log(4/3)\]
+</p>
+
+<p>
+\[d = \log {4 \over 3} \times \log n < 2 \log n\]
+</p>
+
+</section>
+<section id="slide-org0f878d2">
+<h3 id="org0f878d2">Bad Partitions</h3>
+<aside class="notes">
+<p>
+This begs the opposite question though. If we pick elements
+arbitrarily from the array, how often will we generate a decent
+partition?
+</p>
+
+</aside>
+<p>
+\[{{3n \over 4} + {n \over 4} \over 2} = {n \over 2}\]
+</p>
+
+<p>
+\(2 \times \log n\) good partitions do the job, and half of partitions
+will be good. That's &asymp; \(4 \times \log n\) depth on average.
+</p>
+
+</section>
+<section id="slide-orgf04999f">
+<h3 id="orgf04999f">Average Case Analysis</h3>
+<aside class="notes">
+<p>
+If we want to get down to the nitty-gritty of the average case
+analysis, we'll need to take a look at the actual amount of time <i>T</i>
+that it will take. We select pivots <i>p</i> with equal probability, and
+we need to do <i>n - 1</i> comparisons at each level. If we break this
+out it looks a bit like the summation for calculating the harmonic
+numbers which approximates the natural log.
+</p>
+
+</aside>
+<p>
+\[T(n) = \sum_{p=1}^n {1 \over n}(T(p - 1) + T(n - p)) + n - 1\]
+</p>
+
+
+<div class="figure">
+<p><img src="./img/harmonic_numbers.png" alt="harmonic_numbers.png" />
+</p>
+</div>
+
+<p>
+\[H_n = \sum_{i=1}^n {1 \over i} \approx \ln n\]
+</p>
+
+
+</section>
+<section id="slide-org807f79b">
+<h3 id="org807f79b">And then there was more math</h3>
+<aside class="notes">
+<p>
+If we
+</p>
+
+</aside>
+<p>
+\[{T(n) \over n + 1} = {T(n − 1) \over n} + {2(n-1) \over n(n+1)}\]
+</p>
+
+<p>
+\[\sum_{i=1}^n {2(i - 1) \over (i + 1)} \approx 2 \sum_{i=1}^n {1 \over (i + 1)} \approx 2 \ln n\]
+</p>
+
+<p>
+&#x2026; and then more math &#x2026; actually &asymp; 1.38 ln n
+</p>
+
+</section>
+<section id="slide-org49489ae">
+<h3 id="org49489ae">Enemy Sort</h3>
+<aside class="notes">
+<p>
+Suppose you need to sort data given to you by your worst
+enemy. What kind of data are they going to give you to make you
+look bad? Well, if they know you're going to use a quicksort,
+they'll probably create a data set with the worst possible pivot
+points at either end of the array. How could you thwart the plans
+of your worst enemy?
+</p>
+
+</aside>
+
+<p class="fragment appear">
+Randomize the pivot.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org55d8ae4">
+<h2 id="org55d8ae4">Randomization</h2>
+<aside class="notes">
+<p>
+Randomization gives us some important guarantees. If we either mix
+up the order of the target set or always choose a random pivot
+point, we can make a guarantee.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+Because the time bounding won't depend upon input distribution,
+there is an extremely small chance that we will end up with the
+worst case performance. We can use randomization as a tool to make
+algorithms with poor worst-case scenarios but good average cases
+into viable or even performant options. The worst-case is still
+there, but it is extremely unlikely that we'll ever see it.
+</p>
+
+</aside>
+<blockquote nil>
+<p>
+Random quicksort runs in \(O(n \log n)\) with high probability.
+</p>
+</blockquote>
+
+
+</section>
+<section id="slide-org394ace6">
+<h3 id="org394ace6">Good pivots</h3>
+<aside class="notes">
+<p>
+What are some strategies we can use to ensure that we will almost
+always get good performance out of quicksort?
+</p>
+
+</aside>
+<ul>
+<li class="fragment roll-in">Choose a random pivot</li>
+<li class="fragment roll-in">Choose the middle index</li>
+<li class="fragment roll-in">Choose the median</li>
+
+</ul>
+
+<p class="fragment appear">
+The worst case will always remain \(O(n^2)\)
+</p>
+
+</section>
+<section id="slide-orgd2a0b9a">
+<h3 id="orgd2a0b9a">Comparing sorts</h3>
+<aside class="notes">
+<p>
+When quicksort is implemented well, it's about 2-3 times faster
+than heapsort. This is mainly because the number of operations in
+the inner loop for partitioning is smaller than the number of
+comparisons required to heapsort.
+</p>
+
+<p>
+Because are in the same complexity ranking, the difference between
+them will be a multiplicative constant factor. However, when
+comparing algorithms with similar complexity, the constant factor
+may still be significant, and the difference is going to show based
+on the details of your implementation.
+</p>
+
+</aside>
+<ul>
+<li>Selection sort \(\theta(n^2)\)</li>
+<li>Heapsort \(\theta(n \log n)\)</li>
+<li>Quicksort \(\theta(n \log n)\)</li>
+
+</ul>
+</section>
+</section>
+</div>
+</div>
+<script src="./reveal.js/lib/js/head.min.js"></script>
+<script src="./reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+margin: 0.20,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: './reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+ { src: './reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>

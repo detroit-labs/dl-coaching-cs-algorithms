@@ -1,0 +1,341 @@
+#+TITLE:  Computer Science 2: Algorithms
+#+AUTHOR: Detroit Labs Dev Coaching
+#+DATE:   2018
+#+EMAIL:  ndotz@detroitlabs.com
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   skip:nil d:nil todo:t pri:nil tags:not-in-toc timestamp:nil
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+REVEAL_PLUGINS: (highlight notes)
+#+REVEAL_THEME: league
+#+REVEAL_MARGIN: 0.2
+# #+REVEAL_MIN_SCALE: 0.5
+# #+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_EXTRA_CSS: ./presentation.css
+
+* Lecture 5
+
+* Practice Problem
+  #+BEGIN_NOTES
+  Let's start with a warm-up problem. Two sets are disjoint if they
+  share no common elements.
+  #+END_NOTES
+  What is an efficient algorithm for discovering whether two sets are
+  disjoint? Analyze the complexity of your algorithm. What happens
+  when the sets have very different sizes?
+
+* Mergesort
+  #+BEGIN_NOTES
+  Here's a gif from Wikipedia to get us started. Last session we
+  focused on sorting through iteration with priority queue and
+  heapsort. However, mergesort here is a recursive
+  algorithm. Recursive algorithms are based on reducing big problems
+  into smaller ones until there is some trivial problem to be solved.
+
+  We can certainly apply this to sorting. What's the trivial case for
+  sorting? A single element is always in the correct order. So,
+  mergesort does just that, dividing the problem into smaller and
+  smaller arrays until they are down to single elements, and then
+  merging the sorted arrays back into a larger collection.
+  #+END_NOTES
+  [[https://upload.wikimedia.org/wikipedia/commons/c/cc/Merge-sort-example-300px.gif]]
+
+** Implementation
+   #+BEGIN_NOTES
+   The implementation of the recursive part of mergesort is actually
+   remarkably simple. We set a base case of the low index being less
+   than the high index to stop the recursion when we hit single
+   elements. Then, we call merge on the appropriate section of the
+   array. So clearly, the efficiency of mergesort is going to come
+   down to what happens in the merge function.
+   #+END_NOTES
+   #+BEGIN_SRC c
+    mergesort(item type s[], int low, int high) {
+        int i;      /* counter */
+        int middle; /* index of middle element */
+        if (low < high) {
+            middle = (low+high)/2;
+            mergesort(s,low,middle);
+            mergesort(s,middle+1,high);
+            merge(s, low, middle, high);
+        }
+    }
+   #+END_SRC
+
+** Merging strategy
+   #+BEGIN_NOTES
+   So, our last level of recursion before returning, we might have
+   these two sets of numbers to merge. As we saw in the animation, we
+   want to compare the front of these sorted lists and remove
+   whichever is smaller, placing it in the sorted list. How many
+   operations will this take?
+
+   ---
+   At most, n-1 comparisons and at least n/2, with an average of 3n/4,
+   so this is O(n)
+   #+END_NOTES
+   ~[1, 3, 5, 6] ++ [2, 4, 7, 8]~
+
+** Mergesort analysis
+   #+BEGIN_NOTES
+   So, we know we're going to do a linear amount of work at each
+   level. Since this is a tree-like iteration, we're going to need to
+   do that linear amount of work for each level of the tree, so the
+   height is going to be log n. Linear work on log n levels leaves us
+   O(n log n)
+   #+END_NOTES
+   [[./img/mergesort_tree.png]]
+
+** Divide and Conquer
+   #+BEGIN_NOTES
+   The strategy employed in mergesort is called divide and conquer. We
+   continually divide the problem into multiple sub-problems which we
+   solve recursively, then merge the partial solutions back together.
+
+   So long as we can merge the solutions in less time than it takes to
+   solve the subproblems, we have an efficient algorithm.
+   #+END_NOTES
+   - binary search
+   - mergesort
+   - quicksort
+   - FFT
+   - matrix multiplication
+
+   $$T(n) = 2 \times T({n \over 2}) + \theta(n) \rightarrow \theta(n \log n)$$
+
+** External vs Internal
+   #+BEGIN_NOTES
+   Although we can write a version of mergesort that does the sorting
+   internally - that is, in memory. However this only works
+   so long as all of the data to be sorted fits in memory! Often if
+   data are small, we might favor a more complex algorithm just to
+   save the efficiency of sorting in memory, but if we need to sort
+   gigabytes or terabytes of information, we will want an algorithm
+   that performs well on data that is split into parts. As a
+   corollary, algorithms efficient at external sorting also tend to be
+   good for parallelism.
+   #+END_NOTES
+   - internal: fully in memory (RAM)
+   - external: using external storage (hard drive, other processors)
+
+* Quicksort
+  #+BEGIN_NOTES
+  The fastest internal sort algorithm is the quicksort, and it's no
+  surprise that it is the default sorting algorithm for many
+  programming languages' standard libraries. It uses the principal of
+  partitioning, choosing a "pivot" and using it to divide the array
+  into partitions. Every element less than the pivot goes in one side
+  of the array, with the greater elements on the other side of the
+  array. The smaller arrays on either side of the pivot are then
+  quicksorted recursively.
+  #+END_NOTES
+  [[https://upload.wikimedia.org/wikipedia/commons/9/9c/Quicksort-example.gif]]
+
+** Partitioning
+   #+BEGIN_NOTES
+   There are a number of strategies for choosing a pivot and
+   organizing around it. The Lomuto partitioning scheme is often what
+   you'll see taught when introducing quicksort. It starts by taking
+   the last element and moving it down until all elements lower than
+   it are on the left and all elements greater are on the right. Tony
+   Hoare's original algorithm started at both ends of an array,
+   walking towards the middle and swapping elements that were in the
+   wrong side relative to the pivot.
+   #+END_NOTES
+   - Could make up to $n$ swaps.
+   - Pivot ends up in right place
+   - Elements never "jump" sides
+   - Allows recursive sorting of sub-arrays
+
+** Pseudocode
+   #+BEGIN_NOTES
+   #+END_NOTES
+   #+BEGIN_VERSE
+   Quicksort(A, low, high)
+       if (low < high)
+           pivot-index = Partition(A,low,high)
+           Quicksort(A,low, pivot-index - 1)
+           Quicksort(A, pivot-index + 1, high)
+   #+END_VERSE
+
+** Pseudocode
+   #+BEGIN_VERSE
+   Partition(A,low,high)
+        pivot = A[low]
+        leftwall = low
+        for i = low+1 to high
+            if (A[i] < pivot) then
+                leftwall = leftwall+1
+                swap(A[i],A[leftwall])
+            swap(A[low],A[leftwall])
+   #+END_VERSE
+
+** Quicksort Best Case
+   #+BEGIN_NOTES
+   We have shown that the we can get the numbers into the right place
+   in the array, but how the heck long does it take? You will probably
+   say "that depends on how you partition it", which is true. However,
+   unless we've done something disastrous, all partition operations
+   should happen in O(n).
+   #+END_NOTES
+
+   #+ATTR_REVEAL: :frag (roll-in)
+   - Partitions happen in $O(n)$
+   - Best case: pivot perfectly divides data
+   - Subproblems would be $n \over 2$ size
+   - $n \over 2^d$ partitioning work
+   - Perfectly divided tree are $\log n$ divisions
+   - Best case time is $O(n \log n)$
+
+** Quicksort Worst Case
+   #+BEGIN_NOTES
+   So the best case is that we make as even of a tree of recursion as
+   possible. What would the worst case be?
+
+   ---
+
+   What situation would create this worst case?
+   #+END_NOTES
+
+   #+ATTR_REVEAL: :frag (roll-in)
+   - Partition still takes $O(n)$ time
+   - Worst case: pivot does not divide data
+   - Subproblems are $n - 1$ size
+   - $(n - d)$ partitioning work
+   - Non-divided trees are lists
+   - Worst case time is $O(n^2)$
+
+** Quicksort Worst Case
+   #+BEGIN_NOTES
+   If we always pick the least or greatest element, we reverse the
+   advantage of splitting into subproblems at all, leaving us with
+   \theta(n^2) since the n/2 elements each have more than n/2 elements to
+   partition. So if the best case provides a relatively fast O(n log
+   n) time but could lead to an expensive worst-case of O(n^2), why is
+   quicksort so revered?
+   #+END_NOTES
+   [[./img/quicksort_worst_case.png]]
+
+** Quicksort Average Case
+   #+BEGIN_NOTES
+   If we pick points at random from some set of numbers, half the
+   time the point will be closer to the center than it is to either
+   end. So, anytime a pivot is selected that will end up in this
+   center half, neither of the sides will contain less than n/4
+   elements or more than 3n/4 elements.
+   #+END_NOTES
+   [[./img/quicksort_avg_case.png]]
+
+** Good Partitions
+   #+BEGIN_NOTES
+   So, if we can always find a pivot that will end up in the
+   middle-ish part of the array, how deep do we need to recur to get
+   from n elements to one?
+   #+END_NOTES
+   $$(3/4)^d \times n = 1 → n = (4/3)^d$$
+
+   $$\log n = d \times \log(4/3)$$
+
+   $$d = \log {4 \over 3} \times \log n < 2 \log n$$
+
+** Bad Partitions
+   #+BEGIN_NOTES
+   This begs the opposite question though. If we pick elements
+   arbitrarily from the array, how often will we generate a decent
+   partition?
+   #+END_NOTES
+   $${{3n \over 4} + {n \over 4} \over 2} = {n \over 2}$$
+
+   $2 \times \log n$ good partitions do the job, and half of partitions
+   will be good. That's \approx $4 \times \log n$ depth on average.
+
+** Average Case Analysis
+   #+BEGIN_NOTES
+   If we want to get down to the nitty-gritty of the average case
+   analysis, we'll need to take a look at the actual amount of time /T/
+   that it will take. We select pivots /p/ with equal probability, and
+   we need to do /n - 1/ comparisons at each level. If we break this
+   out it looks a bit like the summation for calculating the harmonic
+   numbers which approximates the natural log.
+   #+END_NOTES
+   $$T(n) = \sum_{p=1}^n {1 \over n}(T(p - 1) + T(n - p)) + n - 1$$
+
+   [[./img/harmonic_numbers.png]]
+
+   $$H_n = \sum_{i=1}^n {1 \over i} \approx \ln n$$
+
+
+** And then there was more math
+   #+BEGIN_NOTES
+   If we
+   #+END_NOTES
+   $${T(n) \over n + 1} = {T(n − 1) \over n} + {2(n-1) \over n(n+1)}$$
+
+   $$\sum_{i=1}^n {2(i - 1) \over (i + 1)} \approx 2 \sum_{i=1}^n {1 \over (i + 1)} \approx 2 \ln n$$
+
+   ... and then more math ... actually \approx 1.38 \ln n
+
+** Enemy Sort
+   #+BEGIN_NOTES
+   Suppose you need to sort data given to you by your worst
+   enemy. What kind of data are they going to give you to make you
+   look bad? Well, if they know you're going to use a quicksort,
+   they'll probably create a data set with the worst possible pivot
+   points at either end of the array. How could you thwart the plans
+   of your worst enemy?
+   #+END_NOTES
+
+   #+ATTR_REVEAL: :frag appear
+   Randomize the pivot.
+
+* Randomization
+  #+BEGIN_NOTES
+  Randomization gives us some important guarantees. If we either mix
+  up the order of the target set or always choose a random pivot
+  point, we can make a guarantee.
+
+  ---
+
+  Because the time bounding won't depend upon input distribution,
+  there is an extremely small chance that we will end up with the
+  worst case performance. We can use randomization as a tool to make
+  algorithms with poor worst-case scenarios but good average cases
+  into viable or even performant options. The worst-case is still
+  there, but it is extremely unlikely that we'll ever see it.
+  #+END_NOTES
+  #+BEGIN_QUOTE
+  Random quicksort runs in $O(n \log n)$ with high probability.
+  #+END_QUOTE
+
+
+** Good pivots
+   #+BEGIN_NOTES
+   What are some strategies we can use to ensure that we will almost
+   always get good performance out of quicksort?
+   #+END_NOTES
+   #+ATTR_REVEAL: :frag (roll-in)
+   - Choose a random pivot
+   - Choose the middle index
+   - Choose the median
+
+   #+ATTR_REVEAL: :frag appear
+   The worst case will always remain $O(n^2)$
+
+** Comparing sorts
+   #+BEGIN_NOTES
+   When quicksort is implemented well, it's about 2-3 times faster
+   than heapsort. This is mainly because the number of operations in
+   the inner loop for partitioning is smaller than the number of
+   comparisons required to heapsort.
+
+   Because are in the same complexity ranking, the difference between
+   them will be a multiplicative constant factor. However, when
+   comparing algorithms with similar complexity, the constant factor
+   may still be significant, and the difference is going to show based
+   on the details of your implementation.
+   #+END_NOTES
+   - Selection sort $\theta(n^2)$
+   - Heapsort $\theta(n \log n)$
+   - Quicksort $\theta(n \log n)$
