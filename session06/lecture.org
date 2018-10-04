@@ -1,0 +1,638 @@
+#+TITLE:  Computer Science 2: Algorithms
+#+AUTHOR: Detroit Labs Dev Coaching
+#+DATE:   2018
+#+EMAIL:  ndotz@detroitlabs.com
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   skip:nil d:nil todo:t pri:nil tags:not-in-toc timestamp:nil
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+REVEAL_PLUGINS: (highlight notes)
+#+REVEAL_THEME: league
+#+REVEAL_MARGIN: 0.2
+# #+REVEAL_MIN_SCALE: 0.5
+# #+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_EXTRA_CSS: ./presentation.css
+
+* Lecture 6
+
+* Sorting in $o(n \log n)$
+  #+BEGIN_NOTES
+  Can we sort in o(n log n)? If you'll recall, Big-O states there must
+  a bounding function that creates an upper bound of the function we
+  are analyzing for part of the range of the function. Little-O states
+  there must be a bounding function that creates an upper bound of the
+  function we are analyzing for ALL of the range of the function.
+
+  Now, when we write a sorting algorithm, we are essentially
+  committing to some decision tree. Given the same data, that decision
+  tree will make the same comparisons based on the provided
+  decisions. However, given different data, it will use different
+  comparisons. but the decisions themselves will not have changed.
+
+  So what are we saying when we ask "can we sort in little-o n log n?"
+
+  We want to know if we can always do better than O(n log n), and
+  never do anything worse than O(n log n), so never O(n^2) or greater.
+  #+END_NOTES
+  - Decision tree
+  - Same data \rightarrow Same comparisons
+  - Different data \rightarrow Different comparisons
+  - Same decisions
+
+** Worst case?
+   #+BEGIN_NOTES
+   Well, if we want to always do better than some function complexity,
+   we had better know the worst case!
+   #+END_NOTES
+   Is the height of the decision tree the worst case complexity for
+   sorting?
+
+** Lower bounds
+   #+BEGIN_NOTES
+   Given 2 permutations of n elements, there must be a different
+   sequence of steps to sort each of them, so there must be n! paths
+   from the root to the leaves, and n! leaves.
+
+   Binary tree of height h has at most 2^h leaves, so n! \le 2^h \rightarrow h \ge \log(n!)
+
+   Last n/2 terms of n! are greater than n/2, so n! > (n/2)^(n/2)
+   #+END_NOTES
+   - Permutations have different steps to sort
+   - $n!$ paths from the root to the leaves, and $n!$ leaves.
+
+   $$n! \le 2^h \rightarrow h \ge \log(n!)$$
+
+   $$n! > {n \over 2}^{({n \over 2})}$$
+
+   $$log(n!) > log({n \over 2}^{({n \over 2})}) = {n \over 2} log({n \over 2}) \rightarrow \theta(n \log n)$$
+
+** Stirling's approximation
+   #+BEGIN_NOTES
+   To wit, there is also a mathematical principle called Stirling's
+   approximation that gives a better bound for n! > (n/e)^n where e =
+   2.718, so we know that this is a lower bound of n log n as well.
+   #+END_NOTES
+   $$n! \sim {\sqrt {2\pi n}}({n \over e})^n$$
+
+   $$h \ge \log({n \over e})^n = n \log n - n \log e = \Omega(n \log n)$$
+
+** Card Sorting
+   #+BEGIN_NOTES
+   How would we sort a deck of cards? If I want an ordering of Aces as
+   heart, club, diamond, spade, then 2s heart club diamond spade, then
+   3s and so on, what would be a good strategy to get this sorting?
+   #+END_NOTES
+   How would you sort a deck of cards?
+
+   [[https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/English_pattern_playing_cards_deck.svg/500px-English_pattern_playing_cards_deck.svg.png]]
+
+** Non-comparison sorting
+   #+BEGIN_NOTES
+   It's important to note here that we're not strictly doing primitive
+   binary sorting of the "does A go before B or does B go before
+   A". If we can find the correct pile in constant time and each pile
+   gets O(1) cards, this will happen in O(n) time.
+   #+END_NOTES
+
+   #+ATTR_REVEAL: :frag (roll-in)
+   - 13 piles
+   - same numbers go in piles
+   - constant size per pile = n^2 sort per pile
+   - merge piles
+
+** Bucketsort
+   #+BEGIN_NOTES
+
+   #+END_NOTES
+   If we need to sort $n$ numbers from 1 to $m$, assuming the numbers
+   are relatively uniformly distributed:
+
+   - set up $n$ buckets
+   - each bucket covers $m \over n$ interval
+   - $\forall x$, add to bucket $xn \over m$
+   - If backed by array, $O(1)$ per item, $O(n)$ for whole set
+
+   [[https://www.cs.usfca.edu/~galles/visualization/BucketSort.html][BucketSort]]
+
+** Breaking the rules?
+   If the elements are uniformly distributed, we should have only 1
+   item per bucket, so we don't need to sort the buckets before
+   merging, or $O(1)$.
+
+   This leaves us with a very speedy $O(n)$ sort!
+
+   What happened to our $\Omega(n \log n)$ lower boundary?!
+
+** Worst case
+   #+BEGIN_NOTES
+   What happens if we goof on assuming the distribution? If we spend
+   linear time putting all of the items into a single bucket, we've
+   done work for no advantage!
+   #+END_NOTES
+   [[./img/bucketsort_worst_case.png]]
+
+
+** "Real World" Distributions
+   We "shouldn't" come across the worst case if we understand the
+   distribution of our data.
+
+   What about a phone book?
+   - Will there be many people named Dotz?
+   - How about Brown?
+   - Li? Gonzalez?
+
+   We need to be sure of our data if we're going to make assumptions
+   about its distribution. Otherwise, we need to pick a randomized
+   algorithm or one with a good worst-case!
+
+** Can't beat the bound
+   #+BEGIN_NOTES
+   Radix sort is another non-comparison sort that works on
+   least-significant digits. It takes O(nm) to sort n strings of
+   m length, which is linear in the size of the input, but m \ge
+   \Omega(\log n) for values to be distinct.
+   #+END_NOTES
+
+   $O(nm)$ to sort $n$ strings of $m$ length
+
+   $m \ge \Omega(\log n)$ for values to be distinct.
+
+   [[https://upload.wikimedia.org/wikipedia/commons/6/6a/Dsa_radix_sort.png]]
+
+   There are specific cases of sorts that work faster in certain
+   cases, but in general for sorting $n$ arbitrary, distinct values,
+   we cannot beat $\theta(n \log n)$
+
+
+* Nuts and bolts problem
+  #+BEGIN_NOTES
+  #+END_NOTES
+  You are given $n$ bolts of different sizes and $n$ corresponding
+  nuts. Trying a nut on a bolt tells you whether they are too big, too
+  small, or a good fit. Differences between pairs are
+  indistinguishable without testing, so you cannot compare 2 bolts or
+  2 nuts. Match each bolt to each nut.
+
+  - Give a $O(n^2)$ algorithm
+  - Find the smallest bolt and its nut. This can be done in $2n - 2$
+    comparisons.
+  - Match all nuts and bolts in expected $O(n \log n)$ time.
+
+* Graphs
+  A graph $G = (V, E)$ is a set of vertices $V$ and a set of edges $E$
+  which are pairs of vertices from $V$.
+
+** Roads
+   #+BEGIN_NOTES
+   Modeling roads is a common use for graphs. Vertices could be
+   intersections if we are modeling a city, or perhaps cities if we
+   are modeling a country's highway network. The edges would represent
+   the roads between those vertices.
+   #+END_NOTES
+   | [[./img/road_cities.png]] | [[./img/road_node_intersection.png]] |
+
+** Circuits
+   #+BEGIN_NOTES
+   Likewise, we might model a circuit with a graph. The junctions
+   where electricity goes multiple directions would be the vertices,
+   while the components through which that electricity flows to make
+   the circuit work would be the edges.
+
+   In case anyone was wondering, this is an RLC circuit which forms
+   the harmonic oscillator in a low-pass filter.
+   #+END_NOTES
+   [[https://upload.wikimedia.org/wikipedia/en/thumb/7/7d/RLC_low-pass.svg/570px-RLC_low-pass.svg.png]]
+
+** Graph problems
+   #+BEGIN_NOTES
+   What other kinds of things can we model with graphs?
+   #+END_NOTES
+   #+ATTR_REVEAL: :frag (roll-in)
+   - Social Networks
+   - The World-wide web
+   - Control flow in a computer program
+   - Pairwise similarities between items
+
+** Properties of graphs
+   #+BEGIN_NOTES
+   Before we understand how graphs help us solve problems, we need to
+   get familiar with properties that graphs may have, or
+   "flavors". The type of graph that we use will have greatly effect
+   which algorithms are appropriate and efficient for the problem at hand.
+   #+END_NOTES
+   - Undirected / Directed
+   - Unweighted / Weighted
+   - Simple / Not Simple
+   - Sparse / Dense
+   - Cyclic / Acyclic
+   - Embedded / Topological
+
+** Undirected / Directed
+   #+BEGIN_NOTES
+   Highways between cities are almost always undirected because
+   highways almost always go both ways.
+
+   Street networks in a city are directed due to one-way streets, road
+   closures etc.
+
+   Most of the interesting problems in graph theory are related to
+   undirected graphs. Due to the nature of directed graphs, there are
+   fewer interesting choices to make.
+   #+END_NOTES
+   A graph $G = (V,E)$ is /undirected/ if edge $(x,y) \in E$ implies $(y,x) \in E$
+
+   | [[./img/nyc_map.png]] | [[./img/vancouver_map.jpg]] |
+
+** Unweighted / Weighted
+   #+BEGIN_NOTES
+   In an /unweighted/ graph, there is no cost difference between the
+   edges and vertices, and each is treated equally.
+
+   In a road network, the edges representing the roads might be
+   weighted by their length, drive time, or speed limit.
+
+   In a circuit, the weight might be voltage or resistance.
+
+   #+END_NOTES
+   In a /weighted/ graph, each edge or vertex has a /weight/ associated
+   with it, usually a numerical value.
+
+   [[https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/CPT-Graphs-undirected-weighted.svg/200px-CPT-Graphs-undirected-weighted.svg.png]]
+
+** Simple / Not Simple
+   #+BEGIN_NOTES
+   A /simple/ graph is the kind of graph you probably picture in your
+   mind when you think about vertices connected by edges, with edges
+   going between different vertices.
+
+   Certain types of edges make a graph no longer simple. A self-loop
+   where an edge has the same vertex at one end is one such case. A
+   multi-edge is an edge that occurs more than one, and is another
+   case. Graphs containing these are not considered simple.
+
+   In a social network, are you your own friend?
+   #+END_NOTES
+   | [[https://upload.wikimedia.org/wikipedia/commons/9/96/Simple_graph.png]] | [[https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/CPT-Graphs-undirected-unweighted-loop-multiedge.svg/500px-CPT-Graphs-undirected-unweighted-loop-multiedge.svg.png]] |
+
+** Sparse / Dense
+   #+BEGIN_NOTES
+   If a graph has few of the possible connections between vertices as
+   actual edges, we call it a /sparse/ graph. A /dense/ graph usually
+   has in the neighborhood of $n^2$ edges.
+
+   Roads are generally sparse graphs due to the physical constraints
+   of space, while a tightly-knit friend group on social media might
+   be rather dense.
+   #+END_NOTES
+   [[./img/dense_graph.png]]
+
+** Cyclic / Acyclic
+   #+BEGIN_NOTES
+   A cycle is a path of edges and vertices wherein a vertex is
+   reachable from itself. So, a graph that creates any kind of closed
+   loop is cyclic.
+
+   Graphs that do not create cycles are called acyclic. A connected,
+   undirected graph with no cycles is a tree. Directed acyclic graphs
+   or DAGs show up often as decision flowcharts or in scheduling problems.
+   #+END_NOTES
+   | [[https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Directed_graph%2C_cyclic.svg/500px-Directed_graph%2C_cyclic.svg.png]] | [[https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Directed_acyclic_graph.svg/500px-Directed_acyclic_graph.svg.png]] |
+
+** Embedded / Topological
+   #+BEGIN_NOTES
+   Think about the different between the traveling salesman problem
+   versus the shortest path on a plane.
+
+   A graph is /embedded/ if the vertices (and therefore, the edges)
+   have assigned geometric positions.
+
+   A /topological/ graph is one where a specific drawing of the edges
+   between vertices matters, such as a twisting highway, or in a
+   circuit.
+   #+END_NOTES
+   | [[./img/road_cities.png]] | [[./img/topological.png]] |
+
+** Friendship graphs
+   #+BEGIN_NOTES
+   Suppose we want to model graphs of our friendships. We could make
+   the vertices people, and create an edge between them if they are
+   friends.
+
+   We could certainly use this to model friendships on any
+   scale. People in algorithms class, all of Detroit Labs, all of the
+   midwest, or even everyone in the world.
+
+   So, assuming we had such a model, what could we find out from it?
+   #+END_NOTES
+   - vertices = people
+   - edges = friendship
+
+** Are we friends?
+   #+BEGIN_NOTES
+   The heard-of graph is most certainly directed, as there are likely
+   many celebrities I have heard of that have never heard of
+   me. However, a "went on a date" graph likely takes at least 2
+   people to assemble each edge, so it will probably be best as an
+   undirected graph.
+   #+END_NOTES
+   An undirected graph means an edge represents both $(x,y)$ and
+   $(y,x)$.
+
+   - a "heard-of" graph would be directed.
+   - a "went-on-date" graph is presumably undirected.
+
+** Six Degrees of Kevin Bacon
+   A /path/ is a sequence of edges between two vertices.
+
+   By measuring the path between two vertices we can establish how
+   many edges (relationships) there are between two people in our
+   graph.
+
+   Most often, we're interested in the shortest path.
+
+** Can we meet?
+   A graph is /connected/ if there is some path between any two
+   vertices.
+
+   A graph is /strongly connected/ if there is a directed path between
+   any two vertices.
+
+** Who's the most popular?
+   The /degree/ of a graph is the number of edges adjacent to it, so
+   the vertex with the most edges would be the most popular person in
+   our graph of friends.
+
+** Cliques
+   #+BEGIN_NOTES
+   A group of people who spend time together a lot is called a clique.
+
+   ---
+
+   In our friendship graph, we'd likely find cliques around jobs,
+   neighborhoods, churches and schools.
+   #+END_NOTES
+
+   In graph theory, a /clique/ is a complete subgraph where each
+   vertex pair has an edge between them.
+
+* Data Structures for Graphs
+  - Adjacency Matrices
+  - Adjacency Lists
+
+  For a graph $G = (V,E)$, assume that we have $n$ vertices and $m$ edges.
+
+** Adjacency Matrix
+   We can use a matrix to represent a graph by making an $n$ by $n$
+   matrix $M$. If there is an edge between two vertices, $M[i, j]$
+   will be true.
+
+** Adjacency Matrix
+   #+BEGIN_NOTES
+   This method can be a bit excessive in space consumption if the
+   graph has many vertices and relatively few edges.
+
+   Can we save space if the graph is undirected or sparse?
+   #+END_NOTES
+
+   | [[https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/6n-graph2.svg/200px-6n-graph2.svg.png]] | [[./img/adjacency_matrix.png]] |
+
+** Adjacency List
+   #+BEGIN_NOTES
+   It should be noted that when we update an adjacency list, it will
+   likely have a corresponding edge in the j-th list if it is an
+   undirected graph.
+   #+END_NOTES
+   We can represent a graph by making an array of size $n$, where the
+   $i$ th element contains a linked list of vertices that form an edge
+   with $i$. Thus, if $(i,j)$ is an edge in the graph, the $i$ th list
+   will contain $j$.
+
+   Finding edges will take $O(d_i)$ where $d$ is the degree of the vertex.
+
+** Adjacency List
+
+   [[https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Adjacencylist_linkedlistof_doublelinkedlists_undirectedgraph.svg/640px-Adjacencylist_linkedlistof_doublelinkedlists_undirectedgraph.svg.png]]
+
+** Analyzing Operations
+   #+BEGIN_NOTES
+   Let's think about which data structure will be best for certain
+   kinds of operations we might want to perform on a graph.
+
+   | Operation                  | Matrix | List   |
+   |----------------------------+--------+--------|
+   | Test if (x,y) exists       | O(1)   | O(d_i)  |
+   | Find vertex degree         | O(n)   | O(1)   |
+   | Memory on small graphs     | n^2     | m+n    |
+   | Memory on big graphs       | n^2     | 2n^2    |
+   | Edge insertion or deletion | O(1)   | O(n)   |
+   | Traversal                  | O(n^2)  | O(m+n) |
+
+   #+END_NOTES
+
+   | Operation                  | Matrix | List |
+   |----------------------------+--------+------|
+   | Test if (x,y) exists       |        |      |
+   | Find vertex degree         |        |      |
+   | Memory on small graphs     |        |      |
+   | Memory on big graphs       |        |      |
+   | Edge insertion or deletion |        |      |
+   | Traversal                  |        |      |
+
+* Graph Operations
+
+** Traversal
+   One of the most important operations is traversing every edge and
+   vertex. We need this so be systematic so that we don't miss
+   anything, and we want to visit each edge the fewest number of
+   times, twice at the most.
+
+** Escape the Maze
+   #+BEGIN_NOTES
+   A maze is essentially a graph, so any algorithm suitable for
+   traversing a graph should be powerful enough to enable us to get
+   out of an arbitrary maze.
+   #+END_NOTES
+   [[https://d18l82el6cdm1i.cloudfront.net/image_optimizer/54429cab5dc05daafae44df6aae405409f240684.gif]]
+
+** Marking
+   #+BEGIN_NOTES
+   To be both efficient and correct, we will need a way of thinking
+   about how to traverse the graph as well as abstract around the
+   state of our traversal. For this we can use the concept of marking.
+
+   ---
+
+   A vertex cannot be processed before we are aware it exists. As we
+   discover new vertices, we can take a look at their edges and begin
+   to follow them to discover more vertices. Once all of a vertex's
+   edges have been visited, we can consider that vertex processed.
+   #+END_NOTES
+   - /undiscovered/: not yet seen
+   - /discovered/: have visited, but haven't visited all edges
+   - /processed/: have visited vertex and all incident edges
+
+** Discovery Queue
+   #+BEGIN_NOTES
+   To facilitate this, we will need to maintain some data structure
+   containing the vertices we have discovered by not fully
+   explored. For any vertex in the queue, we examine every edge
+   incident to it, and for each edge that goes to an undiscovered
+   vertex, we mark it ass discovered and add it to the queue. No
+   matter the order we explore the vertices, each edge should only be
+   considered twice, as each of its vertices are explored.
+
+   In this way, every edge and vertex in the connected component of
+   the graph is visited eventually. If there are unvisited vertices
+   whose neighbor gets visited, we will eventually visit them via
+   their neighbors.
+   #+END_NOTES
+
+* Breadth-First Traversal
+  #+BEGIN_NOTES
+  As we stated before, one of the main things we want to do with
+  graphs is to systematically traverse the graph until every vertex
+  and edge has been visited exactly once, and hopefully in some
+  semblance of order. One of those strategies of order is Breadth
+  First Search. Breadth-first search is the most appropriate traversal
+  method if we're interested in the shortest paths on unweighted graphs.
+  #+END_NOTES
+
+** BFS Data Structures
+   #+BEGIN_NOTES
+   One way of structuring the data required for a breadth first search
+   is to keep a pair of boolean arrays for our mark states, as well as
+   one of integers, which we'll use to store the indices of the parent
+   node in our search. So, whatever node we visit at some index /i/
+   will have its parent's index stored at parent[i]
+   #+END_NOTES
+   - FIFO Queue
+   - 2 $n$ -sized arrays of booleans
+   - An $n$ -sized array of integers
+
+   #+BEGIN_SRC c
+   bool processed[MAXV];
+   bool discovered[MAXV];
+   int parent[MAXV];
+   #+END_SRC
+
+** BFS Animated
+   [[https://www.cs.usfca.edu/~galles/visualization/BFS.html][Animated]]
+
+** Finding paths with ~parent~
+   By using the ~parent~ array, we can easily find paths.
+
+   #+BEGIN_SRC c
+   int path_length = 0;
+   while(i != 0) {
+       i = parent[i];
+       path_length++;
+   }
+   #+END_SRC
+
+** Shortest Paths
+   #+BEGIN_NOTES
+   In BFS, vertices are discovered in an order such that each
+   iteration is discovering points further away from the root of the
+   search. The unique path from the root to any node in the graph uses
+   the smallest possible number of edges on any root-to-node path in
+   the graph.
+   #+END_NOTES
+   | [[./img/shortest_path_a.png]] | [[./img/shortest_path_b.png]] |
+
+** Recursion and Shortest Paths
+   #+BEGIN_NOTES
+   To find these shortest paths, we can make use of the parent array,
+   following the parent indices recursively until we get back to the root.
+   #+END_NOTES
+   #+BEGIN_SRC c
+   find_path(int start, int end, int parents[]) {
+       if ((start == end) || (end == -1))
+           printf(”%d”, start);
+       else {
+           find_path(start, parents[end], parents);
+           printf(” %d”, end);
+       }
+   }
+   #+END_SRC
+
+** Connected Components
+   #+BEGIN_NOTES
+   Connected components in undirected graphs represent the different
+   pieces of the graph.
+
+   Many problems can be solved by modeling them this way. There is a
+   graph of possible moves from the way a Rubik's cube is currently
+   configured to it's completed state. Likewise, there is a graph of
+   possible moves in a sliding puzzle its current layout to the
+   finished one.
+
+   However, breadth-first search only covers the connected component
+   that the root of our search is in. If we cannot find the node we
+   are looking for or haven't discovered all the nodes, we may need to
+   run BFS again on an undiscovered component to find the remaining
+   nodes.
+   #+END_NOTES
+   [[https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Pseudoforest.svg/500px-Pseudoforest.svg.png]]
+
+** Coloring Graphs
+   #+BEGIN_NOTES
+   Vertex coloring is used to label ("color") vertices in the graph so
+   that edges never link two vertices of the same color.
+
+   A "Bipartite" graph is a colored graph such that it can be colored
+   without conflicts using only two colors. These show up in a lot of
+   kinds of problems naturally, but have become even more common with
+   the rise of social media platforms, as they are very useful in
+   social network analysis.
+
+   For example you might imagine some set of nodes on one side of a
+   graph that are the "user" nodes and one set of nodes on the other
+   side that are the "interest" nodes. Users will have edges
+   connecting them to interests, and likewise, we can walk other edges
+   from an interest node to find other users who are also interested
+   in the same thing.
+   #+END_NOTES
+   [[https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Simple-bipartite-graph.svg/500px-Simple-bipartite-graph.svg.png]]
+
+* Practice Problem
+  #+BEGIN_NOTES
+  1. Convert from an adjacency matrix to adjacency lists
+
+      for i from 1 \rightarrow n-1
+        for j from i+1 \rightarrow n
+          if m_i[j] = 1, add edges [i,j] and [j,i] to the graph
+
+      This is O(n^2)
+
+   2. Convert from an adjacency list to an incidence matrix.
+      Count the m edges.
+      Initialize n \times m matrix.
+      for i from 1 \rightarrow n
+        while l \ne nil
+          if j > i, set I[k,i] and I[k,j] = 1
+
+      This is O(n*m)
+
+   3. Convert from an incidence matrix to adjacency lists.
+
+      for i from 1 \rightarrow n
+        L[i] = nil
+        for k from 1 \rightarrow m
+          for j from 1 \rightarrow n
+            if k[x] = 1, inset [i,j] and [j,i]
+
+  #+END_NOTES
+  Provide algorithms for converting between data structures for an
+  undirected graph $G$ with $n$ vertices and $m$ edges. They should be
+  correct and efficient, and supply the time complexity of each
+  algorithm.
+
+  1. Convert from an adjacency matrix to adjacency lists.
+  2. Convert from an adjacency list to an incidence matrix.
+  3. Convert from an incidence matrix to adjacency lists.
+
+  An incidence matrix M has a row for each vertex and a column for
+  each edge, such that $M[i,j] = 1$ if vertex $i$ is part of edge $j$,
+  otherwise $M[i,j] = 0$.

@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Computer Science 2: Algorithms</title>
+<meta name="author" content="(Detroit Labs Dev Coaching)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="./reveal.js/css/theme/league.css" id="theme"/>
+
+<link rel="stylesheet" href="./presentation.css"/>
+<link rel="stylesheet" href="./reveal.js/lib/css/zenburn.css"/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Computer Science 2: Algorithms</h1><h2 class="author">Detroit Labs Dev Coaching</h2><h2 class="date">2018</h2>
+</section>
+
+<section>
+<section id="slide-org713a2bc">
+<h2 id="org713a2bc">Lecture 6</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-org20ef52a">
+<h2 id="org20ef52a">Sorting in \(o(n \log n)\)</h2>
+<aside class="notes">
+<p>
+Can we sort in o(n log n)? If you'll recall, Big-O states there must
+a bounding function that creates an upper bound of the function we
+are analyzing for part of the range of the function. Little-O states
+there must be a bounding function that creates an upper bound of the
+function we are analyzing for ALL of the range of the function.
+</p>
+
+<p>
+Now, when we write a sorting algorithm, we are essentially
+committing to some decision tree. Given the same data, that decision
+tree will make the same comparisons based on the provided
+decisions. However, given different data, it will use different
+comparisons. but the decisions themselves will not have changed.
+</p>
+
+<p>
+So what are we saying when we ask "can we sort in little-o n log n?"
+</p>
+
+<p>
+We want to know if we can always do better than O(n log n), and
+never do anything worse than O(n log n), so never O(n<sup>2</sup>) or greater.
+</p>
+
+</aside>
+<ul>
+<li>Decision tree</li>
+<li>Same data &rarr; Same comparisons</li>
+<li>Different data &rarr; Different comparisons</li>
+<li>Same decisions</li>
+
+</ul>
+
+</section>
+<section id="slide-orga943ee8">
+<h3 id="orga943ee8">Worst case?</h3>
+<aside class="notes">
+<p>
+Well, if we want to always do better than some function complexity,
+we had better know the worst case!
+</p>
+
+</aside>
+<p>
+Is the height of the decision tree the worst case complexity for
+sorting?
+</p>
+
+</section>
+<section id="slide-org4888eac">
+<h3 id="org4888eac">Lower bounds</h3>
+<aside class="notes">
+<p>
+Given 2 permutations of n elements, there must be a different
+sequence of steps to sort each of them, so there must be n! paths
+from the root to the leaves, and n! leaves.
+</p>
+
+<p>
+Binary tree of height h has at most 2<sup>h</sup> leaves, so n! &le; 2<sup>h</sup> &rarr; h &ge; log(n!)
+</p>
+
+<p>
+Last n/2 terms of n! are greater than n/2, so n! &gt; (n/2)<sup>(n/2)</sup>
+</p>
+
+</aside>
+<ul>
+<li>Permutations have different steps to sort</li>
+<li>\(n!\) paths from the root to the leaves, and \(n!\) leaves.</li>
+
+</ul>
+
+<p>
+\[n! \le 2^h \rightarrow h \ge \log(n!)\]
+</p>
+
+<p>
+\[n! > {n \over 2}^{({n \over 2})}\]
+</p>
+
+<p>
+\[log(n!) > log({n \over 2}^{({n \over 2})}) = {n \over 2} log({n \over 2}) \rightarrow \theta(n \log n)\]
+</p>
+
+</section>
+<section id="slide-org5119882">
+<h3 id="org5119882">Stirling's approximation</h3>
+<aside class="notes">
+<p>
+To wit, there is also a mathematical principle called Stirling's
+approximation that gives a better bound for n! &gt; (n/e)<sup>n</sup> where e =
+2.718, so we know that this is a lower bound of n log n as well.
+</p>
+
+</aside>
+<p>
+\[n! \sim {\sqrt {2\pi n}}({n \over e})^n\]
+</p>
+
+<p>
+\[h \ge \log({n \over e})^n = n \log n - n \log e = \Omega(n \log n)\]
+</p>
+
+</section>
+<section id="slide-org0c76335">
+<h3 id="org0c76335">Card Sorting</h3>
+<aside class="notes">
+<p>
+How would we sort a deck of cards? If I want an ordering of Aces as
+heart, club, diamond, spade, then 2s heart club diamond spade, then
+3s and so on, what would be a good strategy to get this sorting?
+</p>
+
+</aside>
+<p>
+How would you sort a deck of cards?
+</p>
+
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/English_pattern_playing_cards_deck.svg/500px-English_pattern_playing_cards_deck.svg.png" alt="500px-English_pattern_playing_cards_deck.svg.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org8c3266a">
+<h3 id="org8c3266a">Non-comparison sorting</h3>
+<aside class="notes">
+<p>
+It's important to note here that we're not strictly doing primitive
+binary sorting of the "does A go before B or does B go before
+A". If we can find the correct pile in constant time and each pile
+gets O(1) cards, this will happen in O(n) time.
+</p>
+
+</aside>
+
+<ul>
+<li class="fragment roll-in">13 piles</li>
+<li class="fragment roll-in">same numbers go in piles</li>
+<li class="fragment roll-in">constant size per pile = n<sup>2</sup> sort per pile</li>
+<li class="fragment roll-in">merge piles</li>
+
+</ul>
+
+</section>
+<section id="slide-org79cd058">
+<h3 id="org79cd058">Bucketsort</h3>
+<aside class="notes">
+<p>
+
+</p>
+
+</aside>
+<p>
+If we need to sort \(n\) numbers from 1 to \(m\), assuming the numbers
+are relatively uniformly distributed:
+</p>
+
+<ul>
+<li>set up \(n\) buckets</li>
+<li>each bucket covers \(m \over n\) interval</li>
+<li>\(\forall x\), add to bucket \(xn \over m\)</li>
+<li>If backed by array, \(O(1)\) per item, \(O(n)\) for whole set</li>
+
+</ul>
+
+<p>
+<a href="https://www.cs.usfca.edu/~galles/visualization/BucketSort.html">BucketSort</a>
+</p>
+
+</section>
+<section id="slide-orgf83cda6">
+<h3 id="orgf83cda6">Breaking the rules?</h3>
+<p>
+If the elements are uniformly distributed, we should have only 1
+item per bucket, so we don't need to sort the buckets before
+merging, or \(O(1)\).
+</p>
+
+<p>
+This leaves us with a very speedy \(O(n)\) sort!
+</p>
+
+<p>
+What happened to our \(\Omega(n \log n)\) lower boundary?!
+</p>
+
+</section>
+<section id="slide-orge9526c2">
+<h3 id="orge9526c2">Worst case</h3>
+<aside class="notes">
+<p>
+What happens if we goof on assuming the distribution? If we spend
+linear time putting all of the items into a single bucket, we've
+done work for no advantage!
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/bucketsort_worst_case.png" alt="bucketsort_worst_case.png" />
+</p>
+</div>
+
+
+</section>
+<section id="slide-org956b8e6">
+<h3 id="org956b8e6">"Real World" Distributions</h3>
+<p>
+We "shouldn't" come across the worst case if we understand the
+distribution of our data.
+</p>
+
+<p>
+What about a phone book?
+</p>
+<ul>
+<li>Will there be many people named Dotz?</li>
+<li>How about Brown?</li>
+<li>Li? Gonzalez?</li>
+
+</ul>
+
+<p>
+We need to be sure of our data if we're going to make assumptions
+about its distribution. Otherwise, we need to pick a randomized
+algorithm or one with a good worst-case!
+</p>
+
+</section>
+<section id="slide-orgcb60882">
+<h3 id="orgcb60882">Can't beat the bound</h3>
+<aside class="notes">
+<p>
+Radix sort is another non-comparison sort that works on
+least-significant digits. It takes O(nm) to sort n strings of
+m length, which is linear in the size of the input, but m &ge;
+&Omega;(log n) for values to be distinct.
+</p>
+
+</aside>
+
+<p>
+\(O(nm)\) to sort \(n\) strings of \(m\) length
+</p>
+
+<p>
+\(m \ge \Omega(\log n)\) for values to be distinct.
+</p>
+
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Dsa_radix_sort.png" alt="Dsa_radix_sort.png" />
+</p>
+</div>
+
+<p>
+There are specific cases of sorts that work faster in certain
+cases, but in general for sorting \(n\) arbitrary, distinct values,
+we cannot beat \(\theta(n \log n)\)
+</p>
+
+
+</section>
+</section>
+<section>
+<section id="slide-orgbb31f18">
+<h2 id="orgbb31f18">Nuts and bolts problem</h2>
+<aside class="notes">
+nil
+</aside>
+<p>
+You are given \(n\) bolts of different sizes and \(n\) corresponding
+nuts. Trying a nut on a bolt tells you whether they are too big, too
+small, or a good fit. Differences between pairs are
+indistinguishable without testing, so you cannot compare 2 bolts or
+2 nuts. Match each bolt to each nut.
+</p>
+
+<ul>
+<li>Give a \(O(n^2)\) algorithm</li>
+<li>Find the smallest bolt and its nut. This can be done in \(2n - 2\)
+comparisons.</li>
+<li>Match all nuts and bolts in expected \(O(n \log n)\) time.</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org02b1dc5">
+<h2 id="org02b1dc5">Graphs</h2>
+<p>
+A graph \(G = (V, E)\) is a set of vertices \(V\) and a set of edges \(E\)
+which are pairs of vertices from \(V\).
+</p>
+
+</section>
+<section id="slide-orgd93bdce">
+<h3 id="orgd93bdce">Roads</h3>
+<aside class="notes">
+<p>
+Modeling roads is a common use for graphs. Vertices could be
+intersections if we are modeling a city, or perhaps cities if we
+are modeling a country's highway network. The edges would represent
+the roads between those vertices.
+</p>
+
+</aside>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><img src="./img/road_cities.png" alt="road_cities.png" /></td>
+<td class="org-left"><img src="./img/road_node_intersection.png" alt="road_node_intersection.png" /></td>
+</tr>
+</tbody>
+</table>
+
+</section>
+<section id="slide-orgcb0b28a">
+<h3 id="orgcb0b28a">Circuits</h3>
+<aside class="notes">
+<p>
+Likewise, we might model a circuit with a graph. The junctions
+where electricity goes multiple directions would be the vertices,
+while the components through which that electricity flows to make
+the circuit work would be the edges.
+</p>
+
+<p>
+In case anyone was wondering, this is an RLC circuit which forms
+the harmonic oscillator in a low-pass filter.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7d/RLC_low-pass.svg/570px-RLC_low-pass.svg.png" alt="570px-RLC_low-pass.svg.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org90ee745">
+<h3 id="org90ee745">Graph problems</h3>
+<aside class="notes">
+<p>
+What other kinds of things can we model with graphs?
+</p>
+
+</aside>
+<ul>
+<li class="fragment roll-in">Social Networks</li>
+<li class="fragment roll-in">The World-wide web</li>
+<li class="fragment roll-in">Control flow in a computer program</li>
+<li class="fragment roll-in">Pairwise similarities between items</li>
+
+</ul>
+
+</section>
+<section id="slide-org4c81ff8">
+<h3 id="org4c81ff8">Properties of graphs</h3>
+<aside class="notes">
+<p>
+Before we understand how graphs help us solve problems, we need to
+get familiar with properties that graphs may have, or
+"flavors". The type of graph that we use will have greatly effect
+which algorithms are appropriate and efficient for the problem at hand.
+</p>
+
+</aside>
+<ul>
+<li>Undirected / Directed</li>
+<li>Unweighted / Weighted</li>
+<li>Simple / Not Simple</li>
+<li>Sparse / Dense</li>
+<li>Cyclic / Acyclic</li>
+<li>Embedded / Topological</li>
+
+</ul>
+
+</section>
+<section id="slide-org8533661">
+<h3 id="org8533661">Undirected / Directed</h3>
+<aside class="notes">
+<p>
+Highways between cities are almost always undirected because
+highways almost always go both ways.
+</p>
+
+<p>
+Street networks in a city are directed due to one-way streets, road
+closures etc.
+</p>
+
+<p>
+Most of the interesting problems in graph theory are related to
+undirected graphs. Due to the nature of directed graphs, there are
+fewer interesting choices to make.
+</p>
+
+</aside>
+<p>
+A graph \(G = (V,E)\) is <i>undirected</i> if edge \((x,y) \in E\) implies \((y,x) \in E\)
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><img src="./img/nyc_map.png" alt="nyc_map.png" /></td>
+<td class="org-left"><img src="./img/vancouver_map.jpg" alt="vancouver_map.jpg" /></td>
+</tr>
+</tbody>
+</table>
+
+</section>
+<section id="slide-org7928e8f">
+<h3 id="org7928e8f">Unweighted / Weighted</h3>
+<aside class="notes">
+<p>
+In an <i>unweighted</i> graph, there is no cost difference between the
+edges and vertices, and each is treated equally.
+</p>
+
+<p>
+In a road network, the edges representing the roads might be
+weighted by their length, drive time, or speed limit.
+</p>
+
+<p>
+In a circuit, the weight might be voltage or resistance.
+</p>
+
+</aside>
+<p>
+In a <i>weighted</i> graph, each edge or vertex has a <i>weight</i> associated
+with it, usually a numerical value.
+</p>
+
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/CPT-Graphs-undirected-weighted.svg/200px-CPT-Graphs-undirected-weighted.svg.png" alt="200px-CPT-Graphs-undirected-weighted.svg.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org21f9812">
+<h3 id="org21f9812">Simple / Not Simple</h3>
+<aside class="notes">
+<p>
+A <i>simple</i> graph is the kind of graph you probably picture in your
+mind when you think about vertices connected by edges, with edges
+going between different vertices.
+</p>
+
+<p>
+Certain types of edges make a graph no longer simple. A self-loop
+where an edge has the same vertex at one end is one such case. A
+multi-edge is an edge that occurs more than one, and is another
+case. Graphs containing these are not considered simple.
+</p>
+
+<p>
+In a social network, are you your own friend?
+</p>
+
+</aside>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Simple_graph.png" alt="Simple_graph.png" /></td>
+<td class="org-left"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/CPT-Graphs-undirected-unweighted-loop-multiedge.svg/500px-CPT-Graphs-undirected-unweighted-loop-multiedge.svg.png" alt="500px-CPT-Graphs-undirected-unweighted-loop-multiedge.svg.png" /></td>
+</tr>
+</tbody>
+</table>
+
+</section>
+<section id="slide-org8f82d77">
+<h3 id="org8f82d77">Sparse / Dense</h3>
+<aside class="notes">
+<p>
+If a graph has few of the possible connections between vertices as
+actual edges, we call it a <i>sparse</i> graph. A <i>dense</i> graph usually
+has in the neighborhood of \(n^2\) edges.
+</p>
+
+<p>
+Roads are generally sparse graphs due to the physical constraints
+of space, while a tightly-knit friend group on social media might
+be rather dense.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/dense_graph.png" alt="dense_graph.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-orgec0e97c">
+<h3 id="orgec0e97c">Cyclic / Acyclic</h3>
+<aside class="notes">
+<p>
+A cycle is a path of edges and vertices wherein a vertex is
+reachable from itself. So, a graph that creates any kind of closed
+loop is cyclic.
+</p>
+
+<p>
+Graphs that do not create cycles are called acyclic. A connected,
+undirected graph with no cycles is a tree. Directed acyclic graphs
+or DAGs show up often as decision flowcharts or in scheduling problems.
+</p>
+
+</aside>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Directed_graph,_cyclic.svg/500px-Directed_graph,_cyclic.svg.png" alt="500px-Directed_graph,_cyclic.svg.png" /></td>
+<td class="org-left"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Directed_acyclic_graph.svg/500px-Directed_acyclic_graph.svg.png" alt="500px-Directed_acyclic_graph.svg.png" /></td>
+</tr>
+</tbody>
+</table>
+
+</section>
+<section id="slide-orgc48ec12">
+<h3 id="orgc48ec12">Embedded / Topological</h3>
+<aside class="notes">
+<p>
+Think about the different between the traveling salesman problem
+versus the shortest path on a plane.
+</p>
+
+<p>
+A graph is <i>embedded</i> if the vertices (and therefore, the edges)
+have assigned geometric positions.
+</p>
+
+<p>
+A <i>topological</i> graph is one where a specific drawing of the edges
+between vertices matters, such as a twisting highway, or in a
+circuit.
+</p>
+
+</aside>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><img src="./img/road_cities.png" alt="road_cities.png" /></td>
+<td class="org-left"><img src="./img/topological.png" alt="topological.png" /></td>
+</tr>
+</tbody>
+</table>
+
+</section>
+<section id="slide-org4d61fd4">
+<h3 id="org4d61fd4">Friendship graphs</h3>
+<aside class="notes">
+<p>
+Suppose we want to model graphs of our friendships. We could make
+the vertices people, and create an edge between them if they are
+friends.
+</p>
+
+<p>
+We could certainly use this to model friendships on any
+scale. People in algorithms class, all of Detroit Labs, all of the
+midwest, or even everyone in the world.
+</p>
+
+<p>
+So, assuming we had such a model, what could we find out from it?
+</p>
+
+</aside>
+<ul>
+<li>vertices = people</li>
+<li>edges = friendship</li>
+
+</ul>
+
+</section>
+<section id="slide-org277d122">
+<h3 id="org277d122">Are we friends?</h3>
+<aside class="notes">
+<p>
+The heard-of graph is most certainly directed, as there are likely
+many celebrities I have heard of that have never heard of
+me. However, a "went on a date" graph likely takes at least 2
+people to assemble each edge, so it will probably be best as an
+undirected graph.
+</p>
+
+</aside>
+<p>
+An undirected graph means an edge represents both \((x,y)\) and
+\((y,x)\).
+</p>
+
+<ul>
+<li>a "heard-of" graph would be directed.</li>
+<li>a "went-on-date" graph is presumably undirected.</li>
+
+</ul>
+
+</section>
+<section id="slide-org9af59ef">
+<h3 id="org9af59ef">Six Degrees of Kevin Bacon</h3>
+<p>
+A <i>path</i> is a sequence of edges between two vertices.
+</p>
+
+<p>
+By measuring the path between two vertices we can establish how
+many edges (relationships) there are between two people in our
+graph.
+</p>
+
+<p>
+Most often, we're interested in the shortest path.
+</p>
+
+</section>
+<section id="slide-orgc764655">
+<h3 id="orgc764655">Can we meet?</h3>
+<p>
+A graph is <i>connected</i> if there is some path between any two
+vertices.
+</p>
+
+<p>
+A graph is <i>strongly connected</i> if there is a directed path between
+any two vertices.
+</p>
+
+</section>
+<section id="slide-orgd2b0e04">
+<h3 id="orgd2b0e04">Who's the most popular?</h3>
+<p>
+The <i>degree</i> of a graph is the number of edges adjacent to it, so
+the vertex with the most edges would be the most popular person in
+our graph of friends.
+</p>
+
+</section>
+<section id="slide-orgb5b91e7">
+<h3 id="orgb5b91e7">Cliques</h3>
+<aside class="notes">
+<p>
+A group of people who spend time together a lot is called a clique.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+In our friendship graph, we'd likely find cliques around jobs,
+neighborhoods, churches and schools.
+</p>
+
+</aside>
+
+<p>
+In graph theory, a <i>clique</i> is a complete subgraph where each
+vertex pair has an edge between them.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgb6fc269">
+<h2 id="orgb6fc269">Data Structures for Graphs</h2>
+<ul>
+<li>Adjacency Matrices</li>
+<li>Adjacency Lists</li>
+
+</ul>
+
+<p>
+For a graph \(G = (V,E)\), assume that we have \(n\) vertices and \(m\) edges.
+</p>
+
+</section>
+<section id="slide-org8c2ad45">
+<h3 id="org8c2ad45">Adjacency Matrix</h3>
+<p>
+We can use a matrix to represent a graph by making an \(n\) by \(n\)
+matrix \(M\). If there is an edge between two vertices, \(M[i, j]\)
+will be true.
+</p>
+
+</section>
+<section id="slide-org7191223">
+<h3 id="org7191223">Adjacency Matrix</h3>
+<aside class="notes">
+<p>
+This method can be a bit excessive in space consumption if the
+graph has many vertices and relatively few edges.
+</p>
+
+<p>
+Can we save space if the graph is undirected or sparse?
+</p>
+
+</aside>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/6n-graph2.svg/200px-6n-graph2.svg.png" alt="200px-6n-graph2.svg.png" /></td>
+<td class="org-left"><img src="./img/adjacency_matrix.png" alt="adjacency_matrix.png" /></td>
+</tr>
+</tbody>
+</table>
+
+</section>
+<section id="slide-orgc99e22a">
+<h3 id="orgc99e22a">Adjacency List</h3>
+<aside class="notes">
+<p>
+It should be noted that when we update an adjacency list, it will
+likely have a corresponding edge in the j-th list if it is an
+undirected graph.
+</p>
+
+</aside>
+<p>
+We can represent a graph by making an array of size \(n\), where the
+\(i\) th element contains a linked list of vertices that form an edge
+with \(i\). Thus, if \((i,j)\) is an edge in the graph, the \(i\) th list
+will contain \(j\).
+</p>
+
+<p>
+Finding edges will take \(O(d_i)\) where \(d\) is the degree of the vertex.
+</p>
+
+</section>
+<section id="slide-orgc5a1c7b">
+<h3 id="orgc5a1c7b">Adjacency List</h3>
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Adjacencylist_linkedlistof_doublelinkedlists_undirectedgraph.svg/640px-Adjacencylist_linkedlistof_doublelinkedlists_undirectedgraph.svg.png" alt="640px-Adjacencylist_linkedlistof_doublelinkedlists_undirectedgraph.svg.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-orgcf8bf6a">
+<h3 id="orgcf8bf6a">Analyzing Operations</h3>
+<aside class="notes">
+<p>
+Let's think about which data structure will be best for certain
+kinds of operations we might want to perform on a graph.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Operation</th>
+<th scope="col" class="org-left">Matrix</th>
+<th scope="col" class="org-left">List</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Test if (x,y) exists</td>
+<td class="org-left">O(1)</td>
+<td class="org-left">O(d<sub>i</sub>)</td>
+</tr>
+
+<tr>
+<td class="org-left">Find vertex degree</td>
+<td class="org-left">O(n)</td>
+<td class="org-left">O(1)</td>
+</tr>
+
+<tr>
+<td class="org-left">Memory on small graphs</td>
+<td class="org-left">n<sup>2</sup></td>
+<td class="org-left">m+n</td>
+</tr>
+
+<tr>
+<td class="org-left">Memory on big graphs</td>
+<td class="org-left">n<sup>2</sup></td>
+<td class="org-left">2n<sup>2</sup></td>
+</tr>
+
+<tr>
+<td class="org-left">Edge insertion or deletion</td>
+<td class="org-left">O(1)</td>
+<td class="org-left">O(n)</td>
+</tr>
+
+<tr>
+<td class="org-left">Traversal</td>
+<td class="org-left">O(n<sup>2</sup>)</td>
+<td class="org-left">O(m+n)</td>
+</tr>
+</tbody>
+</table>
+
+</aside>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Operation</th>
+<th scope="col" class="org-left">Matrix</th>
+<th scope="col" class="org-left">List</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Test if (x,y) exists</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Find vertex degree</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Memory on small graphs</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Memory on big graphs</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Edge insertion or deletion</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Traversal</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+</section>
+<section>
+<section id="slide-org98a5bcb">
+<h2 id="org98a5bcb">Graph Operations</h2>
+<div class="outline-text-2" id="text-org98a5bcb">
+</div>
+</section>
+<section id="slide-org0f05aaa">
+<h3 id="org0f05aaa">Traversal</h3>
+<p>
+One of the most important operations is traversing every edge and
+vertex. We need this so be systematic so that we don't miss
+anything, and we want to visit each edge the fewest number of
+times, twice at the most.
+</p>
+
+</section>
+<section id="slide-org875ead4">
+<h3 id="org875ead4">Escape the Maze</h3>
+<aside class="notes">
+<p>
+A maze is essentially a graph, so any algorithm suitable for
+traversing a graph should be powerful enough to enable us to get
+out of an arbitrary maze.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://d18l82el6cdm1i.cloudfront.net/image_optimizer/54429cab5dc05daafae44df6aae405409f240684.gif" alt="54429cab5dc05daafae44df6aae405409f240684.gif" />
+</p>
+</div>
+
+</section>
+<section id="slide-orgdddc91c">
+<h3 id="orgdddc91c">Marking</h3>
+<aside class="notes">
+<p>
+To be both efficient and correct, we will need a way of thinking
+about how to traverse the graph as well as abstract around the
+state of our traversal. For this we can use the concept of marking.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+A vertex cannot be processed before we are aware it exists. As we
+discover new vertices, we can take a look at their edges and begin
+to follow them to discover more vertices. Once all of a vertex's
+edges have been visited, we can consider that vertex processed.
+</p>
+
+</aside>
+<ul>
+<li><i>undiscovered</i>: not yet seen</li>
+<li><i>discovered</i>: have visited, but haven't visited all edges</li>
+<li><i>processed</i>: have visited vertex and all incident edges</li>
+
+</ul>
+
+</section>
+<section id="slide-orgb1dc142">
+<h3 id="orgb1dc142">Discovery Queue</h3>
+<aside class="notes">
+<p>
+To facilitate this, we will need to maintain some data structure
+containing the vertices we have discovered by not fully
+explored. For any vertex in the queue, we examine every edge
+incident to it, and for each edge that goes to an undiscovered
+vertex, we mark it ass discovered and add it to the queue. No
+matter the order we explore the vertices, each edge should only be
+considered twice, as each of its vertices are explored.
+</p>
+
+<p>
+In this way, every edge and vertex in the connected component of
+the graph is visited eventually. If there are unvisited vertices
+whose neighbor gets visited, we will eventually visit them via
+their neighbors.
+</p>
+
+</aside>
+
+</section>
+</section>
+<section>
+<section id="slide-orgeedffde">
+<h2 id="orgeedffde">Breadth-First Traversal</h2>
+<aside class="notes">
+<p>
+As we stated before, one of the main things we want to do with
+graphs is to systematically traverse the graph until every vertex
+and edge has been visited exactly once, and hopefully in some
+semblance of order. One of those strategies of order is Breadth
+First Search. Breadth-first search is the most appropriate traversal
+method if we're interested in the shortest paths on unweighted graphs.
+</p>
+
+</aside>
+
+</section>
+<section id="slide-orgc0b60be">
+<h3 id="orgc0b60be">BFS Data Structures</h3>
+<aside class="notes">
+<p>
+One way of structuring the data required for a breadth first search
+is to keep a pair of boolean arrays for our mark states, as well as
+one of integers, which we'll use to store the indices of the parent
+node in our search. So, whatever node we visit at some index <i>i</i>
+will have its parent's index stored at parent[i]
+</p>
+
+</aside>
+<ul>
+<li>FIFO Queue</li>
+<li>2 \(n\) -sized arrays of booleans</li>
+<li>An \(n\) -sized array of integers</li>
+
+</ul>
+
+<div class="org-src-container">
+
+<pre><code class="c" >bool processed[MAXV];
+bool discovered[MAXV];
+int parent[MAXV];
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org62c67e5">
+<h3 id="org62c67e5">BFS Animated</h3>
+<p>
+<a href="https://www.cs.usfca.edu/~galles/visualization/BFS.html">Animated</a>
+</p>
+
+</section>
+<section id="slide-orgae3e047">
+<h3 id="orgae3e047">Finding paths with <code>parent</code></h3>
+<p>
+By using the <code>parent</code> array, we can easily find paths.
+</p>
+
+<div class="org-src-container">
+
+<pre><code class="c" >int path_length = 0;
+while(i != 0) {
+    i = parent[i];
+    path_length++;
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org5b7a8dc">
+<h3 id="org5b7a8dc">Shortest Paths</h3>
+<aside class="notes">
+<p>
+In BFS, vertices are discovered in an order such that each
+iteration is discovering points further away from the root of the
+search. The unique path from the root to any node in the graph uses
+the smallest possible number of edges on any root-to-node path in
+the graph.
+</p>
+
+</aside>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><img src="./img/shortest_path_a.png" alt="shortest_path_a.png" /></td>
+<td class="org-left"><img src="./img/shortest_path_b.png" alt="shortest_path_b.png" /></td>
+</tr>
+</tbody>
+</table>
+
+</section>
+<section id="slide-orgfa490df">
+<h3 id="orgfa490df">Recursion and Shortest Paths</h3>
+<aside class="notes">
+<p>
+To find these shortest paths, we can make use of the parent array,
+following the parent indices recursively until we get back to the root.
+</p>
+
+</aside>
+<div class="org-src-container">
+
+<pre><code class="c" >find_path(int start, int end, int parents[]) {
+    if ((start == end) || (end == -1))
+        printf(”%d”, start);
+    else {
+        find_path(start, parents[end], parents);
+        printf(” %d”, end);
+    }
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org7153d9b">
+<h3 id="org7153d9b">Connected Components</h3>
+<aside class="notes">
+<p>
+Connected components in undirected graphs represent the different
+pieces of the graph.
+</p>
+
+<p>
+Many problems can be solved by modeling them this way. There is a
+graph of possible moves from the way a Rubik's cube is currently
+configured to it's completed state. Likewise, there is a graph of
+possible moves in a sliding puzzle its current layout to the
+finished one.
+</p>
+
+<p>
+However, breadth-first search only covers the connected component
+that the root of our search is in. If we cannot find the node we
+are looking for or haven't discovered all the nodes, we may need to
+run BFS again on an undiscovered component to find the remaining
+nodes.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Pseudoforest.svg/500px-Pseudoforest.svg.png" alt="500px-Pseudoforest.svg.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org8e1d304">
+<h3 id="org8e1d304">Coloring Graphs</h3>
+<aside class="notes">
+<p>
+Vertex coloring is used to label ("color") vertices in the graph so
+that edges never link two vertices of the same color.
+</p>
+
+<p>
+A "Bipartite" graph is a colored graph such that it can be colored
+without conflicts using only two colors. These show up in a lot of
+kinds of problems naturally, but have become even more common with
+the rise of social media platforms, as they are very useful in
+social network analysis.
+</p>
+
+<p>
+For example you might imagine some set of nodes on one side of a
+graph that are the "user" nodes and one set of nodes on the other
+side that are the "interest" nodes. Users will have edges
+connecting them to interests, and likewise, we can walk other edges
+from an interest node to find other users who are also interested
+in the same thing.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Simple-bipartite-graph.svg/500px-Simple-bipartite-graph.svg.png" alt="500px-Simple-bipartite-graph.svg.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org6bb5538">
+<h2 id="org6bb5538">Practice Problem</h2>
+<aside class="notes">
+<ol>
+<li><p>
+Convert from an adjacency matrix to adjacency lists
+</p>
+
+<p>
+for i from 1 &rarr; n-1
+  for j from i+1 &rarr; n
+    if m<sub>i</sub>[j] = 1, add edges [i,j] and [j,i] to the graph
+</p>
+
+<p>
+This is O(n<sup>2</sup>)
+</p>
+
+<ol>
+<li><p>
+Convert from an adjacency list to an incidence matrix.
+Count the m edges.
+Initialize n &times; m matrix.
+for i from 1 &rarr; n
+  while l &ne; nil
+    if j &gt; i, set I[k,i] and I[k,j] = 1
+</p>
+
+<p>
+This is O(n*m)
+</p></li>
+
+<li><p>
+Convert from an incidence matrix to adjacency lists.
+</p>
+
+<p>
+for i from 1 &rarr; n
+  L[i] = nil
+  for k from 1 &rarr; m
+    for j from 1 &rarr; n
+      if k[x] = 1, inset [i,j] and [j,i]
+</p></li>
+
+</ol></li>
+
+</ol>
+
+</aside>
+<p>
+Provide algorithms for converting between data structures for an
+undirected graph \(G\) with \(n\) vertices and \(m\) edges. They should be
+correct and efficient, and supply the time complexity of each
+algorithm.
+</p>
+
+<ol>
+<li>Convert from an adjacency matrix to adjacency lists.</li>
+<li>Convert from an adjacency list to an incidence matrix.</li>
+<li>Convert from an incidence matrix to adjacency lists.</li>
+
+</ol>
+
+<p>
+An incidence matrix M has a row for each vertex and a column for
+each edge, such that \(M[i,j] = 1\) if vertex \(i\) is part of edge \(j\),
+otherwise \(M[i,j] = 0\).
+</p>
+</section>
+</section>
+</div>
+</div>
+<script src="./reveal.js/lib/js/head.min.js"></script>
+<script src="./reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+margin: 0.20,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: './reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+ { src: './reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>
