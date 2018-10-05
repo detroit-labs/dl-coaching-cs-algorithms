@@ -168,6 +168,16 @@
 
 * Nuts and bolts problem
   #+BEGIN_NOTES
+  1. Compare each bolt to each nut - n^2
+  2. Take a nut and a bolt. Keep whichever is too small. Take the next
+     of the one that was too big. Continue checking to see if you find
+     smaller ones until you run out of one of the parts.
+  3. Take a random nut. Compare it to each of the bolts. Put the
+     smaller bolts to one side, the larger bolts to the other
+     side. (this take /n/ time like a quicksort). Select a bolt from
+     each side, and compare against the remaining nuts, again dividing
+     them into piles. Continue until you have correctly matched 1
+     to 1. Expected O(n log n)
   #+END_NOTES
   You are given $n$ bolts of different sizes and $n$ corresponding
   nuts. Trying a nut on a bolt tells you whether they are too big, too

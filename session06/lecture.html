@@ -32,14 +32,14 @@
 </section>
 
 <section>
-<section id="slide-org713a2bc">
-<h2 id="org713a2bc">Lecture 6</h2>
+<section id="slide-org40c19d5">
+<h2 id="org40c19d5">Lecture 6</h2>
 
 </section>
 </section>
 <section>
-<section id="slide-org20ef52a">
-<h2 id="org20ef52a">Sorting in \(o(n \log n)\)</h2>
+<section id="slide-orga034dd1">
+<h2 id="orga034dd1">Sorting in \(o(n \log n)\)</h2>
 <aside class="notes">
 <p>
 Can we sort in o(n log n)? If you'll recall, Big-O states there must
@@ -76,8 +76,8 @@ never do anything worse than O(n log n), so never O(n<sup>2</sup>) or greater.
 </ul>
 
 </section>
-<section id="slide-orga943ee8">
-<h3 id="orga943ee8">Worst case?</h3>
+<section id="slide-orgbb8072e">
+<h3 id="orgbb8072e">Worst case?</h3>
 <aside class="notes">
 <p>
 Well, if we want to always do better than some function complexity,
@@ -91,8 +91,8 @@ sorting?
 </p>
 
 </section>
-<section id="slide-org4888eac">
-<h3 id="org4888eac">Lower bounds</h3>
+<section id="slide-orgf19ad05">
+<h3 id="orgf19ad05">Lower bounds</h3>
 <aside class="notes">
 <p>
 Given 2 permutations of n elements, there must be a different
@@ -128,8 +128,8 @@ Last n/2 terms of n! are greater than n/2, so n! &gt; (n/2)<sup>(n/2)</sup>
 </p>
 
 </section>
-<section id="slide-org5119882">
-<h3 id="org5119882">Stirling's approximation</h3>
+<section id="slide-org2ccb9e8">
+<h3 id="org2ccb9e8">Stirling's approximation</h3>
 <aside class="notes">
 <p>
 To wit, there is also a mathematical principle called Stirling's
@@ -147,8 +147,8 @@ approximation that gives a better bound for n! &gt; (n/e)<sup>n</sup> where e =
 </p>
 
 </section>
-<section id="slide-org0c76335">
-<h3 id="org0c76335">Card Sorting</h3>
+<section id="slide-org42bfce4">
+<h3 id="org42bfce4">Card Sorting</h3>
 <aside class="notes">
 <p>
 How would we sort a deck of cards? If I want an ordering of Aces as
@@ -168,8 +168,8 @@ How would you sort a deck of cards?
 </div>
 
 </section>
-<section id="slide-org8c3266a">
-<h3 id="org8c3266a">Non-comparison sorting</h3>
+<section id="slide-org72963b0">
+<h3 id="org72963b0">Non-comparison sorting</h3>
 <aside class="notes">
 <p>
 It's important to note here that we're not strictly doing primitive
@@ -189,8 +189,8 @@ gets O(1) cards, this will happen in O(n) time.
 </ul>
 
 </section>
-<section id="slide-org79cd058">
-<h3 id="org79cd058">Bucketsort</h3>
+<section id="slide-org09c5f41">
+<h3 id="org09c5f41">Bucketsort</h3>
 <aside class="notes">
 <p>
 
@@ -215,8 +215,8 @@ are relatively uniformly distributed:
 </p>
 
 </section>
-<section id="slide-orgf83cda6">
-<h3 id="orgf83cda6">Breaking the rules?</h3>
+<section id="slide-org2e594da">
+<h3 id="org2e594da">Breaking the rules?</h3>
 <p>
 If the elements are uniformly distributed, we should have only 1
 item per bucket, so we don't need to sort the buckets before
@@ -232,8 +232,8 @@ What happened to our \(\Omega(n \log n)\) lower boundary?!
 </p>
 
 </section>
-<section id="slide-orge9526c2">
-<h3 id="orge9526c2">Worst case</h3>
+<section id="slide-org6d155ae">
+<h3 id="org6d155ae">Worst case</h3>
 <aside class="notes">
 <p>
 What happens if we goof on assuming the distribution? If we spend
@@ -250,8 +250,8 @@ done work for no advantage!
 
 
 </section>
-<section id="slide-org956b8e6">
-<h3 id="org956b8e6">"Real World" Distributions</h3>
+<section id="slide-orgd106569">
+<h3 id="orgd106569">"Real World" Distributions</h3>
 <p>
 We "shouldn't" come across the worst case if we understand the
 distribution of our data.
@@ -274,8 +274,8 @@ algorithm or one with a good worst-case!
 </p>
 
 </section>
-<section id="slide-orgcb60882">
-<h3 id="orgcb60882">Can't beat the bound</h3>
+<section id="slide-org69fad83">
+<h3 id="org69fad83">Can't beat the bound</h3>
 <aside class="notes">
 <p>
 Radix sort is another non-comparison sort that works on
@@ -310,10 +310,23 @@ we cannot beat \(\theta(n \log n)\)
 </section>
 </section>
 <section>
-<section id="slide-orgbb31f18">
-<h2 id="orgbb31f18">Nuts and bolts problem</h2>
+<section id="slide-orgda8e028">
+<h2 id="orgda8e028">Nuts and bolts problem</h2>
 <aside class="notes">
-nil
+<ol>
+<li>Compare each bolt to each nut - n<sup>2</sup></li>
+<li>Take a nut and a bolt. Keep whichever is too small. Take the next
+of the one that was too big. Continue checking to see if you find
+smaller ones until you run out of one of the parts.</li>
+<li>Take a random nut. Compare it to each of the bolts. Put the
+smaller bolts to one side, the larger bolts to the other
+side. (this take <i>n</i> time like a quicksort). Select a bolt from
+each side, and compare against the remaining nuts, again dividing
+them into piles. Continue until you have correctly matched 1
+to 1. Expected O(n log n)</li>
+
+</ol>
+
 </aside>
 <p>
 You are given \(n\) bolts of different sizes and \(n\) corresponding
@@ -334,16 +347,16 @@ comparisons.</li>
 </section>
 </section>
 <section>
-<section id="slide-org02b1dc5">
-<h2 id="org02b1dc5">Graphs</h2>
+<section id="slide-orgb04e6d5">
+<h2 id="orgb04e6d5">Graphs</h2>
 <p>
 A graph \(G = (V, E)\) is a set of vertices \(V\) and a set of edges \(E\)
 which are pairs of vertices from \(V\).
 </p>
 
 </section>
-<section id="slide-orgd93bdce">
-<h3 id="orgd93bdce">Roads</h3>
+<section id="slide-orga94821f">
+<h3 id="orga94821f">Roads</h3>
 <aside class="notes">
 <p>
 Modeling roads is a common use for graphs. Vertices could be
@@ -370,8 +383,8 @@ the roads between those vertices.
 </table>
 
 </section>
-<section id="slide-orgcb0b28a">
-<h3 id="orgcb0b28a">Circuits</h3>
+<section id="slide-org4b1ea20">
+<h3 id="org4b1ea20">Circuits</h3>
 <aside class="notes">
 <p>
 Likewise, we might model a circuit with a graph. The junctions
@@ -393,8 +406,8 @@ the harmonic oscillator in a low-pass filter.
 </div>
 
 </section>
-<section id="slide-org90ee745">
-<h3 id="org90ee745">Graph problems</h3>
+<section id="slide-org5a886ea">
+<h3 id="org5a886ea">Graph problems</h3>
 <aside class="notes">
 <p>
 What other kinds of things can we model with graphs?
@@ -410,8 +423,8 @@ What other kinds of things can we model with graphs?
 </ul>
 
 </section>
-<section id="slide-org4c81ff8">
-<h3 id="org4c81ff8">Properties of graphs</h3>
+<section id="slide-org12f62e1">
+<h3 id="org12f62e1">Properties of graphs</h3>
 <aside class="notes">
 <p>
 Before we understand how graphs help us solve problems, we need to
@@ -432,8 +445,8 @@ which algorithms are appropriate and efficient for the problem at hand.
 </ul>
 
 </section>
-<section id="slide-org8533661">
-<h3 id="org8533661">Undirected / Directed</h3>
+<section id="slide-orgefb7c69">
+<h3 id="orgefb7c69">Undirected / Directed</h3>
 <aside class="notes">
 <p>
 Highways between cities are almost always undirected because
@@ -473,8 +486,8 @@ A graph \(G = (V,E)\) is <i>undirected</i> if edge \((x,y) \in E\) implies \((y,
 </table>
 
 </section>
-<section id="slide-org7928e8f">
-<h3 id="org7928e8f">Unweighted / Weighted</h3>
+<section id="slide-org2c3baa9">
+<h3 id="org2c3baa9">Unweighted / Weighted</h3>
 <aside class="notes">
 <p>
 In an <i>unweighted</i> graph, there is no cost difference between the
@@ -503,8 +516,8 @@ with it, usually a numerical value.
 </div>
 
 </section>
-<section id="slide-org21f9812">
-<h3 id="org21f9812">Simple / Not Simple</h3>
+<section id="slide-orgb46e23a">
+<h3 id="orgb46e23a">Simple / Not Simple</h3>
 <aside class="notes">
 <p>
 A <i>simple</i> graph is the kind of graph you probably picture in your
@@ -541,8 +554,8 @@ In a social network, are you your own friend?
 </table>
 
 </section>
-<section id="slide-org8f82d77">
-<h3 id="org8f82d77">Sparse / Dense</h3>
+<section id="slide-orgc59a06a">
+<h3 id="orgc59a06a">Sparse / Dense</h3>
 <aside class="notes">
 <p>
 If a graph has few of the possible connections between vertices as
@@ -564,8 +577,8 @@ be rather dense.
 </div>
 
 </section>
-<section id="slide-orgec0e97c">
-<h3 id="orgec0e97c">Cyclic / Acyclic</h3>
+<section id="slide-orga6a0613">
+<h3 id="orga6a0613">Cyclic / Acyclic</h3>
 <aside class="notes">
 <p>
 A cycle is a path of edges and vertices wherein a vertex is
@@ -597,8 +610,8 @@ or DAGs show up often as decision flowcharts or in scheduling problems.
 </table>
 
 </section>
-<section id="slide-orgc48ec12">
-<h3 id="orgc48ec12">Embedded / Topological</h3>
+<section id="slide-org38566a0">
+<h3 id="org38566a0">Embedded / Topological</h3>
 <aside class="notes">
 <p>
 Think about the different between the traveling salesman problem
@@ -634,8 +647,8 @@ circuit.
 </table>
 
 </section>
-<section id="slide-org4d61fd4">
-<h3 id="org4d61fd4">Friendship graphs</h3>
+<section id="slide-orge40c47f">
+<h3 id="orge40c47f">Friendship graphs</h3>
 <aside class="notes">
 <p>
 Suppose we want to model graphs of our friendships. We could make
@@ -661,8 +674,8 @@ So, assuming we had such a model, what could we find out from it?
 </ul>
 
 </section>
-<section id="slide-org277d122">
-<h3 id="org277d122">Are we friends?</h3>
+<section id="slide-orgc84c6b4">
+<h3 id="orgc84c6b4">Are we friends?</h3>
 <aside class="notes">
 <p>
 The heard-of graph is most certainly directed, as there are likely
@@ -685,8 +698,8 @@ An undirected graph means an edge represents both \((x,y)\) and
 </ul>
 
 </section>
-<section id="slide-org9af59ef">
-<h3 id="org9af59ef">Six Degrees of Kevin Bacon</h3>
+<section id="slide-org67f0803">
+<h3 id="org67f0803">Six Degrees of Kevin Bacon</h3>
 <p>
 A <i>path</i> is a sequence of edges between two vertices.
 </p>
@@ -702,8 +715,8 @@ Most often, we're interested in the shortest path.
 </p>
 
 </section>
-<section id="slide-orgc764655">
-<h3 id="orgc764655">Can we meet?</h3>
+<section id="slide-orgbe66866">
+<h3 id="orgbe66866">Can we meet?</h3>
 <p>
 A graph is <i>connected</i> if there is some path between any two
 vertices.
@@ -715,8 +728,8 @@ any two vertices.
 </p>
 
 </section>
-<section id="slide-orgd2b0e04">
-<h3 id="orgd2b0e04">Who's the most popular?</h3>
+<section id="slide-orgc824815">
+<h3 id="orgc824815">Who's the most popular?</h3>
 <p>
 The <i>degree</i> of a graph is the number of edges adjacent to it, so
 the vertex with the most edges would be the most popular person in
@@ -724,8 +737,8 @@ our graph of friends.
 </p>
 
 </section>
-<section id="slide-orgb5b91e7">
-<h3 id="orgb5b91e7">Cliques</h3>
+<section id="slide-orgfa6f1f3">
+<h3 id="orgfa6f1f3">Cliques</h3>
 <aside class="notes">
 <p>
 A group of people who spend time together a lot is called a clique.
@@ -750,8 +763,8 @@ vertex pair has an edge between them.
 </section>
 </section>
 <section>
-<section id="slide-orgb6fc269">
-<h2 id="orgb6fc269">Data Structures for Graphs</h2>
+<section id="slide-org8c2eb32">
+<h2 id="org8c2eb32">Data Structures for Graphs</h2>
 <ul>
 <li>Adjacency Matrices</li>
 <li>Adjacency Lists</li>
@@ -763,8 +776,8 @@ For a graph \(G = (V,E)\), assume that we have \(n\) vertices and \(m\) edges.
 </p>
 
 </section>
-<section id="slide-org8c2ad45">
-<h3 id="org8c2ad45">Adjacency Matrix</h3>
+<section id="slide-org9c1db0d">
+<h3 id="org9c1db0d">Adjacency Matrix</h3>
 <p>
 We can use a matrix to represent a graph by making an \(n\) by \(n\)
 matrix \(M\). If there is an edge between two vertices, \(M[i, j]\)
@@ -772,8 +785,8 @@ will be true.
 </p>
 
 </section>
-<section id="slide-org7191223">
-<h3 id="org7191223">Adjacency Matrix</h3>
+<section id="slide-orgf9e859c">
+<h3 id="orgf9e859c">Adjacency Matrix</h3>
 <aside class="notes">
 <p>
 This method can be a bit excessive in space consumption if the
@@ -803,8 +816,8 @@ Can we save space if the graph is undirected or sparse?
 </table>
 
 </section>
-<section id="slide-orgc99e22a">
-<h3 id="orgc99e22a">Adjacency List</h3>
+<section id="slide-orgbee922f">
+<h3 id="orgbee922f">Adjacency List</h3>
 <aside class="notes">
 <p>
 It should be noted that when we update an adjacency list, it will
@@ -825,8 +838,8 @@ Finding edges will take \(O(d_i)\) where \(d\) is the degree of the vertex.
 </p>
 
 </section>
-<section id="slide-orgc5a1c7b">
-<h3 id="orgc5a1c7b">Adjacency List</h3>
+<section id="slide-org57c9042">
+<h3 id="org57c9042">Adjacency List</h3>
 
 <div class="figure">
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Adjacencylist_linkedlistof_doublelinkedlists_undirectedgraph.svg/640px-Adjacencylist_linkedlistof_doublelinkedlists_undirectedgraph.svg.png" alt="640px-Adjacencylist_linkedlistof_doublelinkedlists_undirectedgraph.svg.png" />
@@ -834,8 +847,8 @@ Finding edges will take \(O(d_i)\) where \(d\) is the degree of the vertex.
 </div>
 
 </section>
-<section id="slide-orgcf8bf6a">
-<h3 id="orgcf8bf6a">Analyzing Operations</h3>
+<section id="slide-org4edb633">
+<h3 id="org4edb633">Analyzing Operations</h3>
 <aside class="notes">
 <p>
 Let's think about which data structure will be best for certain
@@ -959,13 +972,13 @@ kinds of operations we might want to perform on a graph.
 </section>
 </section>
 <section>
-<section id="slide-org98a5bcb">
-<h2 id="org98a5bcb">Graph Operations</h2>
-<div class="outline-text-2" id="text-org98a5bcb">
+<section id="slide-org4685d9b">
+<h2 id="org4685d9b">Graph Operations</h2>
+<div class="outline-text-2" id="text-org4685d9b">
 </div>
 </section>
-<section id="slide-org0f05aaa">
-<h3 id="org0f05aaa">Traversal</h3>
+<section id="slide-org680512a">
+<h3 id="org680512a">Traversal</h3>
 <p>
 One of the most important operations is traversing every edge and
 vertex. We need this so be systematic so that we don't miss
@@ -974,8 +987,8 @@ times, twice at the most.
 </p>
 
 </section>
-<section id="slide-org875ead4">
-<h3 id="org875ead4">Escape the Maze</h3>
+<section id="slide-org47e00ad">
+<h3 id="org47e00ad">Escape the Maze</h3>
 <aside class="notes">
 <p>
 A maze is essentially a graph, so any algorithm suitable for
@@ -991,8 +1004,8 @@ out of an arbitrary maze.
 </div>
 
 </section>
-<section id="slide-orgdddc91c">
-<h3 id="orgdddc91c">Marking</h3>
+<section id="slide-org4aebf2a">
+<h3 id="org4aebf2a">Marking</h3>
 <aside class="notes">
 <p>
 To be both efficient and correct, we will need a way of thinking
@@ -1020,8 +1033,8 @@ edges have been visited, we can consider that vertex processed.
 </ul>
 
 </section>
-<section id="slide-orgb1dc142">
-<h3 id="orgb1dc142">Discovery Queue</h3>
+<section id="slide-orgaf94a4b">
+<h3 id="orgaf94a4b">Discovery Queue</h3>
 <aside class="notes">
 <p>
 To facilitate this, we will need to maintain some data structure
@@ -1045,8 +1058,8 @@ their neighbors.
 </section>
 </section>
 <section>
-<section id="slide-orgeedffde">
-<h2 id="orgeedffde">Breadth-First Traversal</h2>
+<section id="slide-org968c446">
+<h2 id="org968c446">Breadth-First Traversal</h2>
 <aside class="notes">
 <p>
 As we stated before, one of the main things we want to do with
@@ -1060,8 +1073,8 @@ method if we're interested in the shortest paths on unweighted graphs.
 </aside>
 
 </section>
-<section id="slide-orgc0b60be">
-<h3 id="orgc0b60be">BFS Data Structures</h3>
+<section id="slide-org7767344">
+<h3 id="org7767344">BFS Data Structures</h3>
 <aside class="notes">
 <p>
 One way of structuring the data required for a breadth first search
@@ -1088,15 +1101,15 @@ int parent[MAXV];
 </div>
 
 </section>
-<section id="slide-org62c67e5">
-<h3 id="org62c67e5">BFS Animated</h3>
+<section id="slide-orgca474ab">
+<h3 id="orgca474ab">BFS Animated</h3>
 <p>
 <a href="https://www.cs.usfca.edu/~galles/visualization/BFS.html">Animated</a>
 </p>
 
 </section>
-<section id="slide-orgae3e047">
-<h3 id="orgae3e047">Finding paths with <code>parent</code></h3>
+<section id="slide-org50c0cb6">
+<h3 id="org50c0cb6">Finding paths with <code>parent</code></h3>
 <p>
 By using the <code>parent</code> array, we can easily find paths.
 </p>
@@ -1112,8 +1125,8 @@ while(i != 0) {
 </div>
 
 </section>
-<section id="slide-org5b7a8dc">
-<h3 id="org5b7a8dc">Shortest Paths</h3>
+<section id="slide-org666a0fa">
+<h3 id="org666a0fa">Shortest Paths</h3>
 <aside class="notes">
 <p>
 In BFS, vertices are discovered in an order such that each
@@ -1141,8 +1154,8 @@ the graph.
 </table>
 
 </section>
-<section id="slide-orgfa490df">
-<h3 id="orgfa490df">Recursion and Shortest Paths</h3>
+<section id="slide-orge281163">
+<h3 id="orge281163">Recursion and Shortest Paths</h3>
 <aside class="notes">
 <p>
 To find these shortest paths, we can make use of the parent array,
@@ -1164,8 +1177,8 @@ following the parent indices recursively until we get back to the root.
 </div>
 
 </section>
-<section id="slide-org7153d9b">
-<h3 id="org7153d9b">Connected Components</h3>
+<section id="slide-org393ca48">
+<h3 id="org393ca48">Connected Components</h3>
 <aside class="notes">
 <p>
 Connected components in undirected graphs represent the different
@@ -1196,8 +1209,8 @@ nodes.
 </div>
 
 </section>
-<section id="slide-org8e1d304">
-<h3 id="org8e1d304">Coloring Graphs</h3>
+<section id="slide-orge4a7171">
+<h3 id="orge4a7171">Coloring Graphs</h3>
 <aside class="notes">
 <p>
 Vertex coloring is used to label ("color") vertices in the graph so
@@ -1231,8 +1244,8 @@ in the same thing.
 </section>
 </section>
 <section>
-<section id="slide-org6bb5538">
-<h2 id="org6bb5538">Practice Problem</h2>
+<section id="slide-org08dab2b">
+<h2 id="org08dab2b">Practice Problem</h2>
 <aside class="notes">
 <ol>
 <li><p>
