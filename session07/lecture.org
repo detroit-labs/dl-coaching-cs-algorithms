@@ -1,0 +1,229 @@
+#+TITLE:  Computer Science 2: Algorithms
+#+AUTHOR: Detroit Labs Dev Coaching
+#+DATE:   2018
+#+EMAIL:  ndotz@detroitlabs.com
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   skip:nil d:nil todo:t pri:nil tags:not-in-toc timestamp:nil
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+REVEAL_PLUGINS: (highlight notes)
+#+REVEAL_THEME: league
+#+REVEAL_MARGIN: 0.2
+# #+REVEAL_MIN_SCALE: 0.5
+# #+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_EXTRA_CSS: ./presentation.css
+
+* Lecture 7
+
+* Practice Problem
+  #+BEGIN_NOTES
+  In BFS, we will always be discovering new vertices or finding edges
+  that go to a vertex that we have already discovered but not yet
+  fully explored. If the vertex were already explored, we would have
+  already discovered the edge in question, so a newly discovered edge
+  cannot go back to an ancestor that is already in the discovery tree.
+
+  #+END_NOTES
+  Prove that in a breadth-first search of an undirected graph G, every
+  edge in G is either a tree edge or a cross edge. A cross edge
+  $(x,y)$ is an edge where $x$ is neither an ancestor nor a
+  descendant of $y$.
+
+* Depth-First Search
+  #+BEGIN_NOTES
+  Perhaps the simplest way to think of a depth-first search is that
+  it is a breadth-first search that uses a stack instead of a
+  queue. Like breadth-first search, it intends to visit every vertex
+  and every edge in a graph in a systematic way. However, the order of
+  discovery will be very different, since we want to go as deep as
+  possible instead of as broadly as possible.
+
+  Generally, breadth-first search creates a relatively balanced
+  discovery tree, while depth-first search creates a relatively flat
+  discovery tree.
+
+  Interestingly, this can be implemented recursively. To do this, we
+  can use the system's call stack instead of a stack data structure.
+  #+END_NOTES
+
+  [[https://www.cs.usfca.edu/~galles/visualization/DFS.html][Depth-First Search Animation]]
+
+** DFS Order
+   #+BEGIN_NOTES
+   The important part about DFS is the order in which we discover the
+   vertices. In the DFS, we assign a direction to each edge from the
+   vertex which discovers it, so as not to backtrack to already
+   discovered edges.
+
+   Some edges will be edges we come across in our discovery tree and
+   others will be found but not involved in the discovery of new
+   vertices. All of the edges that do not point to a new vertex will
+   therefore point back to an ancestor.
+   #+END_NOTES
+   [[./img/dfs_ordering.png]]
+
+** Edge Classifications
+   #+BEGIN_NOTES
+   In any particular DFS or BFS of a directed or undirected graph,
+   each edge gets classified as one of the above.
+
+   1. A Tree Edge
+   2. A Back Edge to an ancestor
+   3. A Forward Edge to a descendant
+   4. A Cross Edge to a different node
+   #+END_NOTES
+   Every edge will be a:
+   [[./img/edge_classification.png]]
+
+** Trees and Back Only
+   #+BEGIN_NOTES
+   DFS defines specific ordering to the edges of the graph. In a DFS
+   of an undirected graph, every edge must be either a tree edge
+   discovering a new vertex, or a back edge. This is because any
+   undiscovered edge from a vertex being explored must either point to
+   a new vertex or to an ancestor. A edge incident to a vertex higher
+   up in the tree should have already been discovered when exploring
+   its descendant. Likewise, a cross edge would have been classified
+   as a tree edge before discovering the edges coming from the ancestors.
+   #+END_NOTES
+   [[./img/front_cross.png]]
+
+** Finding Cycles
+   #+BEGIN_NOTES
+   Back edges play an important role in the discovery of cycles. Any
+   back edge from some vertex inherently creates a cycle with the
+   path in the tree going from the vertex we are discovering to the
+   ancestor.
+
+   If we discover a vertex that is already discovered, that is, an
+   ancestor, then there is a cycle involving the points leading to the
+   vertex from the vertex the back edge points to, as well as the back
+   edge itself.
+   #+END_NOTES
+   [[./img/back_edge.png]]
+
+** Articulation Vertices
+   #+BEGIN_NOTES
+   An articulation vertex is a vertex of a connected graph whose
+   deletion disconnects the graph. If you were a security specialist
+   and needed to prevent hackers from breaking in to the nuclear
+   facility's computers, which machine in the network would you take
+   offline?
+
+   Connectivity is an important concern in the design of networks.
+
+   We can find articulation vertices in O(n(n+m)) time by deleting
+   each vertex and doing a DFS on the remaining graph to see if it is
+   still connected.
+
+   Articulation edges have a similar property of connecting what would
+   otherwise be separate connected components that will not be
+   connected without the edge. These can be found similarly to
+   articulation vertices but by deleting edges instead in O(m(n+m))
+   time.
+   #+END_NOTES
+   [[./img/articulation.png]]
+
+** Faster Articulation Vertices
+   #+BEGIN_NOTES
+   In a DFS discovery tree, a vertex (not the root) is an
+   articulation vertex if it is not a leaf and some subtree of it has
+   no back edge incident to an ancestor of it. By taking this in to
+   account and keeping track of the oldest ancestor we have at a given
+   time, we can find the articulation vertices during a single DFS in
+   O(n+m) time. This is apparent only because of the ordered nature of
+   the DFS.
+   #+END_NOTES
+
+* Topological Sorting
+  #+BEGIN_NOTES
+  So far we've been looking at problems as they relate to undirected
+  graphs. Let's hop over to another important algorithm for graphs,
+  which is topological sorting.
+
+  An directed, acyclic graph has no directed cycles.
+
+  A topological sorting of a graph is an ordering on the vertices so
+  that all the edges go from left to right (or one side to the
+  other). This is probably the most important problem involving DAGs.
+
+  All DAGs (and only DAGs) have at least one topological sort. They
+  must be orderable to both connected and acyclic.
+  #+END_NOTES
+  [[https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Directed_acyclic_graph.svg/640px-Directed_acyclic_graph.svg.png]]
+
+** What are DAGs for?
+   #+BEGIN_NOTES
+   Topological sorting is useful in scheduling jobs in a proper
+   sequence. More generally we can use topological sorting to order
+   things based on given precidence constraints.
+
+   Course prerequisites for classes are a DAG. Recipes are a DAG. The
+   order that we might get dressed in the morning can be modeled as a DAG.
+   What else are DAGs?
+   #+END_NOTES
+   [[https://i.imgflip.com/1xhtwh.jpg]]
+
+** Topological Sort and DFS
+   #+BEGIN_NOTES
+   A directed graph is a DAG if no back edges are discovered during a
+   depth-first search. Reversing the order in which the vertices are
+   labeled "processed" gives one possible topological sort of a
+   DAG. Why is this?
+
+   ---
+
+   Consider a directed edge (x,y) as we explore it while discovering x:
+
+   - If y is currently undiscovered, we start a DFS on y before coming
+     back to continue on x. y will be marked "completed" before x, and
+     x will appear before y in topological sort.
+   - If y is discovered but not completed, (x,y) is a back edge, so
+     this is not a DAG.
+   - If y is completed, then it will have already been labeled and x
+     still appears before it in topological sort.
+   #+END_NOTES
+
+* Strongly Connected Components
+  #+BEGIN_NOTES
+  A directed graph is strongly connected if there is a directed path
+  between any two given vertices.
+
+  A strongly connected component is a maximal subset of the graph such
+  that the subset behaves like a strongly connected graph of its own.
+
+  No single vertex can be part of two strongly connected components,
+  otherwise the two components would be a single component. Therefore,
+  strongly connected component partition the graph into subsections.
+  #+END_NOTES
+  [[https://upload.wikimedia.org/wikipedia/commons/5/5c/Scc.png]]
+
+** Kosaraju's Algorithm
+   #+BEGIN_NOTES
+   Kosaraju's Algorithm is an elegant, recursive algorithm that uses
+   depth-first search to find the connected components of a graph.
+
+   1. For each vertex u of the graph, mark u as unvisited. Let L be empty.
+   2. For each vertex u of the graph do Visit(u), where Visit(u) is
+      the recursive subroutine:
+
+        If u is unvisited then:
+
+            Mark u as visited.
+            For each out-neighbour v of u, do Visit(v).
+            Prepend u to L.
+
+        Otherwise do nothing.
+
+   3. For each element u of L in order, do Assign(u,u) where
+      Assign(u,root) is the recursive subroutine:
+
+        If u has not been assigned to a component then:
+
+            Assign u as belonging to the component whose root is root.
+            For each in-neighbour v of u, do Assign(v,root).
+
+        Otherwise do nothing.
+   #+END_NOTES

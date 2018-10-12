@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Computer Science 2: Algorithms</title>
+<meta name="author" content="(Detroit Labs Dev Coaching)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="./reveal.js/css/theme/league.css" id="theme"/>
+
+<link rel="stylesheet" href="./presentation.css"/>
+<link rel="stylesheet" href="./reveal.js/lib/css/zenburn.css"/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Computer Science 2: Algorithms</h1><h2 class="author">Detroit Labs Dev Coaching</h2><h2 class="date">2018</h2>
+</section>
+
+<section>
+<section id="slide-orgf592f7c">
+<h2 id="orgf592f7c">Lecture 7</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc5ad744">
+<h2 id="orgc5ad744">Practice Problem</h2>
+<aside class="notes">
+<p>
+In BFS, we will always be discovering new vertices or finding edges
+that go to a vertex that we have already discovered but not yet
+fully explored. If the vertex were already explored, we would have
+already discovered the edge in question, so a newly discovered edge
+cannot go back to an ancestor that is already in the discovery tree.
+</p>
+
+</aside>
+<p>
+Prove that in a breadth-first search of an undirected graph G, every
+edge in G is either a tree edge or a cross edge. A cross edge
+\((x,y)\) is an edge where \(x\) is neither an ancestor nor a
+descendant of \(y\).
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgb0cf98c">
+<h2 id="orgb0cf98c">Depth-First Search</h2>
+<aside class="notes">
+<p>
+Perhaps the simplest way to think of a depth-first search is that
+it is a breadth-first search that uses a stack instead of a
+queue. Like breadth-first search, it intends to visit every vertex
+and every edge in a graph in a systematic way. However, the order of
+discovery will be very different, since we want to go as deep as
+possible instead of as broadly as possible.
+</p>
+
+<p>
+Generally, breadth-first search creates a relatively balanced
+discovery tree, while depth-first search creates a relatively flat
+discovery tree.
+</p>
+
+<p>
+Interestingly, this can be implemented recursively. To do this, we
+can use the system's call stack instead of a stack data structure.
+</p>
+
+</aside>
+
+<p>
+<a href="https://www.cs.usfca.edu/~galles/visualization/DFS.html">Depth-First Search Animation</a>
+</p>
+
+</section>
+<section id="slide-org66ece5c">
+<h3 id="org66ece5c">DFS Order</h3>
+<aside class="notes">
+<p>
+The important part about DFS is the order in which we discover the
+vertices. In the DFS, we assign a direction to each edge from the
+vertex which discovers it, so as not to backtrack to already
+discovered edges.
+</p>
+
+<p>
+Some edges will be edges we come across in our discovery tree and
+others will be found but not involved in the discovery of new
+vertices. All of the edges that do not point to a new vertex will
+therefore point back to an ancestor.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/dfs_ordering.png" alt="dfs_ordering.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org3272d22">
+<h3 id="org3272d22">Edge Classifications</h3>
+<aside class="notes">
+<p>
+In any particular DFS or BFS of a directed or undirected graph,
+each edge gets classified as one of the above.
+</p>
+
+<ol>
+<li>A Tree Edge</li>
+<li>A Back Edge to an ancestor</li>
+<li>A Forward Edge to a descendant</li>
+<li>A Cross Edge to a different node</li>
+
+</ol>
+
+</aside>
+<p>
+Every edge will be a:
+<img src="./img/edge_classification.png" alt="edge_classification.png" />
+</p>
+
+</section>
+<section id="slide-orgced57e2">
+<h3 id="orgced57e2">Trees and Back Only</h3>
+<aside class="notes">
+<p>
+DFS defines specific ordering to the edges of the graph. In a DFS
+of an undirected graph, every edge must be either a tree edge
+discovering a new vertex, or a back edge. This is because any
+undiscovered edge from a vertex being explored must either point to
+a new vertex or to an ancestor. A edge incident to a vertex higher
+up in the tree should have already been discovered when exploring
+its descendant. Likewise, a cross edge would have been classified
+as a tree edge before discovering the edges coming from the ancestors.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/front_cross.png" alt="front_cross.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-orgceb4109">
+<h3 id="orgceb4109">Finding Cycles</h3>
+<aside class="notes">
+<p>
+Back edges play an important role in the discovery of cycles. Any
+back edge from some vertex inherently creates a cycle with the
+path in the tree going from the vertex we are discovering to the
+ancestor.
+</p>
+
+<p>
+If we discover a vertex that is already discovered, that is, an
+ancestor, then there is a cycle involving the points leading to the
+vertex from the vertex the back edge points to, as well as the back
+edge itself.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/back_edge.png" alt="back_edge.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org2460437">
+<h3 id="org2460437">Articulation Vertices</h3>
+<aside class="notes">
+<p>
+An articulation vertex is a vertex of a connected graph whose
+deletion disconnects the graph. If you were a security specialist
+and needed to prevent hackers from breaking in to the nuclear
+facility's computers, which machine in the network would you take
+offline?
+</p>
+
+<p>
+Connectivity is an important concern in the design of networks.
+</p>
+
+<p>
+We can find articulation vertices in O(n(n+m)) time by deleting
+each vertex and doing a DFS on the remaining graph to see if it is
+still connected.
+</p>
+
+<p>
+Articulation edges have a similar property of connecting what would
+otherwise be separate connected components that will not be
+connected without the edge. These can be found similarly to
+articulation vertices but by deleting edges instead in O(m(n+m))
+time.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/articulation.png" alt="articulation.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org2cb8fbe">
+<h3 id="org2cb8fbe">Faster Articulation Vertices</h3>
+<aside class="notes">
+<p>
+In a DFS discovery tree, a vertex (not the root) is an
+articulation vertex if it is not a leaf and some subtree of it has
+no back edge incident to an ancestor of it. By taking this in to
+account and keeping track of the oldest ancestor we have at a given
+time, we can find the articulation vertices during a single DFS in
+O(n+m) time. This is apparent only because of the ordered nature of
+the DFS.
+</p>
+
+</aside>
+
+</section>
+</section>
+<section>
+<section id="slide-org6727c62">
+<h2 id="org6727c62">Topological Sorting</h2>
+<aside class="notes">
+<p>
+So far we've been looking at problems as they relate to undirected
+graphs. Let's hop over to another important algorithm for graphs,
+which is topological sorting.
+</p>
+
+<p>
+An directed, acyclic graph has no directed cycles.
+</p>
+
+<p>
+A topological sorting of a graph is an ordering on the vertices so
+that all the edges go from left to right (or one side to the
+other). This is probably the most important problem involving DAGs.
+</p>
+
+<p>
+All DAGs (and only DAGs) have at least one topological sort. They
+must be orderable to both connected and acyclic.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Directed_acyclic_graph.svg/640px-Directed_acyclic_graph.svg.png" alt="640px-Directed_acyclic_graph.svg.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-orgbe9e3d7">
+<h3 id="orgbe9e3d7">What are DAGs for?</h3>
+<aside class="notes">
+<p>
+Topological sorting is useful in scheduling jobs in a proper
+sequence. More generally we can use topological sorting to order
+things based on given precidence constraints.
+</p>
+
+<p>
+Course prerequisites for classes are a DAG. Recipes are a DAG. The
+order that we might get dressed in the morning can be modeled as a DAG.
+What else are DAGs?
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://i.imgflip.com/1xhtwh.jpg" alt="1xhtwh.jpg" />
+</p>
+</div>
+
+</section>
+<section id="slide-org0c6a472">
+<h3 id="org0c6a472">Topological Sort and DFS</h3>
+<aside class="notes">
+<p>
+A directed graph is a DAG if no back edges are discovered during a
+depth-first search. Reversing the order in which the vertices are
+labeled "processed" gives one possible topological sort of a
+DAG. Why is this?
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+Consider a directed edge (x,y) as we explore it while discovering x:
+</p>
+
+<ul>
+<li>If y is currently undiscovered, we start a DFS on y before coming
+back to continue on x. y will be marked "completed" before x, and
+x will appear before y in topological sort.</li>
+<li>If y is discovered but not completed, (x,y) is a back edge, so
+this is not a DAG.</li>
+<li>If y is completed, then it will have already been labeled and x
+still appears before it in topological sort.</li>
+
+</ul>
+
+</aside>
+
+</section>
+</section>
+<section>
+<section id="slide-orgfad3a9d">
+<h2 id="orgfad3a9d">Strongly Connected Components</h2>
+<aside class="notes">
+<p>
+A directed graph is strongly connected if there is a directed path
+between any two given vertices.
+</p>
+
+<p>
+A strongly connected component is a maximal subset of the graph such
+that the subset behaves like a strongly connected graph of its own.
+</p>
+
+<p>
+No single vertex can be part of two strongly connected components,
+otherwise the two components would be a single component. Therefore,
+strongly connected component partition the graph into subsections.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Scc.png" alt="Scc.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org7c063cd">
+<h3 id="org7c063cd">Kosaraju's Algorithm</h3>
+<aside class="notes">
+<p>
+Kosaraju's Algorithm is an elegant, recursive algorithm that uses
+depth-first search to find the connected components of a graph.
+</p>
+
+<ol>
+<li>For each vertex u of the graph, mark u as unvisited. Let L be empty.</li>
+<li><p>
+For each vertex u of the graph do Visit(u), where Visit(u) is
+the recursive subroutine:
+</p>
+
+<p>
+If u is unvisited then:
+</p>
+
+<p>
+Mark u as visited.
+For each out-neighbour v of u, do Visit(v).
+Prepend u to L.
+</p>
+
+<p>
+Otherwise do nothing.
+</p></li>
+
+<li><p>
+For each element u of L in order, do Assign(u,u) where
+Assign(u,root) is the recursive subroutine:
+</p>
+
+<p>
+If u has not been assigned to a component then:
+</p>
+
+<p>
+Assign u as belonging to the component whose root is root.
+For each in-neighbour v of u, do Assign(v,root).
+</p>
+
+<p>
+Otherwise do nothing.
+</p></li>
+
+</ol>
+
+</aside>
+</section>
+</section>
+</div>
+</div>
+<script src="./reveal.js/lib/js/head.min.js"></script>
+<script src="./reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+margin: 0.20,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: './reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+ { src: './reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>
