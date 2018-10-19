@@ -1,0 +1,309 @@
+#+TITLE:  Computer Science 2: Algorithms
+#+AUTHOR: Detroit Labs Dev Coaching
+#+DATE:   2018
+#+EMAIL:  ndotz@detroitlabs.com
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   skip:nil d:nil todo:t pri:nil tags:not-in-toc timestamp:nil
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+REVEAL_PLUGINS: (highlight notes)
+#+REVEAL_THEME: league
+#+REVEAL_MARGIN: 0.2
+# #+REVEAL_MIN_SCALE: 0.5
+# #+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_EXTRA_CSS: ./presentation.css
+
+* Lecture 8
+
+* Practice Problem
+  #+BEGIN_NOTES
+  First, we want to achieve a reversed topological sort by creating a
+  directed graph where the direction of precedence is the edge
+  direction.
+
+  Then, build a BFS graph from the directecd graph as built in the
+  previous task. The maximum depth of this graph is the number of rows
+  necessary.
+  #+END_NOTES
+  You are tasked with organizing $n$ politicians for a procession. You
+  are given $m$ rules about organizing them by prestige of the form "$i$
+  must precede $j$" such that the most fickle of them do not cause a
+  scene.
+
+  1. Give an algorithm that orders them in O(n+m) time.
+  2. Later, they must stand in rows. If $i$ must precede $j$, $i$ must
+     be in an earlier row than $j$. Give an efficient algorithm to
+     find the minimum number of rows needed.
+
+* Weighted Graph Algorithms
+  #+BEGIN_NOTES
+  With breadth-first and depth-first searches, we have been largely
+  concerned with graphs where all of the edges connecting vertices
+  were of equal relevance. This week, we're going to start exploring
+  edge-weighted graphs, where edges connected vertices have an
+  associated weight or cost.
+  #+END_NOTES
+  [[https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/CPT-Graphs-directed-weighted-ex1.svg/527px-CPT-Graphs-directed-weighted-ex1.svg.png]]
+
+** Minimum Spanning Trees
+   #+BEGIN_NOTES
+   A spanning tree is a subgraph of some graph G such that it
+   has the same set of vertices as G, but is also a tree - that is, a
+   graph with no cycles.
+
+   A minimum spanning tree of a weighted graph is a spanning tree of
+   the graph whose edges add up to the minimum weight. There can
+   multiple of these, as there are many situations where the sum of
+   the edge weights could be the same along multiple trees.
+   #+END_NOTES
+   [[https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Minimum_spanning_tree.svg/595px-Minimum_spanning_tree.svg.png]]
+
+** Who cares?
+   #+BEGIN_NOTES
+   Minimum spanning trees show up in many graph applications. They've
+   also been around for a long time, dating back to 1926 for the first
+   algorithm for finding them. This charming fellow is Otakar Boruvka
+   and he was trying to figure out how to provide electricity to an
+   area called Malavia in the Czech Republic when he first discovered
+   an algorithm for finding MSTs. His works by looking at pairs of
+   vertices and finding the cheapest way to make them into groups,
+   then looking at those groups and finding the cheapest ways to
+   connect them, and so on.
+
+   Finding minimum spanning trees generally involves greedy
+   algorithms ­ those that choose what to do next based on the best
+   local option from all available choices. Getting this to happen in
+   an efficient way involves using some clever data structures.
+
+   What are some applications where you might want to visit every
+   vertex in a graph while taking the minimum cost in edges?
+
+   - Designing networks to use the least amount of physical connections
+   - Finding clusters
+   - Dividing graphs into partitions by deleting the longest edges
+     sequentially
+   - For points in euclidean planes, MST is a good starter heuristic
+     for the traveling salesman problem
+   #+END_NOTES
+   [[https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Otakar_Boruvka_1981.jpg/339px-Otakar_Boruvka_1981.jpg]]
+
+* Prim's Algorithm
+  #+BEGIN_NOTES
+  Prim's algorithm is another method of finding minimum spanning
+  trees. It starts at one vertex and grows the tree one edge at a
+  time, picking the cheapest edge that will not create a cycle.
+
+  How do we know this is giving us a spanning tree? Because we're
+  always trying to connect a new node, which is inherently a discovery
+  tree.
+  #+END_NOTES
+  [[https://upload.wikimedia.org/wikipedia/commons/9/9b/PrimAlgDemo.gif]]
+
+** Let's try it out
+   #+BEGIN_NOTES
+   Let's give this thing a shot, starting from the vertex in the
+   lower-left corner.
+
+   ---
+
+   By now, you should probably agree that this is going to give us a
+   spanning tree. You should probably also agree that is going to give
+   us a MST with a relatively low weight. Do you think that this will
+   provide the lowest possible weight of any possible spanning tree on
+   a graph? Because it will.
+   #+END_NOTES
+   [[./img/some_graph_g.png]]
+
+** Prim's in english
+   #+BEGIN_NOTES
+   During execution, every vertex will either be in the tree, fringe
+   (meaning it's possible to be connected next), or unseen.
+
+   We know this will create a spanning tree since we're not going to
+   be creating a cycle of any kind, but how will we know it is the
+   minimum of any possible spanning tree?
+   #+END_NOTES
+   #+BEGIN_VERSE
+   Prim-MST(G)
+       Select an arbitrary vertex s to start the tree from.
+           While (there are still non-tree vertices)
+               Select min weight edge between tree/non-tree vertices
+               Add the selected edge and vertex to the tree T_prim.
+   #+END_VERSE
+
+** Prim's is always minimum
+   #+BEGIN_NOTES
+   Well, here is how. This is a proof by contradiction:
+
+   ---
+
+   Given any graph, even if we would have to create a cycle to take
+   the least weighted edge, we can still delete a previous, heavier
+   edge to leave the graph connected an maintain connectivity in the
+   tree.
+   #+END_NOTES
+   - Must be a graph $G$ where Prim's doesn't produce MST
+   - If so, must be an edge $(x,y)$ such that we cannot extend the
+     subgraph $V\prime$ to an MST
+   - If $(x,y) \notin MST(G)$, it must contain a path connecting $x$ and $y$
+   - Let $(u,v)$ be another edge adjacent to $V\prime$
+   - If the edge $(u,v)$ still eventually connects $x$ and $y$, but
+     $(x,y)$ was less weight, it was not an MST
+
+** MST for Traveling Salesman
+   #+BEGIN_NOTES
+   If you'll remember, Traveling Salesman asks us to visit some series
+   of points in a graph at minimum total cost. You may also remember
+   that this is a hard problem! There is no efficient general
+   algorithm to find the shortest around trip between vertices on a
+   graph! However, depth-first search and minimum spanning trees can
+   give us a rough starting point that is not more than twice the
+   optimum tour.
+
+   First, we find the minimum spanning tree. Then, we run DFS from an
+   arbitrary vertex (or a known starting vertex). This gives a
+   relatively good path to travel, if not the optimum path.
+   #+END_NOTES
+
+   [[./img/mst_tsp.png]]
+
+** How Fast is Prim's?
+   #+BEGIN_NOTES
+   Well, how fast Prim's algorithm is will depend on the data
+   structures used to implement it.
+
+   First off, it should be clear that we need at least n iterations,
+   one for each node that we're going to add to the tree. In each
+   vertex we need to find the edge with the minimum weight that goes
+   between a tree node and a non-tree node. What kind of data
+   structure could we use to do the minimum bookkeeping for this
+   algorithm? We could keep something like an n-sized bit vector to
+   accompany an adjacency list and keep track of whether or not it is
+   in the tree yet.
+
+   The algorithm as listed here happens in O(nm) time, by doing a DFS
+   or BFS to loop through all the edges and a total of n iterations.
+
+   What could we do to speed up the inner loop?
+   #+END_NOTES
+   #+BEGIN_VERSE
+   Select an arbitrary vertex to start.
+   While (there are non-tree vertices)
+       select minimum weight edge between tree and fringe
+       add the selected edge and vertex to the tree
+   #+END_VERSE
+
+** Toward a faster Prim's
+   #+BEGIN_NOTES
+   If we want to go faster, we're going to have to identify the fringe
+   vertices and the minimum cost associated with it quickly.
+
+   For every one of the fringe vertices, we can keep track of only the
+   cheapest edge that connects it to the tree. For this we would need
+   a data structure that keeps track of the cheapest edge (so far)
+   that links a particular edge back into the tree. If we had such a
+   data structure, we could then take the cheapest edge in that data
+   structure that connects a new vertex, and then update it with newly
+   possible vertices and their respective cheapest weights.
+   #+END_NOTES
+   [[./img/some_graph_g.png]]
+
+** Prim's Analysis
+   #+BEGIN_NOTES
+   What is the time it takes to find the minimum weight fringe edge?
+   This happens in O(n) because we need to iterate through our
+   distance collection to find the minimum.
+
+   After we add a new vertex to the tree, we'll need to run through
+   its adjacency list in O(n) time to check whether there are cheaper
+   ways to connect its neighbors to the tree. If so we'll need to
+   update the distance values.
+
+   Is there a way to make this faster with some other kind of data
+   structure aside from arrays? Not really, but this is the kind of
+   thing we want a heap for in general. You could probably come up
+   with something very specific that is heap-like.
+
+   Now the real question is... can we beat Prim's algorithm on a dense
+   graph? Remember that a dense graph has in the neighborhood of n^2
+   edges. Can we find the MST without looking at every edge? We
+   probably want to examine every edge in case one is comparatively
+   very, very cheap. So it's likely that Prim's is optimum for dense
+   graphs.
+
+   What kind of complexity would be good for sparse graphs? Would it be
+   a factor of the n vertices or of the m edges?
+   #+END_NOTES
+
+   - Find the minimum weight fringe edge
+   - Add vertex to tree
+     - Compare new edges from vertex with known to find cheapest
+
+   Total time is $n \times (n + m) = O(n^2)$
+
+* Kruskal's Algorithm
+  #+BEGIN_NOTES
+  Well, we know from Prim's that if the number of edges approaches n^2
+  it probably doesn't make much different because the complexity of
+  the algorithm is independent of the edges. In the case of a sparse
+  graph, we can do better with Kruskal's algorithm.
+
+  Kruskal's Algorithm is also greedy, and it works by repeatedly
+  adding the smallest edge to the spanning tree which does not create
+  a cycle.
+  #+END_NOTES
+  [[https://upload.wikimedia.org/wikipedia/commons/b/bb/KruskalDemo.gif]]
+
+** Let's try it out
+   [[./img/some_graph_g.png]]
+
+
+** Kruskal's always the minimum
+   #+BEGIN_NOTES
+   Much like Prim's Algorithm, here is another proof by contradiction.
+
+   ---
+
+   After all this, we can see that if we delete the new heavy edge, we
+   would have a better optimal tree, meaning the MST wasn't an MST,
+   thus Kruskal's must be correct.
+   #+END_NOTES
+   - Must be a graph $G$ where Kruskal's doesn't produce MST
+   - If so, must be an edge $(x,y)$ such that we cannot add to the MST
+   - When we added $(x,y)$, there was no path from $x$ to $y$ we would
+     have a cycle. So adding $(x,y)$ now must create a cycle.
+   - At least one edge must have been added after $(x,y)$ so it must
+     be heavier.
+
+** How fast is Kruskal's
+   #+BEGIN_NOTES
+   Here is perhaps the simplest representation of the implementation
+   of Kruskal's Algorithm
+
+   To test cycles we can use BFS or DFS to check for cycles, which
+   happens in O(n) time. The total time is therefore O(mn). Is this
+   really any better than Prim's? It looks clever, but the cycle
+   checking part is far too expensive to save much time over Prim's.
+
+   Do you think we can be more efficient than that? If so, we would
+   have to find a faster way of checking for cycles during the
+   BFS/DFS. To do that, we can keep track of what component a vertex
+   belongs to as we assemble the tree, and to do that, we can use the
+   Union-Find data structure described in the book that merges sets in
+   log n time.
+   #+END_NOTES
+   - Sort the $m$ edges in $O(m \log m)$
+   - \forall edges, check for a cycle. If no cycle, add to forest.
+
+** Union-Find
+   #+BEGIN_NOTES
+   Union-Find is a data structure for maintaining sets and if two
+   elements are the same, merge them together. We can do this by
+   maintaining a tree backed by an array (using the heap index math we
+   learned before), we can do these operations in log n
+
+   #+END_NOTES
+   - ~find(i)~ - Return the root of the tree containing $i$
+   - ~union(i,j)~ - Link root of $i$ to root of $j$ so $find(i) == find(j)$

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Computer Science 2: Algorithms</title>
+<meta name="author" content="(Detroit Labs Dev Coaching)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="./reveal.js/css/theme/league.css" id="theme"/>
+
+<link rel="stylesheet" href="./presentation.css"/>
+<link rel="stylesheet" href="./reveal.js/lib/css/zenburn.css"/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Computer Science 2: Algorithms</h1><h2 class="author">Detroit Labs Dev Coaching</h2><h2 class="date">2018</h2>
+</section>
+
+<section>
+<section id="slide-orgfbb6bed">
+<h2 id="orgfbb6bed">Lecture 8</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-org3d99c08">
+<h2 id="org3d99c08">Practice Problem</h2>
+<aside class="notes">
+<p>
+First, we want to achieve a reversed topological sort by creating a
+directed graph where the direction of precedence is the edge
+direction.
+</p>
+
+<p>
+Then, build a BFS graph from the directecd graph as built in the
+previous task. The maximum depth of this graph is the number of rows
+necessary.
+</p>
+
+</aside>
+<p>
+You are tasked with organizing \(n\) politicians for a procession. You
+are given \(m\) rules about organizing them by prestige of the form "\(i\)
+must precede \(j\)" such that the most fickle of them do not cause a
+scene.
+</p>
+
+<ol>
+<li>Give an algorithm that orders them in O(n+m) time.</li>
+<li>Later, they must stand in rows. If \(i\) must precede \(j\), \(i\) must
+be in an earlier row than \(j\). Give an efficient algorithm to
+find the minimum number of rows needed.</li>
+
+</ol>
+
+</section>
+</section>
+<section>
+<section id="slide-org9ef6cbb">
+<h2 id="org9ef6cbb">Weighted Graph Algorithms</h2>
+<aside class="notes">
+<p>
+With breadth-first and depth-first searches, we have been largely
+concerned with graphs where all of the edges connecting vertices
+were of equal relevance. This week, we're going to start exploring
+edge-weighted graphs, where edges connected vertices have an
+associated weight or cost.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/CPT-Graphs-directed-weighted-ex1.svg/527px-CPT-Graphs-directed-weighted-ex1.svg.png" alt="527px-CPT-Graphs-directed-weighted-ex1.svg.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org1e1abd8">
+<h3 id="org1e1abd8">Minimum Spanning Trees</h3>
+<aside class="notes">
+<p>
+A spanning tree is a subgraph of some graph G such that it
+has the same set of vertices as G, but is also a tree - that is, a
+graph with no cycles.
+</p>
+
+<p>
+A minimum spanning tree of a weighted graph is a spanning tree of
+the graph whose edges add up to the minimum weight. There can
+multiple of these, as there are many situations where the sum of
+the edge weights could be the same along multiple trees.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Minimum_spanning_tree.svg/595px-Minimum_spanning_tree.svg.png" alt="595px-Minimum_spanning_tree.svg.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-orga6f3483">
+<h3 id="orga6f3483">Who cares?</h3>
+<aside class="notes">
+<p>
+Minimum spanning trees show up in many graph applications. They've
+also been around for a long time, dating back to 1926 for the first
+algorithm for finding them. This charming fellow is Otakar Boruvka
+and he was trying to figure out how to provide electricity to an
+area called Malavia in the Czech Republic when he first discovered
+an algorithm for finding MSTs. His works by looking at pairs of
+vertices and finding the cheapest way to make them into groups,
+then looking at those groups and finding the cheapest ways to
+connect them, and so on.
+</p>
+
+<p>
+Finding minimum spanning trees generally involves greedy
+algorithms ­ those that choose what to do next based on the best
+local option from all available choices. Getting this to happen in
+an efficient way involves using some clever data structures.
+</p>
+
+<p>
+What are some applications where you might want to visit every
+vertex in a graph while taking the minimum cost in edges?
+</p>
+
+<ul>
+<li>Designing networks to use the least amount of physical connections</li>
+<li>Finding clusters</li>
+<li>Dividing graphs into partitions by deleting the longest edges
+sequentially</li>
+<li>For points in euclidean planes, MST is a good starter heuristic
+for the traveling salesman problem</li>
+
+</ul>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Otakar_Boruvka_1981.jpg/339px-Otakar_Boruvka_1981.jpg" alt="339px-Otakar_Boruvka_1981.jpg" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgfb8bbdc">
+<h2 id="orgfb8bbdc">Prim's Algorithm</h2>
+<aside class="notes">
+<p>
+Prim's algorithm is another method of finding minimum spanning
+trees. It starts at one vertex and grows the tree one edge at a
+time, picking the cheapest edge that will not create a cycle.
+</p>
+
+<p>
+How do we know this is giving us a spanning tree? Because we're
+always trying to connect a new node, which is inherently a discovery
+tree.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/9/9b/PrimAlgDemo.gif" alt="PrimAlgDemo.gif" />
+</p>
+</div>
+
+</section>
+<section id="slide-org37f74e1">
+<h3 id="org37f74e1">Let's try it out</h3>
+<aside class="notes">
+<p>
+Let's give this thing a shot, starting from the vertex in the
+lower-left corner.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+By now, you should probably agree that this is going to give us a
+spanning tree. You should probably also agree that is going to give
+us a MST with a relatively low weight. Do you think that this will
+provide the lowest possible weight of any possible spanning tree on
+a graph? Because it will.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/some_graph_g.png" alt="some_graph_g.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org3f349f7">
+<h3 id="org3f349f7">Prim's in english</h3>
+<aside class="notes">
+<p>
+During execution, every vertex will either be in the tree, fringe
+(meaning it's possible to be connected next), or unseen.
+</p>
+
+<p>
+We know this will create a spanning tree since we're not going to
+be creating a cycle of any kind, but how will we know it is the
+minimum of any possible spanning tree?
+</p>
+
+</aside>
+<p class="verse">
+Prim-MST(G)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;Select an arbitrary vertex s to start the tree from.<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;While (there are still non-tree vertices)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;Select min weight edge between tree/non-tree vertices<br />
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;Add the selected edge and vertex to the tree T<sub>prim</sub>.<br />
+</p>
+
+</section>
+<section id="slide-org79725a6">
+<h3 id="org79725a6">Prim's is always minimum</h3>
+<aside class="notes">
+<p>
+Well, here is how. This is a proof by contradiction:
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+Given any graph, even if we would have to create a cycle to take
+the least weighted edge, we can still delete a previous, heavier
+edge to leave the graph connected an maintain connectivity in the
+tree.
+</p>
+
+</aside>
+<ul>
+<li>Must be a graph \(G\) where Prim's doesn't produce MST</li>
+<li>If so, must be an edge \((x,y)\) such that we cannot extend the
+subgraph \(V\prime\) to an MST</li>
+<li>If \((x,y) \notin MST(G)\), it must contain a path connecting \(x\) and \(y\)</li>
+<li>Let \((u,v)\) be another edge adjacent to \(V\prime\)</li>
+<li>If the edge \((u,v)\) still eventually connects \(x\) and \(y\), but
+\((x,y)\) was less weight, it was not an MST</li>
+
+</ul>
+
+</section>
+<section id="slide-orgb3854f4">
+<h3 id="orgb3854f4">MST for Traveling Salesman</h3>
+<aside class="notes">
+<p>
+If you'll remember, Traveling Salesman asks us to visit some series
+of points in a graph at minimum total cost. You may also remember
+that this is a hard problem! There is no efficient general
+algorithm to find the shortest around trip between vertices on a
+graph! However, depth-first search and minimum spanning trees can
+give us a rough starting point that is not more than twice the
+optimum tour.
+</p>
+
+<p>
+First, we find the minimum spanning tree. Then, we run DFS from an
+arbitrary vertex (or a known starting vertex). This gives a
+relatively good path to travel, if not the optimum path.
+</p>
+
+</aside>
+
+
+<div class="figure">
+<p><img src="./img/mst_tsp.png" alt="mst_tsp.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org3e5fa39">
+<h3 id="org3e5fa39">How Fast is Prim's?</h3>
+<aside class="notes">
+<p>
+Well, how fast Prim's algorithm is will depend on the data
+structures used to implement it.
+</p>
+
+<p>
+First off, it should be clear that we need at least n iterations,
+one for each node that we're going to add to the tree. In each
+vertex we need to find the edge with the minimum weight that goes
+between a tree node and a non-tree node. What kind of data
+structure could we use to do the minimum bookkeeping for this
+algorithm? We could keep something like an n-sized bit vector to
+accompany an adjacency list and keep track of whether or not it is
+in the tree yet.
+</p>
+
+<p>
+The algorithm as listed here happens in O(nm) time, by doing a DFS
+or BFS to loop through all the edges and a total of n iterations.
+</p>
+
+<p>
+What could we do to speed up the inner loop?
+</p>
+
+</aside>
+<p class="verse">
+Select an arbitrary vertex to start.<br />
+While (there are non-tree vertices)<br />
+&#xa0;&#xa0;&#xa0;&#xa0;select minimum weight edge between tree and fringe<br />
+&#xa0;&#xa0;&#xa0;&#xa0;add the selected edge and vertex to the tree<br />
+</p>
+
+</section>
+<section id="slide-org4e938a4">
+<h3 id="org4e938a4">Toward a faster Prim's</h3>
+<aside class="notes">
+<p>
+If we want to go faster, we're going to have to identify the fringe
+vertices and the minimum cost associated with it quickly.
+</p>
+
+<p>
+For every one of the fringe vertices, we can keep track of only the
+cheapest edge that connects it to the tree. For this we would need
+a data structure that keeps track of the cheapest edge (so far)
+that links a particular edge back into the tree. If we had such a
+data structure, we could then take the cheapest edge in that data
+structure that connects a new vertex, and then update it with newly
+possible vertices and their respective cheapest weights.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="./img/some_graph_g.png" alt="some_graph_g.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org7445ac3">
+<h3 id="org7445ac3">Prim's Analysis</h3>
+<aside class="notes">
+<p>
+What is the time it takes to find the minimum weight fringe edge?
+This happens in O(n) because we need to iterate through our
+distance collection to find the minimum.
+</p>
+
+<p>
+After we add a new vertex to the tree, we'll need to run through
+its adjacency list in O(n) time to check whether there are cheaper
+ways to connect its neighbors to the tree. If so we'll need to
+update the distance values.
+</p>
+
+<p>
+Is there a way to make this faster with some other kind of data
+structure aside from arrays? Not really, but this is the kind of
+thing we want a heap for in general. You could probably come up
+with something very specific that is heap-like.
+</p>
+
+<p>
+Now the real question is&#x2026; can we beat Prim's algorithm on a dense
+graph? Remember that a dense graph has in the neighborhood of n<sup>2</sup>
+edges. Can we find the MST without looking at every edge? We
+probably want to examine every edge in case one is comparatively
+very, very cheap. So it's likely that Prim's is optimum for dense
+graphs.
+</p>
+
+<p>
+What kind of complexity would be good for sparse graphs? Would it be
+a factor of the n vertices or of the m edges?
+</p>
+
+</aside>
+
+<ul>
+<li>Find the minimum weight fringe edge</li>
+<li>Add vertex to tree
+<ul>
+<li>Compare new edges from vertex with known to find cheapest</li>
+
+</ul></li>
+
+</ul>
+
+<p>
+Total time is \(n \times (n + m) = O(n^2)\)
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgf709047">
+<h2 id="orgf709047">Kruskal's Algorithm</h2>
+<aside class="notes">
+<p>
+Well, we know from Prim's that if the number of edges approaches n<sup>2</sup>
+it probably doesn't make much different because the complexity of
+the algorithm is independent of the edges. In the case of a sparse
+graph, we can do better with Kruskal's algorithm.
+</p>
+
+<p>
+Kruskal's Algorithm is also greedy, and it works by repeatedly
+adding the smallest edge to the spanning tree which does not create
+a cycle.
+</p>
+
+</aside>
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/b/bb/KruskalDemo.gif" alt="KruskalDemo.gif" />
+</p>
+</div>
+
+</section>
+<section id="slide-orga2f2e9c">
+<h3 id="orga2f2e9c">Let's try it out</h3>
+
+<div class="figure">
+<p><img src="./img/some_graph_g.png" alt="some_graph_g.png" />
+</p>
+</div>
+
+
+</section>
+<section id="slide-org178a037">
+<h3 id="org178a037">Kruskal's always the minimum</h3>
+<aside class="notes">
+<p>
+Much like Prim's Algorithm, here is another proof by contradiction.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+After all this, we can see that if we delete the new heavy edge, we
+would have a better optimal tree, meaning the MST wasn't an MST,
+thus Kruskal's must be correct.
+</p>
+
+</aside>
+<ul>
+<li>Must be a graph \(G\) where Kruskal's doesn't produce MST</li>
+<li>If so, must be an edge \((x,y)\) such that we cannot add to the MST</li>
+<li>When we added \((x,y)\), there was no path from \(x\) to \(y\) we would
+have a cycle. So adding \((x,y)\) now must create a cycle.</li>
+<li>At least one edge must have been added after \((x,y)\) so it must
+be heavier.</li>
+
+</ul>
+
+</section>
+<section id="slide-org9561b51">
+<h3 id="org9561b51">How fast is Kruskal's</h3>
+<aside class="notes">
+<p>
+Here is perhaps the simplest representation of the implementation
+of Kruskal's Algorithm
+</p>
+
+<p>
+To test cycles we can use BFS or DFS to check for cycles, which
+happens in O(n) time. The total time is therefore O(mn). Is this
+really any better than Prim's? It looks clever, but the cycle
+checking part is far too expensive to save much time over Prim's.
+</p>
+
+<p>
+Do you think we can be more efficient than that? If so, we would
+have to find a faster way of checking for cycles during the
+BFS/DFS. To do that, we can keep track of what component a vertex
+belongs to as we assemble the tree, and to do that, we can use the
+Union-Find data structure described in the book that merges sets in
+log n time.
+</p>
+
+</aside>
+<ul>
+<li>Sort the \(m\) edges in \(O(m \log m)\)</li>
+<li>&forall; edges, check for a cycle. If no cycle, add to forest.</li>
+
+</ul>
+
+</section>
+<section id="slide-org9ec07b2">
+<h3 id="org9ec07b2">Union-Find</h3>
+<aside class="notes">
+<p>
+Union-Find is a data structure for maintaining sets and if two
+elements are the same, merge them together. We can do this by
+maintaining a tree backed by an array (using the heap index math we
+learned before), we can do these operations in log n
+</p>
+
+</aside>
+<ul>
+<li><code>find(i)</code> - Return the root of the tree containing \(i\)</li>
+<li><code>union(i,j)</code> - Link root of \(i\) to root of \(j\) so \(find(i) == find(j)\)</li>
+
+</ul>
+</section>
+</section>
+</div>
+</div>
+<script src="./reveal.js/lib/js/head.min.js"></script>
+<script src="./reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+margin: 0.20,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: './reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+ { src: './reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>
